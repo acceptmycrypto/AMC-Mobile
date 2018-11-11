@@ -1,0 +1,20 @@
+.settingsDIV{
+  margin: 0 auto;
+  width: 50%;
+}
+
+.lightBlueText{
+  color: #44a8be
+}
+
+.ui.vertical.menu {
+  width: 19rem;
+}
+
+.ui.menu {
+  font-size: 1.1rem;
+}
+
+/* .left-margin-20{
+  margin-left: 20%;
+} */

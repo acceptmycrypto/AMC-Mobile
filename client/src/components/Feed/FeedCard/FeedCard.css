@@ -1,0 +1,88 @@
+/* the container of all contents on the page */
+.transactions-content {
+  display: flex;
+  box-sizing: border-box;
+}
+
+/* move the feed cards to the right of the page. */
+.right {
+  flex-shrink: 0; /* makes sure that content is not cut off in a smaller browser window */
+  /* width: 50%; the left cruptoranking component takes 25% of browser width so I make the feed card 50% of width */
+  margin-left: 10px;
+}
+
+.feed-card {
+  margin-bottom: 15px;
+  background-color: #fff;
+  height: 100px;
+  width: 100%;
+  border-radius: 5px;
+  /* box-shadow: 0 6px 5px -6px #777; */
+  box-shadow:0 2px 5px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12);
+  position: relative;
+  display: flex;
+  font-family: Verdana, sans-serif;
+}
+
+.card-content {
+  min-height: 80px;
+  width: 95%;
+  border-radius: 5px;
+  display: flex;
+  flex-shrink: 0;
+
+  /* center the inner div with the outer div */
+  box-sizing: border-box;
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, -50%)
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  margin-right: 20px;
+}
+
+/* Changed the classes to a  user-icon-background user-icon and  */
+/* .user-icon-background {
+  background-image: linear-gradient(-85deg, #49cdb7, #1ab7db);
+  position: relative;
+  width: 60px;
+  border-radius: 5px;
+  margin: 0 auto;
+}
+
+.user-icon {
+  font-size: 50px;
+  color: #fff;
+   margin: 5px; 
+  justify-content: center;
+} */
+
+.user-name {
+  text-align: center;
+}
+
+/* This is the space for where the main content is */
+.user-transaction-info {
+  margin-top: 10px;
+}
+
+.timestamp {
+  float: right;
+  position: absolute;
+  bottom: 0%;
+  right: 2%;
+}
+
+.blueText{
+  color: rgb(8, 83, 153);
+}
+
+.greenText{
+  color: green;
+}

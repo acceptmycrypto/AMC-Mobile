@@ -1,0 +1,12 @@
+<h1>Sign Up</h1>
+<% if (messages.info) { %>
+<div>
+  <%= messages.info %>
+</div>
+<% } %>
+<form method="POST" action="/admin/signup/create">
+  <input type="text" name="email" placeholder="Enter Your Email Address"> <br>
+  <input type="text" name="password" placeholder="Please Enter Your Password"> <br>
+  <button>submit</button>
+</form>
+<a href="/admin/signin">Login</a>

@@ -1,0 +1,27 @@
+.crypto_logo img {
+  width: 50px;
+  margin-top: 10px;
+}
+
+#submit_payment {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  margin-top: 20px;
+}
+
+#submit_payment button {
+  background-color:green;
+  color: white;
+  border: none;
+  outline: none;
+  border-radius: 25px;
+  padding: 10px 25px;
+  font-size: 1em;
+  font-weight: 500;
+  cursor: pointer;
+  position: absolute;
+  bottom: 0%;
+  margin: 20px 0px;
+  z-index: 1;
+}

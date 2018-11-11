@@ -1,0 +1,75 @@
+<head>
+  <% include ../partials/head %>
+</head>
+
+<body>
+  <header>
+    <% include ../partials/header %>
+  </header>
+
+  <main>
+
+    <div class="limiter">
+      <div class="container-table100">
+        <div class="wrap-table100">
+          <div class="table">
+
+            <div class="row header">
+              <div class="cell">
+                #
+              </div>
+              <div class="cell">
+                Crypto Name
+              </div>
+              <div class="cell">
+                # of Venues Accepting
+              </div>
+              <div class="cell">
+                Price
+              </div>
+            </div>
+
+            <% for(var i = 0; i < cryptos.length; i++) { %>
+              <div class="row">
+                <div class="cell" data-title="rank">
+                  <%= i + 1 %></a>
+                </div>
+                <div class="cell" data-title="crypto">
+                  <a href="/cryptos/<%= cryptos[i].crypto_name %>">
+                    <img class="crypto-logo" src="<%=cryptos[i].crypto_logo %>" alt="crypto-logo">
+                  <%= cryptos[i].crypto_name %></a>
+                </div>
+                <div class="cell" data-title="vendors">
+                  <%= cryptos[i].venues_count %>
+                </div>
+                <div class="cell" data-title="price">
+                  $
+                  <%= cryptos[i].crypto_price %>
+                </div>
+              </div>
+              <% } %>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <% if (messages.info) { %>
+    <div id="snackbar">
+      <%= messages.info %>
+    </div>
+    <% } %>
+
+      <footer>
+        <% include ../partials/footer %>
+      </footer>
+
+
+      <script src="/assets/vendor/bootstrap/js/bootstrap.min.js"></script>
+      <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
+      <script src="/assets/javascript/modal.js"></script>
+      <script src="/assets/javascript/snackbar.js"></script>
+</body>

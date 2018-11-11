@@ -1,0 +1,237 @@
+.deal-container {
+  margin: 50px;
+  height: 80vh; /*relative to the height of the viewport*/
+  box-sizing: border-box;
+  box-shadow:0 2px 5px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12);
+  display: flex;
+  border-radius: 5px;
+  flex-direction: column;
+}
+
+.deal-header {
+  background-image: linear-gradient(-85deg, #49cdb7, #1ab7db);
+  width: 100%;
+  height: 25%;
+  border-radius: 5px 5px 0 0;
+  display: flex;
+  color: white;
+}
+
+.deal-item-header {
+  width: 50%;
+  display: flex;
+  padding: 20px;
+}
+
+.deal-item-name {
+  width: 50%;
+}
+
+.deal-item-cost {
+  width: 50%;
+}
+
+.deal-item-discount {
+  background-color: #e63e43;
+  border:  #e63e43 1px solid;
+  font-size: 12px;
+  border-radius: 5px;
+  margin: 0 7px;
+  padding: 0 5px;
+}
+
+.deal-item-summary {
+  width: 50%;
+  display: flex;
+  justify-content: space-between;
+  text-align: center;
+  padding-top: 5px;
+}
+
+.customize-item-summary {
+  width: 20%;
+}
+
+.customize-item-shipping {
+  width: 60%;
+}
+
+.customize-item-payment {
+  width: 20%;
+}
+
+.deal-main-info {
+  display: flex;
+  height: 100%;
+  /* width: 100%; */
+}
+
+.deal-images-container {
+  height: 100%;
+  width: 100%;
+  padding: 15px;
+
+}
+
+.deal-checkout-container {
+  padding: 0 15px;
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
+
+.react-carousel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+}
+
+.deal-item-image {
+  background: #f8f8fa;
+}
+
+.deal-item-image img {
+  border-radius: 5px;
+}
+
+/* stop default stiling of ol */
+ol.progtrckr {
+  list-style-type: none;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  height: 25%;
+  margin-bottom: 30px;
+}
+
+/* Hide the default step of order list*/
+.progtrckr em {
+  display: none;
+  font-weight: 700;
+  padding-left: 1rem;
+}
+
+
+/* Set the color of three states: todo, doing, and done */
+ol.progtrckr li.progtrckr-todo {
+  color: silver;
+  border-bottom: 4px solid silver;
+}
+
+ol.progtrckr li.progtrckr-doing {
+  color: black;
+  border-bottom: 4px solid #CCCCCC;
+}
+
+ol.progtrckr li.progtrckr-done {
+  color: black;
+  border-bottom: 4px solid #5cb85c;
+}
+
+ol.progtrckr li {
+  display: inline-block;
+  text-align: center;
+  line-height: 4.5rem;
+  cursor: pointer;
+  margin-left: 0;
+}
+
+ol.progtrckr li span {
+  padding: 0 1.5rem;
+}
+
+
+ol.progtrckr li:before {
+  position: relative;
+  bottom: -3.7rem;
+  float: left;
+  left: 50%;
+  margin-top:  4px;
+}
+
+/* adding the content "\00a0\00a0" after li to make some spaces for cenetering */
+ol.progtrckr li:after {
+  content: "\A0\A0";
+}
+
+ol.progtrckr li.progtrckr-doing:before {
+  content: "\2022";
+  color: white;
+  background-color: #CCCCCC;
+  width: 1.2em;
+  line-height: 1.2em;
+  border-radius: 1.2em;
+}
+
+ol.progtrckr li.progtrckr-doing:hover:before {
+  color: #ff4500;
+}
+
+ol.progtrckr li.progtrckr-todo:before {
+  content: "\039F";
+  color: silver;
+  background-color: #f8f8fa;
+  width: 1.2em;
+  line-height: 1.4em;
+}
+
+ol.progtrckr li.progtrckr-todo:hover:before {
+  color: #ff4500;
+}
+
+ol.progtrckr li.progtrckr-done:before {
+  content: "\2713";
+  color: #f8f8fa;
+  background-color: #5cb85c;
+  width: 1.2em;
+  line-height: 1.2em;
+  border-radius: 1.2em;
+}
+
+ol.progtrckr li.progtrckr-done:hover:before {
+  color: #333;
+}
+
+/*Make the button stay at the bottom*/
+.footer-buttons {
+  position: absolute;
+  bottom: 0%;
+  margin: 20px 0px;
+  width: 95%;
+  z-index: 0;
+}
+
+/* overriding the default color of the react-stepzilla */
+.footer-buttons button {
+  background-color: #52C4B9;
+    color: white;
+    border: none;
+    outline: none;
+    border-radius: 25px;
+    padding: 10px 25px;
+    font-size: 1em;
+    font-weight: 500;
+}
+
+.footer-buttons button:hover {
+  background-color: #52C4B9;
+}
+
+/* !important us used to override bootstrap */
+.footer-buttons button:active {
+  background-color: #52C4B9 !important;
+}
+
+/* for mobile */
+@media (max-width: 650px) {
+  .progtrckr li span {
+    display: none;
+  }
+}
+
+@media (max-width: 650px) {
+  .progtrckr em {
+    display: inline;
+  }
+}

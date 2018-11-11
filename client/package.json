@@ -1,0 +1,39 @@
+{
+  "name": "client",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "add": "^2.0.6",
+    "coin-address-validator": "^1.0.4-1",
+    "react": "^16.5.2",
+    "react-awesome-modal": "^2.0.5",
+    "react-dom": "^16.5.2",
+    "react-html-parser": "^2.0.2",
+    "react-popup": "^0.9.3",
+    "react-responsive-carousel": "^3.1.43",
+    "react-router-dom": "^4.3.1",
+    "react-scripts": "2.0.4",
+    "react-select": "^2.1.0",
+    "react-stepzilla": "^4.7.3",
+    "react-timestamp": "^4.4.0",
+    "select": "^1.1.2",
+    "semantic-ui-css": "^2.4.1",
+    "semantic-ui-react": "^0.83.0",
+    "yarn": "^1.12.1"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
+}

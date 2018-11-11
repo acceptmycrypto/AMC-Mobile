@@ -1,0 +1,24 @@
+.column {
+  height: 100%; /* span the full height of the browser window*/
+  display: flex;
+}
+
+#left {
+  flex-shrink: 0;  /*makes sure that content is not cut off in a smaller browser window*/
+  overflow-y: auto; /* scroll inside the column*/
+  max-width: 25%;
+  margin: 0 10px;
+  border-radius: 5px;
+  background-color: #2e4158;
+  font-size: 12px;
+  color: #fff;
+}
+
+thead {
+  color: rgb(22, 190, 182);
+}
+
+/* Simon please add a class to your img tags so that it won't affect other pages */ 
+img {
+  width: 12px;
+}

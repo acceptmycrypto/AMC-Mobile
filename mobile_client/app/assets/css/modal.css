@@ -1,0 +1,96 @@
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 17px;
+  line-height: 1.6;
+}
+
+.button {
+  background: #333b55;
+  padding: 0.5em 1em;
+  color: #fff !important;
+  border: 0;
+  border-radius: 50%;
+  margin-left: 10px;
+
+}
+
+.button:hover {
+  background: #333;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+  background-color: #f4f4f4;
+  margin: 10% auto;
+  width: 50%;
+  box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2), 0 7px 20px 0 rgba(0, 0, 0, 0.17);
+  animation-name: modalopen;
+  animation-duration: 1s;
+}
+
+.modal-header h2,
+.modal-footer h3 {
+  margin: 0;
+}
+
+.modal-header {
+  background: gray;
+  padding: 15px;
+  color: #fff;
+}
+
+.modal-body {
+  padding: 10px 20px;
+}
+
+.modal-body input {
+  width: 100%;
+  display: block !important;
+}
+
+.modal-body button {
+  background-color: #333b55;
+  color: #fff;
+  text-transform: uppercase;
+  padding: 5px 10px;
+  float: right;
+}
+
+.modal-body button:hover {
+  background-color: #6d7992;
+  transition: 0.5s;
+}
+
+.closeBtn {
+  color: #ccc;
+  float: right;
+  font-size: 30px;
+  color: #fff;
+}
+
+.closeBtn:hover,
+.closeBtn:focus {
+  color: gold;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+@keyframes modalopen {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Admin | AcceptMyCrypto</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+</head>
+
+<body>
+  <ul class="nav">
+    <li class="nav-item">
+      <a class="nav-link active" href="/admin">Admin</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/admin/add_venue">Add Venue</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/admin/logout">Logout</a>
+    </li>
+  </ul>
+
+  <h1>
+    Add Venue
+  </h1>
+
+  <form method="POST" action="/admin/venues/create">
+    <div class="form-group col">
+      <input name="venue_name" type="text" class="form-control" id="venue-name" placeholder="Venue Name">
+    </div>
+
+    <div class="form-group col">
+      <input name="venue_link" type="text" class="form-control" id="venue-website" placeholder="Venue Website">
+    </div>
+
+    <div class="form-group col">
+      <label for="venue-description">Venue Description</label>
+      <textarea name="venue_description" class="form-control" id="venue-description" rows="3"></textarea>
+    </div>
+
+    <div class="form-group col-sm-10">
+        <button type="submit" class="btn btn-primary">Add Venue</button>
+    </div>
+
+  </form>
+
+</body>
+
+</html>

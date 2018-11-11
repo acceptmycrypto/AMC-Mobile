@@ -1,0 +1,84 @@
+.urlBox {
+    width: 500px;
+    border-radius: 5px;
+    /* border: black solid 1px; */
+    box-shadow:0 5px 10px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12);
+}
+
+.urlIcon {
+    width: 30px;
+}
+
+.urlImage {
+    width: 100%;
+}
+
+.parentComment {
+    margin: 15px auto;
+    background-color: #fff;
+    /* height: 100px; */
+    width: 90%;
+    border-radius: 5px;
+    /* box-shadow: 0 6px 5px -6px #777; */
+    box-shadow:0 2px 5px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12);
+    position: relative;
+    /* display: flex; */
+    font-family: Verdana, sans-serif;
+    padding: 5px;
+    word-wrap: break-word;
+}
+
+#textarea, .replyArea {
+    -moz-appearance: textfield-multiline;
+    -webkit-appearance: textarea;
+    border: 1px solid gray;
+    font: medium -moz-fixed;
+    font: -webkit-small-control;
+    height: 4em;
+    overflow: auto;
+    padding: 2px;
+    resize: both;
+    width: 100%;
+}
+
+.gray {
+    color: gray;
+}
+
+.black {
+    color: black;
+}
+
+.replyForm {
+    display: none;
+}
+
+.childComment {
+    width: 95%;
+    margin: 5px 0% 5px 5%;
+    word-wrap: break-word;
+}
+
+#commentForm {
+    margin: 5px auto;
+    width: 90%;
+}
+
+.replyForm {
+    width: 95%;
+    margin: 5px 0% 5px 5%;
+}
+
+.commentDeleted {
+    background-color: lightgray;
+}
+
+button {
+    float: right;
+    margin-left: 5px;
+    font-size: small;
+}
+
+.buttonDiv {
+    height: 30px;
+}

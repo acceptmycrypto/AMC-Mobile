@@ -1,0 +1,32 @@
+/* Start of CSS for User Profile Card */
+#profile{
+    /* width: 18em; */
+    
+    /* max-width: 18em; */
+    border: rgb(22, 190, 182) 2px solid;
+    border-radius: 5px;
+}
+
+.capitalize{
+    text-transform: capitalize;
+}
+
+.blueText{
+    color: rgb(8, 83, 153);
+}
+
+
+i{
+    color: rgb(22, 190, 182);
+}
+
+.user-icon-shaded{
+    display: inline-block;
+    color: white;
+    background-image: linear-gradient(-85deg, #49cdb7, #1ab7db); 
+    width: 100%;
+    font-size: 30px;
+    font-size: 7em;
+    border-radius: 5px;
+}
+/* End of CSS for User Profile Card */

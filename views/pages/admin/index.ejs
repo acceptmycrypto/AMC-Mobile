@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Admin | AcceptMyCrypto</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+</head>
+
+<body>
+  <ul class="nav">
+    <li class="nav-item">
+      <a class="nav-link active" href="/admin">Admin</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/admin/add_venue">Add Venue</a>
+      </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/admin/logout">Logout</a>
+    </li>
+  </ul>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Crypto ID</th>
+        <th scope="col">Crypto Name</th>
+        <th scope="col">Venues Count</th>
+        <th scope="col">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% cryptos.forEach(function(crypto) {  %>
+        <tr>
+          <th scope="row"><%= crypto.id %></th>
+          <td><%= crypto.crypto_name %></td>
+          <td><%= crypto.venues_count %></td>
+          <td>
+            <a href="/admin/<%= crypto.crypto_name %>/accept_venue">
+              <button class="btn btn-primary">Accept Venue</button>
+            </a>
+          </td>
+        </tr>
+      <% }); %>
+    </tbody>
+  </table>
+
+  <!-- <h2>1) Add Venues</h2>
+<form method="POST" action="/admin/venues/create">
+  <input type="text" name="venue_name" placeholder="Venue Name"> <br>
+  <input type="text" name="venue_description" placeholder="Venue Description"> <br>
+  <input type="text" name="venue_link" placeholder="Venue Website"> <br>
+  <button>Submit</button>
+</form>
+
+<h2>2) Add Cryptos (If app is ran, Cryptos are added from coinmarketcap api)</h2>
+
+<h2>3) Add Cryptos_Venues Relation</h2>
+<form method="POST" action="/admin/cryptos_venues/create">
+  <input type="text" name="crypto_id" placeholder="Crypto ID"> <br>
+  <input type="text" name="venue_id" placeholder="Venue ID"> <br>
+  <button>Submit</button>
+</form> -->
+  <!--
+1) show a list of cryptos with ID
+2) each crypto row has a venues dropdown with name and ID
+3) each crypto row has a form to enter in the venues
+4) each crypto row has a form to enter in Cryptos_Venues relationship by IDs -->
+
+</body>
+
+</html>
