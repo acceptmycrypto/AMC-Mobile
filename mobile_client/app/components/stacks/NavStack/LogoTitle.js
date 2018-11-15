@@ -1,13 +1,13 @@
-// import * as React from "react";
-// import { Image } from "react-native";
+import * as React from "react";
+import { Image } from "react-native";
 
-// export default class LogoTitle extends React.Component {
-// 	render() {
-// 		return (
-// 			<Image
-// 				source={require("./assets/images/homemade-logo.png")}
-// 				style={{ height: 40, width: 40, marginBottom: 10 }}
-// 			/>
-// 		);
-// 	}
-// }
+export default class LogoTitle extends React.Component {
+	render() {
+		return (
+			<Image
+				source={require("../../../assets/images/logo.png")}
+				style={{ height: 30, width: 70, resizeMode: 'contain', justifyContent: 'center', marginBottom: 10 }}
+			/>
+		);
+	}
+}

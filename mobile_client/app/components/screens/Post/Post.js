@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   StyleSheet,
   Text,
@@ -10,101 +10,124 @@ import {
   ActivityIndicator,
   FlatList,
   ScrollView,
-  AsyncStorage
-} from "react-native";
-import { Button } from "react-native-elements";
-import { _verifier } from "../../../../src/AuthentificationService";
-import Icon from "react-native-vector-icons/FontAwesome";
-import { _loadPosts } from "./PostService";
+  AsyncStorage,
+
+} from 'react-native';
+import { Button } from 'react-native-elements';
+// import { _verifier } from "../../../../src/AuthentificationService";
+import Icon from 'react-native-vector-icons/FontAwesome';
+// import { _loadPosts } from "./PostService";
+import {
+  _loadDeals,
+  _loadDealItem
+} from '../../../../src/services/DealServices';
 
 export default class Post extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      text: "",
+      text: '',
       isLoading: true,
       data: {},
-      search: "",
-      post: ""
+      search: '',
+      post: ''
     };
   }
 
-  searchPost = () => {
-    _loadPosts()
-      .then(
-        resJSON => {
-          let searchData = resJSON.filter(postData => {
-            return postData.information.includes(this.state.search);
-          });
-          this.setState({ data: searchData });
-        },
-        function() {
-          this.setState({ search: "" });
-        }
-      )
-      .catch(err => console.log(err));
-  };
-
-
-  viewPost = (post_id) => {
-    this.props.navigation.navigate('PostInfo', { post_id });
-  }
-
-  buyPost = () => {
-    Alert.alert("buy me");
-  };
-
-  checkToken = async () => {
+  componentDidMount = async () => {
     try {
-      const value = await AsyncStorage.getItem("token");
+      const value = await AsyncStorage.getItem('token');
       if (value !== null) {
         // let token = JSON.stringify(value);
-        console.log("TOKEN!!" + value);
-        return _verifier(value).then(res => {
-          let tokenStr = JSON.stringify(res.verifiedToken);
-          let userData = JSON.parse(tokenStr);
-          console.log("STRING RETURN!!" + tokenStr);
-          console.log("PARSED RETURN!!" + userData);
-          if (userData.name === "TokenExpiredError") {
-            Alert.alert("Session has expired");
-          } else {
-            this.setState({
-              isLoggedIn: userData.isLoggedIn,
-              id: userData._id,
-              username: userData.username,
-              email: userData.email,
-              firstname: userData.firstname,
-              lastname: userData.lastname,
-              create_date: userData.create_date
-            });
-          }
+        console.log('TOKEN!!' + value);
+        return _loadDeals(value).then(res => {
+          console.log('DEALS!!' + res.deals);
+          this.setState({
+            dealsData: res.deals
+          })
+          console.log(this.state)
         });
       }
     } catch (error) {
-      console.log("NO TOKEN!!!" + error);
+      console.log('NO TOKEN!!!' + error);
     }
   };
 
-  componentWillMount() {
-    this.checkToken();
-  }
+  // searchPost = () => {
+  //   _loadDeals()
+  //     .then(
+  //       resJSON => {
+  //         let searchData = resJSON.filter(postData => {
+  //           return postData.information.includes(this.state.search);
+  //         });
+  //         this.setState({ data: searchData });
+  //       },
+  //       function() {
+  //         this.setState({ search: "" });
+  //       }
+  //     )
+  //     .catch(err => console.log(err));
+  // };
 
-  componentDidMount() {
-    return (_loadPosts()
-      .then(resJSON => {
-        this.setState(
-          {
-            isLoading: false,
-            data: resJSON
-          },
-          function() {}
-        );
-      })
-      .catch(err => {
-        console.error(err);
-      })
-      );
-  }
+  viewPost = post_id => {
+    this.props.navigation.navigate('PostInfo', { post_id });
+  };
+
+  buyPost = () => {
+    Alert.alert('buy me');
+  };
+
+  // checkToken = async () => {
+  //   try {
+  //     const value = await AsyncStorage.getItem("token");
+  //     if (value !== null) {
+  //       // let token = JSON.stringify(value);
+  //       console.log("TOKEN!!" + value);
+  //       return _verifier(value).then(res => {
+  //         let tokenStr = JSON.stringify(res.verifiedToken);
+  //         let userData = JSON.parse(tokenStr);
+  //         console.log("STRING RETURN!!" + tokenStr);
+  //         console.log("PARSED RETURN!!" + userData);
+  //         if (userData.name === "TokenExpiredError") {
+  //           Alert.alert("Session has expired");
+  //         } else {
+  //           this.setState({
+  //             isLoggedIn: userData.isLoggedIn,
+  //             id: userData._id,
+  //             username: userData.username,
+  //             email: userData.email,
+  //             firstname: userData.firstname,
+  //             lastname: userData.lastname,
+  //             create_date: userData.create_date
+  //           });
+  //         }
+  //       });
+  //     }
+  //   } catch (error) {
+  //     console.log("NO TOKEN!!!" + error);
+  //   }
+  // };
+
+  // componentWillMount() {
+  //   this.checkToken();
+  // }
+
+  // componentDidMount() {
+  //   return (_loadDeals()
+  //     .then(resJSON => {
+  //       this.setState(
+  //         {
+  //           isLoading: false,
+  //           data: resJSON
+  //         },
+  //         function() {}
+  //       );
+  //     })
+  //     .catch(err => {
+  //       console.error(err);
+  //     })
+  //     );
+  // }
 
   render() {
     if (this.state.isLoading) {
@@ -120,20 +143,22 @@ export default class Post extends React.Component {
         <View style={styles.searchBarStyle}>
           <TextInput
             style={styles.searchStyle}
-            placeholder="enter search"
+            placeholder="Search for Deals!"
+            placeholderTextColor="#58697e"
             onChangeText={search => this.setState({ search })}
+            onChange={this.searchPost}
             value={this.state.search}
           />
-          <Button
+          {/* <Button
             icon={{
               name: "search",
               size: 20
             }}
             buttonStyle={styles.searchButtonStyle}
             onPress={this.searchPost}
-          />
+          /> */}
         </View>
-        <ScrollView>
+        {/* <ScrollView>
           {this.state.data.map(postInfo => {
             return (
 
@@ -161,11 +186,11 @@ export default class Post extends React.Component {
               </TouchableOpacity>
             );
           })}
-        </ScrollView>
-        <TouchableOpacity
+        </ScrollView> */}
+        {/* <TouchableOpacity
           style={{
           borderWidth:1,
-          borderColor: '#f4511e',
+          borderColor: '#2e4158',
           alignItems:'center',
           justifyContent:'center',
           width:70,
@@ -174,13 +199,13 @@ export default class Post extends React.Component {
           bottom: 0,
           marginLeft: 10,
           marginBottom: 10,
-          backgroundColor:'#f4511e',
+          backgroundColor:'#2e4158',
           borderRadius:100,
           }}
           onPress={() => this.props.navigation.navigate("AddPost")}
          >
           <Icon name="plus"  size={30} color="#fff" />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
     );
   }
@@ -189,48 +214,57 @@ export default class Post extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f4511e",
-    alignSelf: "stretch",
-    flexDirection: "column"
+    backgroundColor: '#2e4158',
+    alignSelf: 'stretch',
+    flexDirection: 'column'
   },
   textStyle: {
     fontSize: 20,
-    fontWeight: "bold"
+    fontWeight: 'bold'
   },
   postStyle: {
-    backgroundColor: "white",
+    backgroundColor: 'white',
     borderWidth: 1,
-    borderColor: "grey",
+    borderColor: 'grey',
     padding: 10,
-    flexDirection: "row"
+    flexDirection: 'row'
   },
   searchStyle: {
-    backgroundColor: "#fff",
-    padding: 8,
-    marginBottom: 5,
-    marginLeft: 5,
-    width: 300,
-    height: 45
+    // backgroundColor: "#2e4158",
+    // padding: 8,
+    // marginBottom: 5,
+    // marginLeft: 5,
+    // width: '100%',
+    // height: 45,
+
+    // height: 35,
+    width: '95%',
+    borderBottomWidth: 1,
+    borderColor: '#445366',
+    padding: 5,
+    margin: 8,
+    fontSize: 15,
+    color: '#fff'
   },
   searchBarStyle: {
-    flexDirection: "row",
+    flexDirection: 'row',
     marginTop: 5
   },
   searchButtonStyle: {
-    backgroundColor: "orange",
+    backgroundColor: 'orange',
     width: 50,
     height: 45,
-    alignContent: "center",
+    alignContent: 'center',
     borderRadius: 5
   },
   buyButtonStyle: {
-    color: "#fff",
+    color: '#fff',
     fontSize: 20,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     borderRadius: 10,
-    backgroundColor: "#f4511e",
+    backgroundColor: '#2e4158',
     padding: 10,
     flex: 1,
-    textAlign: "center"
+    textAlign: 'center'
   }
 });

@@ -1,35 +1,41 @@
+let url = 'https://amc-web.herokuapp.com' || 'http://localhost:3001';
+
 export async function _loadDeals(token) {
   const settings = {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "Accept": "application/json",
-      "Content-Type": "application/json",
+      Accept: 'application/json',
+      'Content-Type': 'application/json'
     },
-    body: JSON.stringify({token})
+    body: JSON.stringify({ token })
   };
 
-  const dealsList = await fetch("http://localhost:3001/api/deals", settings);
+  const dealsList = await fetch(url + '/api/deals', settings);
   const deals = await dealsList.json();
 
-  return {deals}
+  return { deals };
 }
 
-export async function _loadDealItem (deal_name) {
-  const dealItemArr = await fetch(`http://localhost:3001/api/deals/${deal_name}`);
+export async function _loadDealItem(deal_name) {
+  const dealItemArr = await fetch(url + `/api/deals/${deal_name}`);
   const dealItem = await dealItemArr.json();
 
-  return dealItem
+  return dealItem;
 }
 
-export async function _fetchTransactionInfo (crypto_name, crypto_symbol, deal_id, amount, token) {
-
-	return fetch('http://localhost:3001/checkout', {
-	    method: 'POST',
-	    headers: {
-	      'Accept': 'application/json',
-	      'Content-Type': 'application/json'
-	    },
-	    body: JSON.stringify({crypto_name, crypto_symbol, deal_id, amount, token})
-    }).then(res => res.json())
-    
+export async function _fetchTransactionInfo(
+  crypto_name,
+  crypto_symbol,
+  deal_id,
+  amount,
+  token
+) {
+  return fetch(url + '/checkout', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ crypto_name, crypto_symbol, deal_id, amount, token })
+  }).then(res => res.json());
 }

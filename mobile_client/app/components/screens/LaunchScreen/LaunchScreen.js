@@ -1,30 +1,23 @@
 import * as React from 'react';
 import {
   View,
-  StyleSheet,
   AsyncStorage,
   Text,
   TextInput,
-  Item,
-  Label,
-  Picker,
   Image,
   TouchableOpacity,
-  Alert,
-  ImageBackground,
   LinkingIOS,
-  Font,
-  ScrollView
+  Alert
 } from 'react-native';
-import fontAwesome from '@expo/vector-icons/FontAwesome';
-// import { _signUp, _login } from '../../../../src/AuthentificationService';
-// import Login from '../LaunchScreen/components/Login';
-// import Register from '../LaunchScreen/components/Register';
-import { Dropdown } from 'react-native-material-dropdown';
 import {
   _signUp,
+  _login,
+  _verifier,
   _loadCryptocurrencies
 } from '../../../../src/services/AuthService';
+import CustomMultiPicker from 'react-native-multiple-select-list';
+// import Login from '../LaunchScreen/components/Login';
+// import Register from '../LaunchScreen/components/Register';
 
 // EXTERNAL STYLESHEET
 const styles = require('../../../assets/stylesheet/style');
@@ -34,33 +27,18 @@ export default class LaunchScreen extends React.Component {
     super(props);
     this.state = {
       firsLaunch: null,
-      fontLoaded: false,
       id: 0,
       username: '',
       email: '',
       password: '',
       firstname: '',
       lastname: '',
-      isLoggedIn: null,
-      cryptoOptions: [],
-      cryptoProfile: [],
-      availableCryptos: [],
-      isSelectingCryptos: false,
-      selectedOptions: null
+      cryptoOptions: {},
+      cryptoProfile: []
     };
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  // // FONT LOADER
-  // async componentDidMount() {
-  //   await Font.loadAsync({
-  //     'fontAwesome': require('@expo/vector-icons/fonts/FontAwesome.ttf'),
-  //   });
-  //   this.setState({ fontLoaded: true });
-  // }
-
-  // FIRST LAUNCH CHECKER
+  // FIRST LAUNCH AND TOKEN CHECKER
   componentWillMount() {
     AsyncStorage.getItem('beenLaunched').then(value => {
       if (value == null) {
@@ -68,22 +46,66 @@ export default class LaunchScreen extends React.Component {
         this.setState({ firsLaunch: true });
       } else {
         this.setState({ firsLaunch: false });
+        this.checkToken();
       }
     });
   }
 
+  // TOKEN VERIFIER
+  checkToken = async () => {
+    try {
+      const value = await AsyncStorage.getItem('token');
+      if (value !== null) {
+        // let token = JSON.stringify(value);
+        console.log('TOKEN!!' + value);
+        return _verifier(value).then(res => {
+          let userData = res[0];
+          let errorData = res.message;
+          console.log('USER DATA!!' + userData.username);
+          console.log('ERROR DATA!!' + errorData);
+          if (errorData === 'Wrong Token') {
+            Alert.alert('Session has expired');
+          } else if (userData !== 'undefined') {
+            this.setState({
+              _id: userData.id,
+              user_name: userData.username,
+              first_name: userData.first_name,
+              last_name: userData.last_name,
+              email: userData.email,
+              bio: userData.bio,
+              photo: userData.photo,
+              user_location: userData.user_location,
+              birthday: userData.birthday
+            });
+            this.props.navigation.navigate('Search', {
+              _id: this.state._id,
+              user_name: this.state.user_name,
+              first_name: this.state.first_name,
+              last_name: this.state.last_name,
+              email: this.state.email,
+              bio: this.state.bio,
+              photo: this.state.photo,
+              user_location: this.state.user_location,
+              birthday: this.state.birthday
+            });
+          }
+        });
+      }
+    } catch (error) {
+      console.log('NO TOKEN!!!' + error);
+    }
+  };
+
   // LOADS AVAILABLE CRYPTOCURRENCIES
   componentDidMount() {
     return _loadCryptocurrencies().then(cryptos => {
-      let cryptoOptions = [];
+      let cryptoOptions = {};
 
       cryptos.map(crypto => {
-        let optionObj = {};
-        optionObj.value = crypto.crypto_metadata_name;
-        optionObj.label =
+        let value = crypto.crypto_metadata_name;
+        let label =
           crypto.crypto_metadata_name + ' ' + '(' + crypto.crypto_symbol + ')';
-
-        cryptoOptions.push(optionObj);
+        cryptoOptions[value] = label;
       });
       console.log(cryptoOptions);
       this.setState({ cryptoOptions });
@@ -95,7 +117,7 @@ export default class LaunchScreen extends React.Component {
   //   // event.preventDefault();
   //   let username = this.state.username;
   //   let password = this.state.password;
-  //   console.log('Line 46');
+  //   console.log('Line 40');
 
   //   return _login(username, password).then(res => {
   //     console.log('LOGIN TOKEN!!' + res.token);
@@ -207,150 +229,213 @@ export default class LaunchScreen extends React.Component {
   //   });
   // };
 
-  handleSubmit() {
-    // event.preventDefault();
-
-    let username = e.target.children[0].children[1].value;
-    let email = e.target.children[1].children[1].value;
-    let password = e.target.children[2].children[1].value;
+  handleSubmit = () => {
+    console.log('SIGN UP');
+    let username = this.state.username;
+    let email = this.state.email;
+    let password = this.state.password;
     let cryptoProfile = this.state.cryptoProfile;
 
     //we add validation on the front end so that user has to enter in the required field before clicking submit
     //TODO
     if (!username || !email || !password) {
-      alert('Please enter in the required field!');
+      Alert.alert('Please enter in the required field');
     } else {
       return _signUp(username, email, password, cryptoProfile).then(res => {
         console.log('message sent from server if success: ', res);
-        //TODO
-        //prompt users to check their email
-      });
-    }
-  }
-
-  handleLogin() {
-    // event.preventDefault();
-    let email = this.state.email;
-    let password = this.state.password;
-
-    if (!email || !password) {
-      alert('please enter in the required fields');
-    } else {
-      return _login(email, password).then(res => {
-        if (res.token) {
-          localStorage.setItem('token', res.token);
-          console.log(res.token);
-          this.props.navigation.navigate(
-            'Profile'
-            // {
-            //   isLoggedIn: true,
-            //   _id: this.state.id,
-            //   username: this.state.username,
-            //   email: this.state.email,
-            //   firstname: this.state.firstname,
-            //   lastname: this.state.lastname,
-            //   create_date: this.state.create_date
-            // }
-          );
-          // alert("You've successfully logged in");
-          //redirect user to the feed/deals
+        console.log('LINE 246 ' + res);
+        if (res.error === 'User already exists') {
+          Alert.alert('User already exists');
+        } else if (res.error === 'you need a password') {
+          Alert.alert('You need a password');
+        } else if (res.error === 'password length must be greater than 5') {
+          Alert.alert('Your password must be greater than 5 characters');
+        } else if (res.error) {
+          // For unhandled errors
+          console.log(res.error);
         } else {
-          console.log('Login error: ', res);
-          alert(res.err);
+          //TODO
+          //prompt users to check their email
+          this.props.navigation.navigate('Profile', {
+            _id: this.state.id,
+            username: this.state.username,
+            email: this.state.email,
+            firstname: this.state.firstname,
+            lastname: this.state.lastname,
+            create_date: this.state.create_date
+          });
         }
       });
     }
-  }
-
-  handleDropdownChange = selectedOptions => {
-    let SelectedCryptos = [];
-    // selectedOptions.map(crypto => {
-    //   SelectedCryptos.push(crypto.value);
-    // });
-    SelectedCryptos.push(selectedOptions);
-    console.log(this.state.cryptoProfile);
-
-    // this.setState({
-    //   cryptoProfile: SelectedCryptos //this is what we get [Bitcoin, Litecoin, ...] as user select the option
-    // });
-
-    this.setState({
-      cryptoProfile: [...this.state.cryptoProfile, ...SelectedCryptos],
-      isSelectingCryptos: true //this is what we get [Bitcoin, Litecoin, ...] as user select the option
-    });
   };
 
-  handleChange(e) {
-    let target = e.target;
-    let value = target.type === 'checkbox' ? target.checked : target.value;
-    let name = target.name;
+  handleLogin = () => {
+    let email = this.state.email;
+    let password = this.state.password;
+    console.log(email, password);
 
-    this.setState({
-      [name]: value
-    });
-    console.log(name);
-  }
-
-  cryptoFilter(cryptoOptions, cryptoProfile) {
-    for (i in cryptoProfile) {
-      console.log(cryptoProfile);
-      if (cryptoOptions === cryptoProfile) {
-        console.log(true);
-      } else {
-        console.log(false);
-      }
+    if (!email && !password) {
+      Alert.alert('Please enter your credentials');
+    } else if (!email) {
+      Alert.alert('Please enter your email');
+    } else if (!password) {
+      Alert.alert('Please enter your password');
+    } else {
+      return _login(email, password).then(res => {
+        if (res.token) {
+          AsyncStorage.setItem('token', res.token);
+          console.log(res.token);
+          this.props.navigation.navigate('Search', {
+            _id: this.state.id,
+            username: this.state.username,
+            email: this.state.email,
+            firstname: this.state.firstname,
+            lastname: this.state.lastname,
+            create_date: this.state.create_date
+          });
+          Alert.alert("You've successfully logged in");
+          // redirect user to the feed/deals
+        } else {
+          console.log('Login error: ', res);
+          if (res.error === 'user not found') {
+            Alert.alert('That user does not exist, please create an account');
+            this.setState({ firsLaunch: true });
+          } else if (res.error === 'incorrect password ') {
+            Alert.alert('Incorrect password');
+          }
+        }
+      });
     }
-  }
+  };
 
   render() {
-    const cryptos = this.state.availableCryptos;
-    const isSelectingCryptos = this.state.isSelectingCryptos;
-    const { selectedOptions } = this.state;
-
     if (this.state.firsLaunch === null) {
       // DISPLAY BEFORE REGISTRATION IS SHOWN
       return null;
     } else if (this.state.firsLaunch == true) {
       // REGISTRATION PAGE
       return (
-        // <View style={styles.container}>
-        //   <ImageBackground style={styles.backgroundImage}>
         <View style={styles.container}>
-          <View style={styles.flexRow}>
+          {/* <View style={styles.flexRow}> */}
+          {/* <Text
+              style={{
+                alignSelf: 'flex-start',
+                color: '#fff',
+                marginTop: 15,
+                marginLeft: 40
+              }}
+            >
+              FIRST NAME
+            </Text>
             <TextInput
               style={styles.nameInput}
               placeholder="First Name"
               placeholderTextColor="#58697e"
               onChangeText={firstname => this.setState({ firstname })}
             />
+            <Text
+              style={{
+                alignSelf: 'flex-start',
+                color: '#fff',
+                marginTop: 15,
+                marginLeft: 40
+              }}
+            >
+              LAST NAME
+            </Text>
             <TextInput
               style={styles.nameInput}
               placeholder="Last Name"
               placeholderTextColor="#58697e"
               onChangeText={lastname => this.setState({ lastname })}
-            />
-          </View>
+            /> */}
+          {/* </View> */}
+          <Text
+            style={{
+              alignSelf: 'flex-start',
+              color: '#fff',
+              marginTop: 45,
+              marginLeft: 40
+            }}
+          >
+            USER NAME
+          </Text>
           <TextInput
             style={styles.textInput}
-            placeholder="Username"
+            placeholder="Enter your desired User Name"
             placeholderTextColor="#58697e"
             onChangeText={username => this.setState({ username })}
           />
+          <Text
+            style={{
+              alignSelf: 'flex-start',
+              color: '#fff',
+              marginTop: 15,
+              marginLeft: 40
+            }}
+          >
+            E-MAIL ADDRESS
+          </Text>
           <TextInput
             style={styles.textInput}
-            placeholder="Password"
+            placeholder="Enter your email"
+            placeholderTextColor="#58697e"
+            autoCapitalize="none"
+            secureTextEntry={false}
+            onChangeText={email => this.setState({ email })}
+          />
+          <Text
+            style={{
+              alignSelf: 'flex-start',
+              color: '#fff',
+              marginTop: 15,
+              marginLeft: 40
+            }}
+          >
+            PASSWORD
+          </Text>
+          <TextInput
+            style={styles.textInput}
+            placeholder="Enter your password"
             placeholderTextColor="#58697e"
             secureTextEntry={true}
             onChangeText={password => this.setState({ password })}
           />
-          <View style={styles.dropdown}>
-            <Dropdown
-              label="Select Cryptos to add to your Profile"
-              data={this.state.cryptoOptions}
-              onChangeText={this.handleDropdownChange}
+          <Text
+            style={{
+              alignSelf: 'flex-start',
+              color: '#fff',
+              marginTop: 15,
+              marginLeft: 40
+            }}
+          >
+            YOUR CRYPTOCURRENCY PORTFOLIO
+          </Text>
+          <View style={styles.selector}>
+            <CustomMultiPicker
+              options={this.state.cryptoOptions}
+              search={true} // should show search bar?
+              multiple={true} //
+              placeholder={'Search'}
+              placeholderTextColor={'#58697e'}
+              returnValue={'value'} // label or value
+              callback={res => {
+                this.setState({
+                  cryptoProfile: res
+                });
+              }} // callback, array of selected items
+              rowBackgroundColor={'#66dac7'}
+              rowHeight={41}
+              rowRadius={10}
+              iconColor={'black'}
+              iconSize={30}
+              selectedIconName={'md-checkmark-circle-outline'}
+              unselectedIconName={'ios-radio-button-off-outline'}
+              scrollViewHeight={135}
+              selected={[]} // list of options which are selected by default
             />
             <Text
-              style={styles.dropdownText}
+              style={styles.selectorText}
               onPress={() => LinkingIOS.openURL('http://google.com')}
             >
               Why do I need to select cryptos?
@@ -365,42 +450,7 @@ export default class LaunchScreen extends React.Component {
           </TouchableOpacity>
           <Text style={styles.termsTop}>By creating an account you agree</Text>
           <Text style={styles.termsBottom}>to the Terms of Service</Text>
-          {isSelectingCryptos ? (
-            <View style={styles.registerGap}>
-              {/* <View>{this.state.cryptoOptions}</View> */}
-              <Text style={{ margin: 10, fontSize: 25 }}>
-                Your Cryptocurrency Portfolio
-              </Text>
-              <ScrollView>
-                {this.state.cryptoProfile.map(cryptos => {
-                  return (
-                    // <TouchableOpacity style={styles.postStyle} key={cryptos.post_id} onPress={() => this.viewPost(cryptos.post_id)}>
-                    //   <Image
-                    //     style={{ width: 100, height: 100 }}
-                    //     source={{ url: "https://via.placeholder.com/50x50" }}
-                    //   />
-                    <View style={{ margin: 5, flex: 1 }}>
-                      {/* <Text >{cryptos.value}</Text> */}
-                      {/* <Text>{cryptos.information}</Text> */}
-                      {/* <TouchableOpacity
-                    style={{
-                      alignContent: "flex-end",
-                      marginLeft: 120,
-                      marginTop: 10
-                    }}
-                    onPress={this.buyPost}
-                  > */}
-                      <Text>{cryptos}</Text>
-                      {/* </TouchableOpacity> */}
-                    </View>
-                    // </TouchableOpacity>
-                  );
-                })}
-              </ScrollView>
-            </View>
-          ) : (
-            <View style={styles.registerGap} />
-          )}
+          <View style={styles.registerGap} />
           <Text
             style={styles.font25}
             onPress={() => this.setState({ firsLaunch: false })}
@@ -408,27 +458,17 @@ export default class LaunchScreen extends React.Component {
             Already have an account?
           </Text>
         </View>
-        //   </ImageBackground>
-        // </View>
       );
     } else {
       // LOGIN PAGE
       return (
-        // <View style={{ flex: 1, alignSelf: 'stretch' }}>
-        //   <ImageBackground
-        //     style={styles.backgroundImage}
-        //   >
         <View style={styles.container}>
           <View
             style={{
               flex: 0.3,
-              marginTop: -50,
-              // flexGrow: 1,
+              marginTop: -40,
               backgroundColor: '#66dac7',
-              // alignItems: 'center',
               justifyContent: 'center'
-              // flexDirection: 'column',
-              // alignSelf: 'stretch',
             }}
           >
             <Image
@@ -436,13 +476,12 @@ export default class LaunchScreen extends React.Component {
               style={styles.logo}
             />
           </View>
-          {/* <Text style={styles.logoText}>AcceptMyCrypto</Text> */}
           <Text
             style={{
               alignSelf: 'flex-start',
               color: '#fff',
               marginTop: 15,
-              marginLeft: 46
+              marginLeft: 40
             }}
           >
             E-MAIL ADDRESS
@@ -452,6 +491,7 @@ export default class LaunchScreen extends React.Component {
             placeholder="Enter your email"
             placeholderTextColor="#58697e"
             autoCapitalize="none"
+            secureTextEntry={false}
             onChangeText={email => this.setState({ email })}
           />
           <Text
@@ -459,7 +499,7 @@ export default class LaunchScreen extends React.Component {
               alignSelf: 'flex-start',
               color: '#fff',
               marginTop: 15,
-              marginLeft: 46
+              marginLeft: 40
             }}
           >
             PASSWORD
@@ -472,7 +512,6 @@ export default class LaunchScreen extends React.Component {
             onChangeText={password => this.setState({ password })}
           />
           <TouchableOpacity
-            // onPress={this.checkLogin}
             onPress={this.handleLogin}
             style={styles.signinButton}
           >
@@ -492,8 +531,6 @@ export default class LaunchScreen extends React.Component {
             Don't have an account?
           </Text>
         </View>
-        //   </ImageBackground>
-        // </View>
       );
     }
   }
