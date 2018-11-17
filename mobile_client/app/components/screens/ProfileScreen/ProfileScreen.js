@@ -98,9 +98,10 @@ export default class ProfileScreen extends React.Component {
   handleLogout = async () => {
     try {
       await AsyncStorage.removeItem('token');
-      this.setState({
-        isLoggedIn: false
-      });
+      // this.setState({
+      //   isLoggedIn: false
+      // });
+      this.props.navigation.navigate('Launch');
     } catch (error) {
       // Error saving data
     }
@@ -149,7 +150,7 @@ export default class ProfileScreen extends React.Component {
           </Text>
         </View> */}
         <Button
-        title='remove'
+        title='Logout'
           onPress={this.handleLogout}
         />
       </View>

@@ -10,8 +10,7 @@ import {
   ActivityIndicator,
   FlatList,
   ScrollView,
-  AsyncStorage,
-
+  AsyncStorage
 } from 'react-native';
 import { Button } from 'react-native-elements';
 // import { _verifier } from "../../../../src/AuthentificationService";
@@ -21,6 +20,35 @@ import {
   _loadDeals,
   _loadDealItem
 } from '../../../../src/services/DealServices';
+import { Component } from 'react';
+import { SearchBar } from 'react-native-elements';
+
+// class FlatListItem extends Component {
+//   render() {
+//     return(
+//       <View>
+//         <TouchableOpacity style={styles.postStyle} key={this.props.item.id}>
+//             <Image
+//               style={{ width: 150, height: 150 }}
+//               source={{ url: this.props.item.featured_deal_image }}
+//             />
+//             <View style={{ marginLeft: 20, flex: 1 }}>
+//               <Text style={styles.textStyle}>{this.props.item.deal_name}</Text>
+//               <Text>{this.props.item.information}</Text>
+
+//                 <Text style={{
+//                   alignContent: "flex-end",
+//                   marginLeft: 120,
+//                   marginTop: 10
+//                 }}>
+//                   {"$" + this.props.item.pay_in_crypto}
+//                 </Text>
+//             </View>
+//         </TouchableOpacity>
+//       </View>
+//     );
+//   }
+// }
 
 export default class Post extends React.Component {
   constructor(props) {
@@ -30,7 +58,8 @@ export default class Post extends React.Component {
       isLoading: true,
       data: {},
       search: '',
-      post: ''
+      post: '',
+      dealsData: []
     };
   }
 
@@ -44,30 +73,43 @@ export default class Post extends React.Component {
           console.log('DEALS!!' + res.deals);
           this.setState({
             dealsData: res.deals
-          })
-          console.log(this.state)
+          });
+          console.log(this.state);
         });
       }
     } catch (error) {
-      console.log('NO TOKEN!!!' + error);
+      console.log('TOKEN ERROR' + error);
     }
   };
 
-  // searchPost = () => {
-  //   _loadDeals()
-  //     .then(
-  //       resJSON => {
-  //         let searchData = resJSON.filter(postData => {
-  //           return postData.information.includes(this.state.search);
-  //         });
-  //         this.setState({ data: searchData });
-  //       },
-  //       function() {
-  //         this.setState({ search: "" });
-  //       }
-  //     )
-  //     .catch(err => console.log(err));
-  // };
+  convertToPercentage = (priceInDollar, priceInCrypto) => {
+    return parseInt(((priceInDollar - priceInCrypto) / priceInDollar) * 100);
+  };
+
+  searchPost = async () => {
+    try {
+      const value = await AsyncStorage.getItem('token');
+      if (value !== null) {
+        _loadDeals(value)
+          .then(
+            resJSON => {
+              console.log(resJSON);
+              let searchData = resJSON.deals.filter(postData => {
+                console.log('POST ' + postData);
+                return postData.deal_name.includes(this.state.search);
+              });
+              this.setState({ dealsData: searchData });
+            },
+            function() {
+              this.setState({ search: '' });
+            }
+          )
+          .catch(err => console.log(err));
+      }
+    } catch (error) {
+      console.log('TOKEN ERROR' + error);
+    }
+  };
 
   viewPost = post_id => {
     this.props.navigation.navigate('PostInfo', { post_id });
@@ -130,20 +172,20 @@ export default class Post extends React.Component {
   // }
 
   render() {
-    if (this.state.isLoading) {
-      return (
-        <View style={styles.container}>
-          <ActivityIndicator />
-        </View>
-      );
-    }
+    // if (this.state.isLoading) {
+    //   return (
+    //     <View style={styles.container}>
+    //       <ActivityIndicator />
+    //     </View>
+    //   );
+    // }
 
     return (
       <View style={styles.container}>
         <View style={styles.searchBarStyle}>
           <TextInput
             style={styles.searchStyle}
-            placeholder="Search for Deals!"
+            placeholder="Search by Deal Name"
             placeholderTextColor="#58697e"
             onChangeText={search => this.setState({ search })}
             onChange={this.searchPost}
@@ -159,17 +201,16 @@ export default class Post extends React.Component {
           /> */}
         </View>
         {/* <ScrollView>
-          {this.state.data.map(postInfo => {
-            return (
-
-              <TouchableOpacity style={styles.postStyle} key={postInfo.post_id} onPress={() => this.viewPost(postInfo.post_id)}>
+          {this.state.dealsData.map(dealsDataInfo => {
+            return (        
+              <TouchableOpacity style={styles.postStyle} key={dealsDataInfo.id} onPress={() => this.viewPost(dealsDataInfo.id)}>
                 <Image
-                  style={{ width: 100, height: 100 }}
-                  source={{ url: "https://via.placeholder.com/50x50" }}
+                  style={{ width: 150, height: 150 }}
+                  source={{ url: dealsDataInfo.featured_deal_image }}
                 />
                 <View style={{ marginLeft: 20, flex: 1 }}>
-                  <Text style={styles.textStyle}>{postInfo.title}</Text>
-                  <Text>{postInfo.information}</Text>
+                  <Text style={styles.textStyle}>{dealsDataInfo.title}</Text>
+                  <Text>{dealsDataInfo.information}</Text>
                   <TouchableOpacity
                     style={{
                       alignContent: "flex-end",
@@ -179,7 +220,7 @@ export default class Post extends React.Component {
                     onPress={this.buyPost}
                   >
                     <Text style={styles.buyButtonStyle}>
-                      {"$" + postInfo.price}
+                      {"$" + dealsDataInfo.pay_in_crypto}
                     </Text>
                   </TouchableOpacity>
                 </View>
@@ -187,7 +228,109 @@ export default class Post extends React.Component {
             );
           })}
         </ScrollView> */}
-        {/* <TouchableOpacity
+        <FlatList
+          data={this.state.dealsData}
+          renderItem={({ item, index }) => {
+            console.log(`Item = ${JSON.stringify(item)}, index = ${index}`);
+            return (
+              <View>
+                <TouchableOpacity
+                  style={styles.postStyle}
+                  key={item.id}
+                  onPress={() => this.viewPost(item.id)}
+                >
+                  <Image
+                    style={{ width: 150, height: 150 }}
+                    source={{ url: item.featured_deal_image }}
+                  />
+                  <View style={{ marginLeft: 20, flex: 1 }}>
+                    <Text style={styles.textStyle}>{item.deal_name}</Text>
+
+                    <View
+                      style={{
+                        flex: 1,
+                        flexDirection: 'column',
+                        justifyContent: 'flex-end'
+                      }}
+                    >
+                      <View style={{ flexDirection: 'row' }}>
+                        <Text
+                          style={{
+                            // alignContent: "flex-end",
+                            opacity: 0.54,
+                            marginLeft: 0,
+                            marginTop: 20
+                          }}
+                        >
+                          Dollar:
+                        </Text>
+
+                        <Text
+                          style={{
+                            // alignContent: "flex-end",
+                            marginLeft: 0,
+                            marginTop: 20,
+                            marginLeft: 10
+                          }}
+                        >
+                          {'$' + item.pay_in_dollar}
+                        </Text>
+                      </View>
+
+                      <View style={{ flexDirection: 'row' }}>
+                        <Text
+                          style={{
+                            // alignContent: "flex-end",
+                            opacity: 0.54,
+                            marginLeft: 0,
+                            marginTop: 20
+                          }}
+                        >
+                          Crypto:
+                        </Text>
+
+                        <Text
+                          style={{
+                            // alignContent: "flex-end",
+                            color: 'green',
+                            marginLeft: 0,
+                            marginTop: 20,
+                            marginLeft: 10
+                          }}
+                        >
+                          {'$' + item.pay_in_crypto}
+                        </Text>
+
+                        <Text
+                          style={{
+                            // alignContent: "flex-end",
+                            fontSize: 11,
+                            color: 'green',
+                            marginLeft: 0,
+                            marginTop: 20,
+                            marginLeft: 10,
+                            borderWidth: 2,
+                            borderColor: 'green',
+                            borderRadius: 5
+                          }}
+                        >
+                          {' ' +
+                            this.convertToPercentage(
+                              item.pay_in_dollar,
+                              item.pay_in_crypto
+                            ) +
+                            '% OFF '}
+                        </Text>
+                      </View>
+                    </View>
+                  </View>
+                </TouchableOpacity>
+              </View>
+            );
+          }}
+        />
+        {/*}
+        <TouchableOpacity
           style={{
           borderWidth:1,
           borderColor: '#2e4158',
@@ -219,8 +362,9 @@ const styles = StyleSheet.create({
     flexDirection: 'column'
   },
   textStyle: {
-    fontSize: 20,
-    fontWeight: 'bold'
+    marginTop: 10,
+    fontSize: 12,
+    fontWeight: '200'
   },
   postStyle: {
     backgroundColor: 'white',
@@ -268,3 +412,8 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   }
 });
+{
+  /*<FlatListItem item={item} index={index}>
+              
+              </FlatListItem>);*/
+}
