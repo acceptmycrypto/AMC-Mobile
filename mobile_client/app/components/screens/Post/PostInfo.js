@@ -234,53 +234,7 @@ export default class PostInfo extends React.Component {
                   </Text>
                 </View>
             </View>
-
-            {/* <View style={{ 
-              flex: 3,
-              flexDirection: 'row',
-              padding: 10,
-              }}>                
-                <View style={{ flexDirection: 'row', padding: 10 }}>
-                  <Text style={{
-                      textAlign: 'right', 
-                      fontSize: 20,
-                      opacity: 0.54,
-                    }}>
-                    If you pay in crypto, you Save:
-                  </Text>
-                  <Text
-                    style={{
-                      marginLeft: 10,
-                      textAlign: 'left', 
-                      fontSize: 20,
-                      color: '#8c0910'
-                    }}
-                  >      
-                    {"$"+this.getSavings(this.state.pay_in_dollar, this.state.pay_in_crypto)+"("+this.convertToPercentage(this.state.pay_in_dollar, this.state.pay_in_crypto) + "%)"}
-                  </Text>
-                </View>
-            </View> */}
           </View>
-          {/* <TouchableOpacity  
-            style={{
-              alignItems: 'center',
-              margin: 5,
-              borderRadius: 5,
-              backgroundColor: '#52c4b9',
-              width: '70%',
-              marginTop: 10,
-              marginBottom: 15,
-              marginLeft: 65
-            }}
-            key={this.state.id}
-            onPress={() => this.viewPost(this.state)}
-            >
-              <Text
-                style={styles.buttonText}
-              >
-              Buy It Now
-              </Text>
-          </TouchableOpacity> */}
           <View style={{ flex: 1, marginTop: 10, alignItems: 'center', justifyContent: 'center' }}>
           <TouchableOpacity
           style={{                      
@@ -343,13 +297,3 @@ const styles = StyleSheet.create({
     fontWeight: '500'
   }
 });
-
-        // {/* <ScrollView>
-        // {this.state.data.map(postInfo => {
-        //   return(
-        //     <View>
-        //       <Text>postInfo.title</Text>
-        //     </View>
-        //   );
-        // })}
-        // </ScrollView> */}
