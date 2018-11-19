@@ -10,7 +10,8 @@ import {
   ActivityIndicator,
   FlatList,
   ScrollView,
-  AsyncStorage
+  AsyncStorage,
+  Picker
 } from "react-native";
 import { Button } from "react-native-elements";
 import { _verifier } from "../../../../src/AuthentificationService";
@@ -146,8 +147,6 @@ export default class PostInfo extends React.Component {
           <View style={styles.description}>
             <View style={{ 
               flexDirection: 'row' ,
-              borderBottomColor: 'black',
-              borderBottomWidth: 1 
             }}>
               <Text
                 style={{
@@ -156,7 +155,7 @@ export default class PostInfo extends React.Component {
                   padding: 10,                  
                 }}
               >      
-                {this.state.description}
+                {this.state.deal_name}
               </Text>
             </View>
             <View style={{ 
@@ -185,7 +184,9 @@ export default class PostInfo extends React.Component {
                 </View>
             </View>
             <View style={{ 
-              flex: 3,
+              borderBottomColor: '#dbd8ce',
+              borderBottomWidth: 1,
+              flex: 3,              
               flexDirection: 'row',
               padding: 10,
               }}>                
@@ -200,7 +201,7 @@ export default class PostInfo extends React.Component {
                   </Text>
                   <Text
                     style={{
-                      marginLeft: 0,
+                      marginLeft: 10,
                       textAlign: 'left', 
                       fontSize: 15,
                     }}
@@ -235,26 +236,61 @@ export default class PostInfo extends React.Component {
                 </View>
             </View>
           </View>
-          <View style={{ flex: 1, marginTop: 10, alignItems: 'center', justifyContent: 'center' }}>
-          <TouchableOpacity
-          style={{                      
-            borderWidth: 1,
-            borderRadius: 5
-          }}
-          key={this.state.id}
-          onPress={() => this.checkOutPage(this.state)}>
-            <LinearGradient
-              colors={[  '#fff4cc','#efb404','#d1a31d']}
-              style={{width:300, padding: 15, alignItems: 'center', borderRadius: 5 }}>
-              <Text
-                style={{
-                  backgroundColor: 'transparent',
-                  fontSize: 15,
-                  color: 'black',
+          <View style={{ 
+            flex: 3,
+            flexDirection: 'row',
+            padding: 10,
+            }}>                
+              <View style={{ flexDirection: 'row', padding: 10 }}>
+                <Text style={{
+                    textAlign: 'left', 
+                    fontSize: 20,
+                    marginLeft: 0,
+                  }}>
+                  Item Description
+                </Text>
+              </View>
+          </View>
+          <View style={{ 
+            flex: 3,
+            flexDirection: 'row',
+            padding: 10,
+            }}>                
+            <View style={{ flexDirection: 'row', padding: 10, flex: 3 }}>
+              <Text style={{
+                  textAlign: 'left', 
+                  fontSize: 13,
+                  marginLeft: 0,
+                  flex: 1,
+                  flexWrap: 'wrap'
                 }}>
-                Checkout
+                {this.state.description}
               </Text>
-            </LinearGradient>
+            </View>
+          </View>
+          <View style={{ backgroundColor: '#edece8', flex: 1, marginTop: 10, alignItems: 'center', justifyContent: 'center' }}>
+            <TouchableOpacity
+              style={{                      
+                paddingTop:20,
+                paddingBottom:20,
+              }}
+              key={this.state.id}
+              onPress={() => this.checkOutPage(this.state)}
+            >
+              <LinearGradient
+                colors={[  '#fff4cc','#efb404','#d1a31d']}
+                style={{
+                  borderWidth: 1,
+                  borderRadius: 5, width:300, padding: 15, alignItems: 'center', borderRadius: 5 }}>
+                <Text
+                  style={{
+                    backgroundColor: 'transparent',
+                    fontSize: 15,
+                    color: 'black',
+                  }}>
+                  Checkout
+                </Text>
+              </LinearGradient>
             </TouchableOpacity>
           </View>
         </ScrollView>
@@ -273,7 +309,7 @@ const styles = StyleSheet.create({
   description: {
     flex: 3,
     backgroundColor: 'white',
-    borderWidth: 1,
+    borderWidth: 0,
     borderColor: 'grey',
   },
   // checkoutButton: {
