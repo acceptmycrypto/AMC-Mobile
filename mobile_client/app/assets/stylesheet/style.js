@@ -5,7 +5,7 @@ const { StyleSheet } = React;
 module.exports = StyleSheet.create({
   flexRow: {
     flexDirection: 'row',
-    marginTop: 65
+    marginTop: 25
   },
   font25: {
     fontSize: 25
@@ -28,9 +28,9 @@ module.exports = StyleSheet.create({
     // alignSelf: 'stretch',
   },
   logo: {
-    flex: .8,
+    flex: 0.8,
     resizeMode: 'contain',
-    marginTop: 40,
+    marginTop: 40
     // width: '100%',
     // height: '30%',
     // alignItems: 'center',
@@ -130,7 +130,7 @@ module.exports = StyleSheet.create({
     // },
     // shadowOpacity: 100,
     fontSize: 13,
-    fontWeight: '500',
+    fontWeight: '500'
     // fontWeight: 'bold',
     // background-color: #52c4b9;
     // color: #fff;
@@ -141,14 +141,15 @@ module.exports = StyleSheet.create({
     // font-size: .8em;
     // font-weight: 500;
   },
-  dropdown: {
-    width: '80%',
-    marginTop: -15
+  selector: {
+    width: '80%'
+    // marginTop: -15
   },
-  dropdownText: {
+  selectorText: {
     alignSelf: 'center',
-    marginBottom: 30,
-    color: 'blue',
+    marginTop: 10,
+    marginBottom: 20,
+    color: '#66dac7',
     textDecorationLine: 'underline'
   },
   termsTop: {
@@ -165,7 +166,7 @@ module.exports = StyleSheet.create({
     justifyContent: 'space-around'
   },
   registerGap: {
-    flex: 0.85,
+    flex: 0.6,
     justifyContent: 'space-around'
   }
 });
