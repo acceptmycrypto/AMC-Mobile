@@ -4,38 +4,52 @@ import {
   createBottomTabNavigator
 } from 'react-navigation';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import Post from '../../screens/Post/Post';
-import PostInfo from '../../screens/Post/PostInfo';
-import AddPost from '../../screens/Post/AddPost';
+import Venues from '../../screens/VenuesScreen/VenuesScreen'
+import Deals from '../../screens/DealsScreen/DealsScreen';
+import DealsInfo from '../../screens/DealsScreen/DealsInfo';
+import AddPost from '../../screens/DealsScreen/AddPost';
 import ProfileScreen from '../../screens/ProfileScreen/ProfileScreen';
 import LogoTitle from './LogoTitle';
 
 const header = {
   headerTitle: <LogoTitle />,
   headerStyle: {
-    backgroundColor: '#66dac7'
+    backgroundColor: '#66dac7',
+    // alignSelf: 'center'
   },
-  headerTintColor: '#fff',
-  headerTitleStyle: {
-    fontWeight: 'bold',
-    justifyContent: 'center'
-  }
+  // headerTintColor: '#fff',
+  // headerTitleStyle: {
+  //   alignSelf: 'center'
+  // }
 };
 
-const PostStack = createStackNavigator(
+const VenuesStack = createStackNavigator(
   {
-    Search: {
-      screen: Post
+    Venues: {
+      screen: Venues
+    }
+  },
+  {
+    navigationOptions: header,
+    headerLayoutPreset: 'center'
+  }
+);
+
+const DealsStack = createStackNavigator(
+  {
+    Deals: {
+      screen: Deals
     },
-    PostInfo: {
-      screen: PostInfo
+    DealsInfo: {
+      screen: DealsInfo
     },
     AddPost: {
       screen: AddPost
     }
   },
   {
-    navigationOptions: header
+    navigationOptions: header,
+    headerLayoutPreset: 'center'
   }
 );
 
@@ -46,13 +60,15 @@ const ProfileStack = createStackNavigator(
     }
   },
   {
-    navigationOptions: header
+    navigationOptions: header,
+    headerLayoutPreset: 'center'
   }
 );
 
 export default createBottomTabNavigator(
   {
-    Search: PostStack,
+    Venues: VenuesStack,
+    Deals: DealsStack,
     Profile: ProfileStack,
   },
   {
@@ -60,8 +76,10 @@ export default createBottomTabNavigator(
       tabBarIcon: ({ focused, horizontal, tintColor }) => {
         const { routeName } = navigation.state;
         let iconName;
-        if (routeName === 'Search') {
+        if (routeName === 'Venues') {
           iconName = `home${focused ? '' : '-outline'}`;
+        } else if (routeName === 'Deals') {
+          iconName = `${focused ? 'tag-multiple' : 'tag-outline'}`;
         } else if (routeName === 'Profile') {
           iconName = `account-box${focused ? '' : '-outline'}`;
         }

@@ -10,7 +10,7 @@ import {
   ScrollView
 } from 'react-native';
 import { Button } from 'react-native-elements';
-import { _addPosts } from './PostService'
+// import { _addPosts } from './PostService'
 import { _verifier } from "../../../../src/AuthentificationService";
 
 export default class AddPost extends React.Component {
