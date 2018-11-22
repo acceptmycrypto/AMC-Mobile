@@ -149,14 +149,7 @@ export default class ProfileScreen extends React.Component {
             Why do I need to select cryptos?
           </Text>
         </View> */}
-<<<<<<< HEAD
-        <Button
-        title='Logout'
-          onPress={this.handleLogout}
-        />
-=======
         <Button title="Logout" onPress={this.handleLogout} />
->>>>>>> e932b9521e02a92ff1e15a5cb0fee4e00ab93fd4
       </View>
     );
   }
