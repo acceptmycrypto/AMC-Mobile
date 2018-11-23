@@ -23,17 +23,17 @@ const header = {
   // }
 };
 
-const VenuesStack = createStackNavigator(
-  {
-    Venues: {
-      screen: Venues
-    }
-  },
-  {
-    navigationOptions: header,
-    headerLayoutPreset: 'center'
-  }
-);
+// const VenuesStack = createStackNavigator(
+//   {
+//     Venues: {
+//       screen: Venues
+//     }
+//   },
+//   {
+//     navigationOptions: header,
+//     headerLayoutPreset: 'center'
+//   }
+// );
 
 const DealsStack = createStackNavigator(
   {
@@ -67,7 +67,7 @@ const ProfileStack = createStackNavigator(
 
 export default createBottomTabNavigator(
   {
-    Venues: VenuesStack,
+    // Venues: VenuesStack,
     Deals: DealsStack,
     Profile: ProfileStack,
   },
@@ -76,9 +76,10 @@ export default createBottomTabNavigator(
       tabBarIcon: ({ focused, horizontal, tintColor }) => {
         const { routeName } = navigation.state;
         let iconName;
-        if (routeName === 'Venues') {
-          iconName = `home${focused ? '' : '-outline'}`;
-        } else if (routeName === 'Deals') {
+        // if (routeName === 'Venues') {
+        //   iconName = `home${focused ? '' : '-outline'}`;
+        // } 
+        if (routeName === 'Deals') {
           iconName = `${focused ? 'tag-multiple' : 'tag-outline'}`;
         } else if (routeName === 'Profile') {
           iconName = `account-box${focused ? '' : '-outline'}`;

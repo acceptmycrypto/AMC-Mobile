@@ -24,15 +24,15 @@ class CryptosRankings extends Component {
     };
   }
 
-  async componentWillMount() {
-    // let url = 'https://amc-web.herokuapp.com' || 'http://localhost:3001';
-    const cryptosList = await fetch('http://localhost:3001/api/cryptosranking');
-    console.log(cryptosList)
+  componentWillMount = async () => {
+    let url = 'https://amc-web.herokuapp.com' || 'http://localhost:3001';
+    const cryptosList = await fetch(url + '/cryptos');
+    console.log(cryptosList);
     const cryptosRanking = await JSON.stringify(cryptosList);
-    console.log(cryptosRanking)
+    console.log(cryptosRanking);
 
     this.setState({ cryptosRanking });
-    console.log(this.state)
+    console.log(this.state);
   }
 
   //   cryptoRankings = () => {
@@ -52,17 +52,17 @@ class CryptosRankings extends Component {
   render() {
     return (
       <View style={styles.container}>
-      <View style={styles.searchBarStyle}>
-        <TextInput
-          style={styles.searchStyle}
-          underlineColorAndroid="transparent"
-          placeholder="Search for Deals!"
-          placeholderTextColor="#58697e"
-          onChangeText={search => this.setState({ search })}
-          onChange={this.searchPost}
-          value={this.state.search}
-        />
-        {/* <Button
+        <View style={styles.searchBarStyle}>
+          <TextInput
+            style={styles.searchStyle}
+            underlineColorAndroid="transparent"
+            placeholder="Search for Deals!"
+            placeholderTextColor="#58697e"
+            onChangeText={search => this.setState({ search })}
+            onChange={this.searchPost}
+            value={this.state.search}
+          />
+          {/* <Button
           icon={{
             name: "search",
             size: 20
@@ -70,8 +70,8 @@ class CryptosRankings extends Component {
           buttonStyle={styles.searchButtonStyle}
           onPress={this.searchPost}
         /> */}
-      </View>
-      {/* <ScrollView>
+        </View>
+        {/* <ScrollView>
         {this.state.dealsData.map(dealsDataInfo => {
           return (        
             <TouchableOpacity style={styles.postStyle} key={dealsDataInfo.id} onPress={() => this.viewPost(dealsDataInfo.id)}>
@@ -99,16 +99,18 @@ class CryptosRankings extends Component {
           );
         })}
       </ScrollView> */}
-      <Text style={{ flex: 1, flexDirection: 'row' }}># Cryptocurrency Venues Price $</Text>
-      <FlatList
-        data={this.state.cryptosRanking}
-        keyExtractor={this._keyExtractor}
-        renderItem={({ crypto, i }) => {
-          // console.log(`Item = ${JSON.stringify(crypto)}, index = ${i}`);
-          console.log(crypto,i);
-          return (
-            <View style={{ flexDirection: 'row' }}>
-              {/* <TouchableOpacity
+        <Text style={{ flex: 1, flexDirection: 'row' }}>
+          # Cryptocurrency Venues Price $
+        </Text>
+        <FlatList
+          // data={this.state.cryptosRanking}
+          keyExtractor={this._keyExtractor}
+          renderItem={({ crypto, i }) => {
+            // console.log(`Item = ${JSON.stringify(crypto)}, index = ${i}`);
+            console.log(crypto, i);
+            return (
+              <View style={{ flexDirection: 'row' }}>
+                {/* <TouchableOpacity
                 style={styles.postStyle}
                 key={crypto + i}
                 // onPress={() => this.viewPost(item)}
@@ -119,9 +121,9 @@ class CryptosRankings extends Component {
                   source={{ uri: crypto.crypto_logo }}
                 /> */}
                 {/* <View style={{ marginLeft: 20, flex: 1 }}> */}
-                  {/* <Text style={styles.textStyle}>{crypto.crypto_symbol}</Text> */}
+                {/* <Text style={styles.textStyle}>{crypto.crypto_symbol}</Text> */}
 
-                  {/* <View
+                {/* <View
                     style={{
                       flex: 1,
                       flexDirection: 'column',
@@ -199,12 +201,12 @@ class CryptosRankings extends Component {
                     </View>
                   </View>
                 </View> */}
-              {/* </TouchableOpacity> */}
-            </View>
-          );
-        }}
-      />
-      {/*}
+                {/* </TouchableOpacity> */}
+              </View>
+            );
+          }}
+        />
+        {/*}
       <TouchableOpacity
         style={{
         borderWidth:1,
@@ -224,7 +226,7 @@ class CryptosRankings extends Component {
        >
         <Icon name="plus"  size={30} color="#fff" />
       </TouchableOpacity> */}
-    </View>
+      </View>
 
       // <SectionList
       //     renderItem={this.state.cryptosRanking.map((crypto, i) => ( <Text key={crypto + i}>{crypto}</Text>)}
