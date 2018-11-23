@@ -33,6 +33,7 @@ export default class LaunchScreen extends React.Component {
     super(props);
     // this._bootstrapAsync();
     this.state = {
+      isLoading: true,
       firsLaunch: null,
       rememberMe: false,
       // isLoggedIn: false,
