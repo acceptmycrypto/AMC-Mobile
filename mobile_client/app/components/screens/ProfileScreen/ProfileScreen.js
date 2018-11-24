@@ -33,6 +33,15 @@ export default class ProfileScreen extends React.Component {
       // cryptoProfile: []
       // isLoggedIn: false,
       // isPassingProps: false
+        crypto_view: "owned",
+        user_info: [],
+        user_crypto: [],
+        add_address: false,
+        qr: false,
+        users_cryptos_id: null,
+        current_crypto_name: null,
+        friends_array: [],
+        transactions: []
     };
   }
 
