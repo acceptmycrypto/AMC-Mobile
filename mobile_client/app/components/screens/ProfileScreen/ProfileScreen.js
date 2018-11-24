@@ -145,11 +145,12 @@ export default class ProfileScreen extends React.Component {
           : null
         }
         {userData.photo == 'fa-user-tie' || userData.photo == 'fa-user-astronaut'
-          ? <FontAwesome name="user" size={110} style={{color:'white'}} />
-          : <FontAwesome name={userData.photo.slice(3)} size={110} style={{color:'white'}} />
+          ? <FontAwesome name="user" size={110} style={{color:'#2e4158'}} />
+          : <FontAwesome name={userData.photo.slice(3)} size={110} style={{color:'#2e4158'}} />
         } 
         </LinearGradient>
-        <Text>{userData.username}</Text>
+        <Text style={{color: 'white', fontSize: 22, alignSelf: 'center', marginTop: 3}}>{userData.username}</Text> 
+        
       </View>
       )}
        
@@ -196,6 +197,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     // justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#2e4158'
   },
   profileImageView: {
     flex: 1,
