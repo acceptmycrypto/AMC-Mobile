@@ -10,8 +10,11 @@ import {
   TouchableOpacity,
   ImageBackground,
   StackActions,
-  NavigationActions
+  NavigationActions,
+  Image
 } from 'react-native';
+import { Ionicons, FontAwesome } from '@expo/vector-icons';
+import { LinearGradient } from 'expo';
 import {
   _updateCryptoTable,
   _loadProfile
@@ -126,8 +129,31 @@ export default class ProfileScreen extends React.Component {
     // const create_date = navigation.getParam('create_date', 'n/a');
     // const status = navigation.getParam('isLoggedIn', 'n/a');
 
+    // const validIcon = parseIconFromClassName('fas fa-chevron-left');
     return (
       <View style={styles.container}>
+     
+      {this.state.user_info.map((userData, i) =>
+      <View style={styles.profileImageView} key={"user" + i} >
+            <LinearGradient
+          colors={['#49cdb7', '#1ab7db']}
+          start={{x: 0.85, y: 0.85}}
+          style={{ padding: 15, alignItems: 'center', borderRadius: 5 }}
+        > 
+        {(userData.photo.indexOf("fa-user") == -1)
+          ? <Image source={userData.photo}></Image>
+          : null
+        }
+        {userData.photo == 'fa-user-tie' || userData.photo == 'fa-user-astronaut'
+          ? <FontAwesome name="user" size={110} style={{color:'white'}} />
+          : <FontAwesome name={userData.photo.slice(3)} size={110} style={{color:'white'}} />
+        } 
+        </LinearGradient>
+        <Text>{userData.username}</Text>
+      </View>
+      )}
+       
+     
         {/* <View style={styles.selector}>
           <CustomMultiPicker
             options={this.state.cryptoOptions}
@@ -158,7 +184,7 @@ export default class ProfileScreen extends React.Component {
             Why do I need to select cryptos?
           </Text>
         </View> */}
-        <Button title="Logout" onPress={this.handleLogout} />
+        {/* <Button title="Logout" onPress={this.handleLogout} /> */}
       </View>
     );
   }
@@ -168,7 +194,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center'
-  }
+    // justifyContent: 'center',
+    alignItems: 'center',
+  },
+  profileImageView: {
+    flex: 1,
+    alignSelf: 'center',
+    margin: 15,
+    position: 'absolute',
+  },
 });
