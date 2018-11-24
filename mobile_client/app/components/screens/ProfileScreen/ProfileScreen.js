@@ -14,58 +14,58 @@ import {
 } from 'react-native';
 import {
   _updateCryptoTable,
-  _loadProfile,
-  _verifyUser
+  _loadProfile
 } from '../../../../src/services/UserProfileService';
 import CustomMultiPicker from 'react-native-multiple-select-list';
+import { _verifier } from '../../../../src/services/AuthService';
 
 export default class ProfileScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      id: 0,
-      username: '',
-      email: '',
-      password: '',
-      firstname: '',
-      lastname: '',
-      cryptoOptions: {},
-      cryptoProfile: []
+      // id: 0,
+      // username: '',
+      // email: '',
+      // password: '',
+      // firstname: '',
+      // lastname: '',
+      // cryptoOptions: {},
+      // cryptoProfile: []
       // isLoggedIn: false,
       // isPassingProps: false
     };
   }
 
-  // checkToken = async () => {
-  //   try {
-  //     const value = await AsyncStorage.getItem('token');
-  //     if (value !== null) {
-  //       // let token = JSON.stringify(value);
-  //       console.log('TOKEN!!' + value);
-  //       return _verifier(value).then(res => {
-  //         let tokenStr = JSON.stringify(res.verifiedToken);
-  //         let userData = JSON.parse(tokenStr);
-  //         console.log('STRING RETURN!!' + tokenStr);
-  //         console.log('PARSED RETURN!!' + userData);
-  //         if (userData.name === 'TokenExpiredError') {
-  //           console.log('Session has expired');
-  //         } else {
-  //           this.setState({
-  //             isLoggedIn: userData.isLoggedIn,
-  //             id: userData._id,
-  //             username: userData.username,
-  //             email: userData.email,
-  //             firstname: userData.firstname,
-  //             lastname: userData.lastname,
-  //             create_date: userData.create_date
-  //           });
-  //         }
-  //       });
-  //     }
-  //   } catch (error) {
-  //     console.log('NO TOKEN!!!' + error);
-  //   }
-  // };
+  checkToken = async () => {
+    try {
+      const value = await AsyncStorage.getItem('token');
+      if (value !== null) {
+        // let token = JSON.stringify(value);
+        console.log('TOKEN!!' + value);
+        return _verifier(value).then(res => {
+          let tokenStr = JSON.stringify(res.verifiedToken);
+          let userData = JSON.parse(tokenStr);
+          console.log('STRING RETURN!!' + tokenStr);
+          console.log('PARSED RETURN!!' + userData);
+          if (userData.name === 'TokenExpiredError') {
+            console.log('Session has expired');
+          } else {
+            this.setState({
+              isLoggedIn: userData.isLoggedIn,
+              id: userData._id,
+              username: userData.username,
+              email: userData.email,
+              firstname: userData.firstname,
+              lastname: userData.lastname,
+              create_date: userData.create_date
+            });
+          }
+        });
+      }
+    } catch (error) {
+      console.log('NO TOKEN!!!' + error);
+    }
+  };
 
   // componentWillMount() {
   //   this.checkToken();
