@@ -16,7 +16,7 @@ import {
 import { Button } from "react-native-elements";
 import { _verifier } from "../../../../src/AuthentificationService";
 import Icon from "react-native-vector-icons/FontAwesome";
-import { _loadOnePosts } from './PostService';
+import { _loadOnePosts } from './DealsService';
 import { LinearGradient } from 'expo';
 
 export default class PostInfo extends React.Component {
