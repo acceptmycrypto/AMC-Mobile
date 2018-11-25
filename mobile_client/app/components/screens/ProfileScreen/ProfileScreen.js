@@ -181,8 +181,8 @@ export default class ProfileScreen extends React.Component {
           : null
         }
         {userData.photo == 'fa-user-tie' || userData.photo == 'fa-user-astronaut'
-          ? <FontAwesome name="user" size={110} style={{color:'#2e4158'}} />
-          : <FontAwesome name={userData.photo.slice(3)} size={100} style={{color:'#2e4158'}} />
+          ? <FontAwesome name="user" size={70} style={{color:'#2e4158'}} />
+          : <FontAwesome name={userData.photo.slice(3)} size={70} style={{color:'#2e4158'}} />
         } 
         </LinearGradient>
         <Text style={{color: 'white', fontSize: 22, alignSelf: 'center', margin: 3}}>{userData.username}</Text> 
@@ -218,7 +218,7 @@ export default class ProfileScreen extends React.Component {
                 <Text style={{color: 'white', fontSize:16, marginBottom: 5, alignSelf: "center"}}>CRYPTO YOU OWN</Text>
                 <ScrollView className="cryptoWallet"> 
                 {this.state.user_crypto.map((crypto, i) =>
-                  <View key={"interested " + i}>
+                  <View key={"owned " + i} style={{marginTop:10}}>
                     {
                       (crypto.crypto_address !== null)
                           ? <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', width: '100%'}}>
@@ -288,14 +288,9 @@ const styles = StyleSheet.create({
     flex: 1,
     alignSelf: 'center',
     marginTop: 15, 
-    marginBottom: 40
+    // marginBottom: 40
     // position: 'absolute',
   },
-  switch:{
-    // position: 'relative',
-    // width: 120,
-    // height: 34,
-  }
 
 
 });
