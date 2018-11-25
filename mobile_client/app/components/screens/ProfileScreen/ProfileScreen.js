@@ -12,7 +12,7 @@ import {
   StackActions,
   NavigationActions,
   Image,
-  CheckBox
+  FlatList
 } from 'react-native';
 import { Ionicons, FontAwesome } from '@expo/vector-icons';
 import { LinearGradient } from 'expo';
@@ -22,7 +22,8 @@ import {
 } from '../../../../src/services/UserProfileService';
 import CustomMultiPicker from 'react-native-multiple-select-list';
 import { _verifier } from '../../../../src/services/AuthService';
-import { Switch, Swipeable } from 'react-native-gesture-handler';
+import { Switch} from 'react-native-gesture-handler';
+
 
 export default class ProfileScreen extends React.Component {
   constructor(props) {
@@ -148,6 +149,12 @@ export default class ProfileScreen extends React.Component {
     }
   };
 
+  handleAddressFormChange = (event) => {
+    let target = event.target;
+    target.remove();
+
+  }
+
   render() {
     const { navigation } = this.props;
     // const id = navigation.getParam('_id', 'n/a');
@@ -188,12 +195,44 @@ export default class ProfileScreen extends React.Component {
         onValueChange={(value) => { this.handleToggleChange(value)}} ></Switch>
       
       <View style={{flex: 1, marginTop: 10}}>
-          {this.state.crypto_view === "owned"
+          {this.state.crypto_view === "interested"
             ? <View>
-                <Text style={{color: 'white', fontSize:16}}>CRYPTO YOU OWN</Text>
-                
+                <Text style={{color: 'white', fontSize:16, marginBottom: 5, alignSelf: "center"}}>CRYPTO YOU ARE INTERESTED IN</Text>
+                <ScrollView className="cryptoWallet"> 
+                {this.state.user_crypto.map((crypto, i) =>
+                  <View key={"interested " + i}>
+                    {
+                      (crypto.crypto_address === null)
+                          ? <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', width: '100%'}}>
+                              <Image className="cryptoImage" style={{alignContent:"flex-start", width: 50, height: 50}}  data-name={crypto.crypto_metadata_name} source={{url: crypto.crypto_logo}} data-id={crypto.id} onPress={(event)=>{this.handleAddressFormChange(event)}}></Image>
+                              <Text style={{marginLeft: 20, color: 'white', fontSize: 18 }}>{crypto.crypto_metadata_name}</Text>
+                          </View>
+                          : null
+                    }
+                  </View>
+                  )
+                }
+                </ScrollView>
               </View>
-            : <Text style={{color: 'white', fontSize:16}}>CRYPTO YOU ARE INTERESTED IN</Text>
+            : <View>
+                <Text style={{color: 'white', fontSize:16, marginBottom: 5, alignSelf: "center"}}>CRYPTO YOU OWN</Text>
+                <ScrollView className="cryptoWallet"> 
+                {this.state.user_crypto.map((crypto, i) =>
+                  <View key={"interested " + i}>
+                    {
+                      (crypto.crypto_address !== null)
+                          ? <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', width: '100%'}}>
+                              <Image className="cryptoImage" style={{alignContent:"flex-start", width: 50, height: 50}}  data-name={crypto.crypto_metadata_name} source={{url: crypto.crypto_logo}} data-id={crypto.id} onPress={(event)=>{this.handleAddressFormChange(event)}}></Image>
+                              <Text style={{marginLeft: 20, color: 'white', fontSize: 18 }}>{crypto.crypto_metadata_name}</Text>
+                          </View>
+                          : null
+                    }
+                  </View>
+                  )
+                }
+                </ScrollView>
+              
+              </View>
           }
       </View>
 
