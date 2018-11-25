@@ -101,6 +101,7 @@ export default class Post extends React.Component {
   };
 
   convertToPercentage = (priceInDollar, priceInCrypto) => {
+    
     return parseInt(((priceInDollar - priceInCrypto) / priceInDollar) * 100);
   };
 
@@ -136,8 +137,8 @@ export default class Post extends React.Component {
       deal_name: post.deal_name,
       description: post.deal_description,
       featured_deal_image: post.featured_deal_image,
-      pay_in_dollar: post.pay_in_dollar,
-      pay_in_crypto: post.pay_in_crypto
+      pay_in_dollar: post.pay_in_dollar.toFixed(2),
+      pay_in_crypto: post.pay_in_crypto.toFixed(2)
      });
   };
 
@@ -252,7 +253,7 @@ export default class Post extends React.Component {
                               marginLeft: 10
                             }}
                           >
-                            {'$' + item.pay_in_dollar}
+                            {'$' + item.pay_in_dollar.toFixed(2)}
                           </Text>
                         </View>
 
@@ -277,7 +278,7 @@ export default class Post extends React.Component {
                               marginLeft: 10
                             }}
                           >
-                            {'$' + item.pay_in_crypto}
+                            {'$' + item.pay_in_crypto.toFixed(2)}
                           </Text>
 
                           <Text

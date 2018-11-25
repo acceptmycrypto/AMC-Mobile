@@ -306,19 +306,28 @@ export default class PostInfo extends React.Component {
               </Text>
             </View>
           </View>
-          {this.state.checkedbox1 == false && <Text style={{color: 'red'}}>Please Select A Size</Text>}
-          <Dropdown
-            label='Select a size...'
-            data={size}
-            onChangeText= {(value, index) => this.setState({size: value,}) }
-          />
 
-          {this.state.checkedbox2 == false && <Text style={{color: 'red'}}>Please select a color</Text>}
-          <Dropdown
-            label='Select a color...'
-            data={colors}
-            onChangeText= {(value, index) => this.setState({color: value,}) }
-          />          
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>     
+            <View style={{width: 150}}>
+            {this.state.checkedbox1 == false && <Text style={{color: 'red'}}>Please Select A Size</Text>}
+              <Dropdown
+                label='Select a size...'
+                data={size}
+                onChangeText= {(value, index) => this.setState({size: value,}) }
+                style={{width: 100}}
+              />
+            </View>
+
+            <View style={{ width: 150,}}>
+              {this.state.checkedbox2 == false && <Text style={{color: 'red'}}>Please select a color</Text>}
+              <Dropdown
+                label='Select a color...'
+                data={colors}
+                onChangeText= {(value, index) => this.setState({color: value,}) }
+                style={{width: 50}}
+              />
+            </View>
+          </View>        
           <View style={{ flex: 1, marginTop: 10, alignItems: 'center', justifyContent: 'center' }}>
             <TouchableOpacity
               style={{                      
@@ -332,7 +341,7 @@ export default class PostInfo extends React.Component {
                 colors={[  '#fff4cc','#efb404','#d1a31d']}
                 style={{
                   borderWidth: 1,
-                  borderRadius: 5, width:390, padding: 15, alignItems: 'center', borderRadius: 5 }}>
+                  borderRadius: 5, width:300, padding: 15, alignItems: 'center', borderRadius: 5 }}>
                 <Text
                   style={{
                     backgroundColor: 'transparent',
