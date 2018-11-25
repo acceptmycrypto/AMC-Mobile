@@ -137,16 +137,15 @@ export default class PostInfo extends React.Component {
     // });
   }
 
-  checkOutPage = post => {
-    
+  checkOutPage = () => {
     if (this.state.color == "" && this.state.size == "") {
       this.setState({checkedbox1: false, checkedbox2: false});
     }
     else if(this.state.size == "") {
-      this.setState({checkedbox1: false});
+      this.setState({checkedbox1: false, checkedbox2: true});
     }
     else if (this.state.color == "") {
-      this.setState({checkedbox2: false});
+      this.setState({checkedbox2: false, checkedbox1: true});
     } 
     else if(this.state.size != "" && this.state.color != "") {
       this.setState({checkedbox1: true, checkedbox2: true});
@@ -308,7 +307,7 @@ export default class PostInfo extends React.Component {
           </View>
 
           <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>     
-            <View style={{width: 150}}>
+            <View style={{marginLeft: 20, width: 150}}>
             {this.state.checkedbox1 == false && <Text style={{color: 'red'}}>Please Select A Size</Text>}
               <Dropdown
                 label='Select a size...'
@@ -318,7 +317,7 @@ export default class PostInfo extends React.Component {
               />
             </View>
 
-            <View style={{ width: 150,}}>
+            <View style={{marginRight: 20, width: 150,}}>
               {this.state.checkedbox2 == false && <Text style={{color: 'red'}}>Please select a color</Text>}
               <Dropdown
                 label='Select a color...'
