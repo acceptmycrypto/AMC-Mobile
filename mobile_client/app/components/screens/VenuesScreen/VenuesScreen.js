@@ -164,7 +164,7 @@ class CryptosRankings extends Component {
             <TextInput
               style={styles.searchStyle}
               underlineColorAndroid="transparent"
-              placeholder="Search for Cryptos!"
+              placeholder="Search through Accepted Cryptos"
               placeholderTextColor="#58697e"
               onChangeText={search => this.setState({ search })}
               onChange={this.searchPost}
@@ -172,11 +172,11 @@ class CryptosRankings extends Component {
             />
           </View>
 
-          <View style={{ flexDirection: 'row', backgroundColor: '#2e4158', padding: 15 }}>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', backgroundColor: '#2e4158', padding: 15 }}>
             {/* <Text style={{ color: '#66dac7', marginLeft: 25, marginRight: 25, fontSize: 20 }}>#</Text> */}
-            <Text style={{ color: '#66dac7', marginRight: 15, fontSize: 20 }}>Cryptocurrency</Text>
-            <Text style={{ color: '#66dac7', marginLeft: 10, marginRight: 15, fontSize: 20 }}>Venues</Text>
-            <Text style={{ color: '#66dac7', marginLeft: 30, fontSize: 20 }}>Price $</Text>
+            <Text style={{ color: '#66dac7', fontSize: 20 }}>Cryptocurrency</Text>
+            <Text style={{ color: '#66dac7', marginRight: 25, fontSize: 20 }}>Venues</Text>
+            <Text style={{ color: '#66dac7', fontSize: 20 }}>Price $</Text>
           </View>
 
           <FlatList
@@ -186,13 +186,15 @@ class CryptosRankings extends Component {
               console.log(`Item = ${JSON.stringify(item)}, index = ${index}`);
               return (
                 <View style={{ backgroundColor: '#2e4158', borderBottomColor: 'black', borderBottomWidth: 1, padding: 10 }}>
-                  <View style={{ flexDirection: 'row' }}>
+                  <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                  <View style={{ flexDirection: 'row', width: 120 }}>
                   <Image style={{ width: 30, height: 30, marginLeft: 20 }} source={{uri: item.crypto_logo}} />
-                  <Text style={{ color: '#ffffff', marginTop: 5, marginLeft: 25, fontSize: 20, width: 60 }}>{item.crypto_symbol}</Text>
+                  <Text style={{ color: '#ffffff', marginTop: 5, marginLeft: 25, fontSize: 20 }}>{item.crypto_symbol}</Text>
+                  </View>
                   {/* <Text style={{ color: '#66dac7', fontSize: 15, marginTop: 10, marginLeft: 10  }}>Venues</Text> */}
                   <Text style={{ color: '#ffffff', fontSize: 20, marginTop: 5, marginLeft: 50, marginRight: 10, width: 15  }}>{item.venues_count}</Text>
                   {/* <Text style={{ color: '#66dac7', fontSize: 15, marginTop: 10  }}>Price $</Text> */}
-                  <Text style={{ color: '#ffffff', fontSize: 20, marginTop: 6, marginLeft: 20, width: 120, textAlign: 'right'  }}>{item.crypto_price}</Text>
+                  <Text style={{ color: '#ffffff', fontSize: 20, marginTop: 6, width: 120, textAlign: 'right'  }}>{item.crypto_price}</Text>
                   </View>
                 </View>
               );
