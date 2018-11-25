@@ -60,6 +60,7 @@ export default class Post extends React.Component {
     this.state = {
       text: '',
       isLoading: true,
+      isFetching: false,
       data: {},
       search: '',
       post: '',
@@ -67,26 +68,28 @@ export default class Post extends React.Component {
     };
   }
 
-  componentDidMount = async () => {
+  componentDidMount = () => {
     BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
+    this.getDealsData();
+  };
+
+  getDealsData = async () => {
     try {
       const value = await AsyncStorage.getItem('token');
       if (value !== null) {
-        // let token = JSON.stringify(value);
-        console.log('TOKEN!!' + value);
         return _loadDeals(value).then(res => {
-          console.log('DEALS!!' + res.deals);
+          console.log('FETCHING'+res);
           this.setState({
             isLoading: false,
+            isFetching: false,
             dealsData: res.deals
           });
-          console.log(this.state);
         });
       }
     } catch (error) {
-      console.log('TOKEN ERROR' + error);
+      console.log(error);
     }
-  };
+  }
 
   componentWillUnmount() {
     BackHandler.removeEventListener('hardwareBackPress', this.handleBackPress);
@@ -138,65 +141,11 @@ export default class Post extends React.Component {
      });
   };
 
-  buyPost = () => {
-    Alert.alert('buy me');
-  };
-
   _keyExtractor = (item, index) => JSON.stringify(item.id);
 
-  showVenues = () => {};
-
-  // checkToken = async () => {
-  //   try {
-  //     const value = await AsyncStorage.getItem("token");
-  //     if (value !== null) {
-  //       // let token = JSON.stringify(value);
-  //       console.log("TOKEN!!" + value);
-  //       return _verifier(value).then(res => {
-  //         let tokenStr = JSON.stringify(res.verifiedToken);
-  //         let userData = JSON.parse(tokenStr);
-  //         console.log("STRING RETURN!!" + tokenStr);
-  //         console.log("PARSED RETURN!!" + userData);
-  //         if (userData.name === "TokenExpiredError") {
-  //           Alert.alert("Session has expired");
-  //         } else {
-  //           this.setState({
-  //             isLoggedIn: userData.isLoggedIn,
-  //             id: userData._id,
-  //             username: userData.username,
-  //             email: userData.email,
-  //             firstname: userData.firstname,
-  //             lastname: userData.lastname,
-  //             create_date: userData.create_date
-  //           });
-  //         }
-  //       });
-  //     }
-  //   } catch (error) {
-  //     console.log("NO TOKEN!!!" + error);
-  //   }
-  // };
-
-  // componentWillMount() {
-  //   this.checkToken();
-  // }
-
-  // componentDidMount() {
-  //   return (_loadDeals()
-  //     .then(resJSON => {
-  //       this.setState(
-  //         {
-  //           isLoading: false,
-  //           data: resJSON
-  //         },
-  //         function() {}
-  //       );
-  //     })
-  //     .catch(err => {
-  //       console.error(err);
-  //     })
-  //     );
-  // }
+  onRefresh = () => {
+    this.setState({ isFetching: true }, function() { this.getDealsData() });
+  }
 
   render() {
     if (this.state.isLoading) {
@@ -258,6 +207,8 @@ export default class Post extends React.Component {
           <FlatList
             data={this.state.dealsData}
             keyExtractor={this._keyExtractor}
+            refreshing={this.state.isFetching}
+            onRefresh={() => this.onRefresh()}
             renderItem={({ item, index }) => {
               console.log(`Item = ${JSON.stringify(item)}, index = ${index}`);
               return (
