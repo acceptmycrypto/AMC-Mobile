@@ -1,4 +1,4 @@
-let url = 'https://amc-web.herokuapp.com' || 'http://localhost:3001';
+let url = 'https://acceptmycrypto.herokuapp.com' || 'http://localhost:3001';
 
 export async function _updateCryptoTable(crypto_address, id, token) {
   const crypto_settings = {
