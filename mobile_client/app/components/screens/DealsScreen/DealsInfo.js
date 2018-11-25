@@ -35,7 +35,8 @@ export default class PostInfo extends React.Component {
       pay_in_crypto:"",
       size: "",
       color: "",
-      checkedbox: null,
+      checkedbox1: null,
+      checkedbox2: null,
       sizeOption: [{value: 'Small',}, {value: 'Medium',}, {value: 'Large',}],
       colorOption: [{value: 'Red',}, {value: 'Blue',}, {value: 'Green',}]
     }
@@ -137,17 +138,18 @@ export default class PostInfo extends React.Component {
   }
 
   checkOutPage = post => {
-    console.log(" ---- Hello from line 134 ---- " + JSON.stringify(this.state));
     
-    if(this.state.size == "") {
-      this.setState({checkedbox1: false});
-    } 
-    else if (this.state.color == ""){
-      this.setState({checkedbox2: false});
+    if (this.state.color == "" && this.state.size == "") {
+      this.setState({checkedbox1: false, checkedbox2: false});
     }
+    else if(this.state.size == "") {
+      this.setState({checkedbox1: false});
+    }
+    else if (this.state.color == "") {
+      this.setState({checkedbox2: false});
+    } 
     else if(this.state.size != "" && this.state.color != "") {
-      this.setState({checkedbox1: true});
-      this.setState({checkedbox2: true});
+      this.setState({checkedbox1: true, checkedbox2: true});
       this.props.navigation.navigate('AddPost', {
         id: this.state.id,
         deal_name: this.state.deal_name,
@@ -304,14 +306,14 @@ export default class PostInfo extends React.Component {
               </Text>
             </View>
           </View>
-          {(this.state.checkedbox1 == false)&& <Text style={{color: 'red'}}>Please Select A Size</Text>}
+          {this.state.checkedbox1 == false && <Text style={{color: 'red'}}>Please Select A Size</Text>}
           <Dropdown
             label='Select a size...'
             data={size}
             onChangeText= {(value, index) => this.setState({size: value,}) }
           />
 
-          {(this.state.checkedbox2 == false)&& <Text style={{color: 'red'}}>Please select a color</Text>}
+          {this.state.checkedbox2 == false && <Text style={{color: 'red'}}>Please select a color</Text>}
           <Dropdown
             label='Select a color...'
             data={colors}
