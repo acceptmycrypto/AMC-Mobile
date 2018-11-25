@@ -11,9 +11,9 @@ import {
 } from 'react-native';
 import { Button } from 'react-native-elements';
 // import { _addPosts } from './PostService'
-import { _verifier } from "../../../../src/AuthentificationService";
+import { _verifier } from "../../../../src//services/AuthService";
 
-export default class AddPost extends React.Component {
+export default class DealsCheckout extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
