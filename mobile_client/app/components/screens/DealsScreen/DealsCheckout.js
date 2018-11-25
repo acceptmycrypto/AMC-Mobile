@@ -8,64 +8,40 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   ScrollView,
-  Animated
-} from 'react-native';
+  Animated,
+  } from 'react-native';
 import { Button } from 'react-native-elements';
 import { _verifier } from "../../../../src//services/AuthService";
-
-//creates a class for FadeIn View Animation
-class FadeInView extends React.Component {
-  state = {
-    fadeAnim: new Animated.Value(0),  // Initial value for opacity: 0
-  }
-
-  componentDidMount() {
-    Animated.timing(                  // Animate over time
-      this.state.fadeAnim,            // The animated value to drive
-      {
-        toValue: 1,                   // Animate to opacity: 1 (opaque)
-        duration: 1000,              // Make it take a while
-      }
-    ).start();                        // Starts the animation
-  }
-
-  render() {
-    let { fadeAnim } = this.state;
-
-    return (
-      <Animated.View                 // Special animatable View
-        style={{
-          ...this.props.style,
-          opacity: fadeAnim,         // Bind opacity to animated value
-        }}
-      >
-        {this.props.children}
-      </Animated.View>
-    );
-  }
-}
 
 export default class DealsCheckout extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      fadeAnim: new Animated.Value(0),
+      fadeValue: new Animated.Value(0),
       full_name: "",
       address: "",
       city: "",
       postal_code: "",
       state: "",
-      status: false
+      paymentViewStatus: false,
+      payment: ""
     };
   }
 
   checkAddress = () => {
     if(this.state.full_name && this.state.address && this.state.city && this.state.postal_code && this.state.state){
-      this.setState({status: true})
+      this.setState({paymentViewStatus: true})
     }else{
-      this.setState({status: false})
+      this.setState({paymentViewStatus: false, fadeValue: new Animated.Value(0)})
     }
   }
+
+   fadeInAnimation = () => {
+    Animated.timing(this.state.fadeValue,{
+      toValue: 1,
+      duration: 750,
+    }).start()
+   }
 
   checkToken = async () => {
     try {
@@ -105,9 +81,10 @@ export default class DealsCheckout extends React.Component {
   render() {
     return (
       <ScrollView style={styles.container}>
-      //Address View
+        {/*Will include a sticky section at the top from previous page with the deals info but in a smaller form*/}
+        {/*Address View*/}
         <View style={styles.postStyle}>
-          <Text style={{fontSize: 20, marginBottom: 5}}>Shipping</Text>
+          <Text style={{fontSize: 25, marginBottom: 5, textAlign: 'center'}}>Shipping</Text>
           <TextInput
             ref="full_name"
             style={styles.inputStyle}
@@ -132,9 +109,10 @@ export default class DealsCheckout extends React.Component {
             returnKeyType={'next'}
             onSubmitEditing={()=>this.state_loc.focus()}
           />
+          {/*State TextInput will be a dropdown menu with USA states*/}
           <TextInput
             ref={state => this.state_loc = state}
-            style={styles.inputStyle}
+            style={[styles.inputStyle, {width: '50%'}]}
             placeholder="State"
             onChangeText={state => this.setState({ state }, this.checkAddress)}
             returnKeyType={'next'}
@@ -143,30 +121,30 @@ export default class DealsCheckout extends React.Component {
           <TextInput
             ref={postal_code => this.postal_code = postal_code}
             keyboardType="numeric"
-            style={styles.inputStyle}
+            style={[styles.inputStyle, {width: '50%'}]}
             placeholder="Zip Code"
             onChangeText={ postal_code => {
             this.setState({postal_code}, this.checkAddress)
             }}
-            returnKeyType={'done'}
           />
         </View>
+        {/*Payment Method View*/}
         {
-        this.state.status ?
-        <FadeInView>
-          <TextInput
-            ref={postal_code => this.postal_code = postal_code}
-            keyboardType="numeric"
-            style={styles.inputStyle}
-            placeholder="Zip Code"
-            onChangeText={ postal_code => {
-            this.setState({postal_code}, this.checkAddress)
-            }}
-            returnKeyType={'done'}
-          />
-        </FadeInView>
+          this.state.paymentViewStatus ?
+            <Animated.View style={[styles.postStyle,{opacity: this.state.fadeValue}]}>
+              {this.fadeInAnimation()}
+              <Text style={{fontSize: 25, marginBottom: 5, textAlign: 'center'}}>Form of Payment</Text>
+              {/*This TextInput needs to be a dropdown*/}
+              <TextInput
+                ref="payment_type"
+                style={styles.inputStyle}
+                placeholder="Form of Payment"
+                onChangeText={ payment => this.setState({ payment })}
+                returnKeyType={'done'}
+              />
+            </Animated.View>
           : null
-        }
+         }
       </ScrollView>
     );
   }
@@ -186,5 +164,7 @@ const styles = StyleSheet.create({
     borderColor: '#2e4158',
     backgroundColor: 'white',
     marginBottom: 5,
+    height: 30,
+    paddingHorizontal: 5,
   },
 });
