@@ -104,9 +104,6 @@ export default class PostInfo extends React.Component {
   };
 
   getSavings = (priceInDollar, priceInCrypto) => {
-    console.log("Line 83 price: " + priceInDollar);
-    console.log("Line 83 price: " + priceInCrypto);
-    console.log(priceInDollar-priceInCrypto)
     return Math.round((priceInDollar - priceInCrypto) *  100)/ 100;
   };
 
@@ -203,21 +200,20 @@ export default class PostInfo extends React.Component {
               padding: 10,
               }}>                
                 <View style={{ flexDirection: 'row', padding: 10 }}>
-                  <Text style={{
-                      textAlign: 'right', 
+                  <Text style={{ 
                       fontSize: 15,
                       marginLeft: 0,
                       opacity: 0.54,
-                      width: 120,
+                      width: 90,
                       textAlign: 'right' 
                     }}>
                     Dollar Price:
                   </Text>
                   <Text
                     style={{
-                      marginLeft: 10,
                       textAlign: 'left', 
                       fontSize: 15,
+                      marginLeft: 10
                     }}
                   >      
                     {"$"+this.state.pay_in_dollar}
@@ -229,47 +225,46 @@ export default class PostInfo extends React.Component {
               flexDirection: 'row',
               padding: 10,
               }}>                
-                <View style={{ flexDirection: 'row', padding: 10 }}>
+                <View style={{ flexDirection: 'row', padding: 10, width: '100%'}}>
                   <Text style={{
-                      textAlign: 'right', 
                       fontSize: 15,
-                      marginRight: 0,
                       opacity: 0.54,
-                      width: 120,
-                      textAlign: 'right' 
+                      width: 90,
+                      textAlign: 'right', 
                     }}>
                     Crypto Price:
                   </Text>
                   <Text
                     style={{
-                      marginLeft: 10,
                       textAlign: 'left', 
                       fontSize: 15,
+                      width: 67,
+                      marginLeft: 10,                
                     }}
                   >      
                     {"$"+this.state.pay_in_crypto}
                   </Text>
                   <Text
                     style={{
-                      marginLeft: 5,
-                      textAlign: 'left', 
+                      textAlign: 'center', 
                       fontSize: 15,
                       color: 'green',
                       borderWidth: 2,
                       borderColor: 'green',
                       borderRadius: 5,
                       marginBottom: 20,
+                      width:80,
                     }}
                   >      
-                    {' ' + this.convertToPercentage(
+                    {+ this.convertToPercentage(
                     this.state.pay_in_dollar,
                     this.state.pay_in_crypto
                     ) +
                     '% OFF '}
                   </Text>
                   <Text style={{
-                      marginLeft: 5,
-                      textAlign: 'left', 
+                      width: 110,
+                      textAlign: 'center', 
                       fontSize: 14,
                       color: 'blue',
                     }}>

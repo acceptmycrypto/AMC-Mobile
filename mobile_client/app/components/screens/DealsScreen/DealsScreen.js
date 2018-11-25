@@ -238,8 +238,9 @@ export default class Post extends React.Component {
                             style={{
                               // alignContent: "flex-end",
                               opacity: 0.54,
-                              marginLeft: 0,
-                              marginTop: 20
+                              marginTop: 20,
+                              textAlign: 'right', 
+                              width:50
                             }}
                           >
                             Dollar:
@@ -250,7 +251,8 @@ export default class Post extends React.Component {
                               // alignContent: "flex-end",
                               marginLeft: 0,
                               marginTop: 20,
-                              marginLeft: 10
+                              marginLeft: 10,
+                              width: 60
                             }}
                           >
                             {'$' + item.pay_in_dollar.toFixed(2)}
@@ -263,7 +265,9 @@ export default class Post extends React.Component {
                               // alignContent: "flex-end",
                               opacity: 0.54,
                               marginLeft: 0,
-                              marginTop: 20
+                              marginTop: 20,
+                              textAlign: 'right', 
+                              width:50
                             }}
                           >
                             Crypto:
@@ -275,7 +279,8 @@ export default class Post extends React.Component {
                               color: 'green',
                               marginLeft: 0,
                               marginTop: 20,
-                              marginLeft: 10
+                              marginLeft: 10,
+                              width: 60
                             }}
                           >
                             {'$' + item.pay_in_crypto.toFixed(2)}
