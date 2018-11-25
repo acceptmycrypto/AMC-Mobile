@@ -14,10 +14,11 @@ import {
   Picker
 } from "react-native";
 import { Button } from "react-native-elements";
-import { _verifier } from "../../../../src/AuthentificationService";
+import { _verifier } from "../../../../src/services/AuthService";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { _loadOnePosts } from './DealsService';
 import { LinearGradient } from 'expo';
+import { Dropdown } from 'react-native-material-dropdown';
 
 export default class PostInfo extends React.Component {
 
@@ -31,10 +32,30 @@ export default class PostInfo extends React.Component {
       description:"",
       featured_deal_image:"",
       pay_in_dollar:"",
-      pay_in_crypto:""
+      pay_in_crypto:"",
+      size: "",
+      color: "",
+      checkedbox: null,
+      sizeOption: [{value: 'Small',}, {value: 'Medium',}, {value: 'Large',}],
+      colorOption: [{value: 'Red',}, {value: 'Blue',}, {value: 'Green',}]
     }
   };
   
+  checkOutpage = post => {
+    console.log("LINE 115 IN POST.JS FILE: " + JSON.stringify(post));
+    
+      this.props.navigation.navigate('DealsInfo', { 
+        id: post.id,
+        deal_name: post.deal_name,
+        description: post.deal_description,
+        featured_deal_image: post.featured_deal_image,
+        pay_in_dollar: post.pay_in_dollar,
+        pay_in_crypto: post.pay_in_crypto,
+        size: post.size,
+        color: post.color
+      });
+  };
+
   checkToken = async () => {
     
     try {
@@ -116,15 +137,28 @@ export default class PostInfo extends React.Component {
   }
 
   checkOutPage = post => {
-    console.log("LINE 115 IN POST.JS FILE: " + JSON.stringify(post));
-    this.props.navigation.navigate('AddPost', { 
-      id: post.id,
-      deal_name: post.deal_name,
-      description: post.deal_description,
-      featured_deal_image: post.featured_deal_image,
-      pay_in_dollar: post.pay_in_dollar,
-      pay_in_crypto: post.pay_in_crypto
-     });
+    console.log(" ---- Hello from line 134 ---- " + JSON.stringify(this.state));
+    
+    if(this.state.size == "") {
+      this.setState({checkedbox1: false});
+    } 
+    else if (this.state.color == ""){
+      this.setState({checkedbox2: false});
+    }
+    else if(this.state.size != "" && this.state.color != "") {
+      this.setState({checkedbox1: true});
+      this.setState({checkedbox2: true});
+      this.props.navigation.navigate('AddPost', {
+        id: this.state.id,
+        deal_name: this.state.deal_name,
+        description: this.state.deal_description,
+        featured_deal_image: this.state.featured_deal_image,
+        pay_in_dollar: this.state.pay_in_dollar,
+        pay_in_crypto: this.state.pay_in_crypto,
+        size: this.state.sizeOption,
+        color: this.state.colorOption,
+      });
+    }
   };
 
   render() {
@@ -137,6 +171,8 @@ export default class PostInfo extends React.Component {
     //   );
     // }
     console.log(this.state);
+    let colors = this.state.colorOption;
+    let size = this.state.sizeOption;
     return(
       <View style={styles.container}>
         <ScrollView>
@@ -268,7 +304,20 @@ export default class PostInfo extends React.Component {
               </Text>
             </View>
           </View>
-          <View style={{ backgroundColor: '#edece8', flex: 1, marginTop: 10, alignItems: 'center', justifyContent: 'center' }}>
+          {(this.state.checkedbox1 == false)&& <Text style={{color: 'red'}}>Please Select A Size</Text>}
+          <Dropdown
+            label='Select a size...'
+            data={size}
+            onChangeText= {(value, index) => this.setState({size: value,}) }
+          />
+
+          {(this.state.checkedbox2 == false)&& <Text style={{color: 'red'}}>Please select a color</Text>}
+          <Dropdown
+            label='Select a color...'
+            data={colors}
+            onChangeText= {(value, index) => this.setState({color: value,}) }
+          />          
+          <View style={{ flex: 1, marginTop: 10, alignItems: 'center', justifyContent: 'center' }}>
             <TouchableOpacity
               style={{                      
                 paddingTop:20,
@@ -281,7 +330,7 @@ export default class PostInfo extends React.Component {
                 colors={[  '#fff4cc','#efb404','#d1a31d']}
                 style={{
                   borderWidth: 1,
-                  borderRadius: 5, width:300, padding: 15, alignItems: 'center', borderRadius: 5 }}>
+                  borderRadius: 5, width:390, padding: 15, alignItems: 'center', borderRadius: 5 }}>
                 <Text
                   style={{
                     backgroundColor: 'transparent',
