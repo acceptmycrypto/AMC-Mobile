@@ -11,7 +11,7 @@ import {
   FlatList,
   ScrollView,
   AsyncStorage,
-  Picker
+  KeyboardAvoidingView
 } from "react-native";
 import { Button } from "react-native-elements";
 import { _verifier } from "../../../../src/services/AuthService";
@@ -42,20 +42,20 @@ export default class PostInfo extends React.Component {
     }
   };
   
-  checkOutpage = post => {
-    console.log("LINE 115 IN POST.JS FILE: " + JSON.stringify(post));
-    
-      this.props.navigation.navigate('DealsInfo', { 
-        id: post.id,
-        deal_name: post.deal_name,
-        description: post.deal_description,
-        featured_deal_image: post.featured_deal_image,
-        pay_in_dollar: post.pay_in_dollar,
-        pay_in_crypto: post.pay_in_crypto,
-        size: post.size,
-        color: post.color
-      });
-  };
+  // checkOutpage = (post,theView) => {
+  //   console.log("LINE 115 IN POST.JS FILE: " + JSON.stringify(post));
+  //   theView.scrollToEnd();
+  //     this.props.navigation.navigate('DealsInfo', { 
+  //       id: post.id,
+  //       deal_name: post.deal_name,
+  //       description: post.deal_description,
+  //       featured_deal_image: post.featured_deal_image,
+  //       pay_in_dollar: post.pay_in_dollar,
+  //       pay_in_crypto: post.pay_in_crypto,
+  //       size: post.size,
+  //       color: post.color
+  //     });
+  // };
 
   checkToken = async () => {
     
@@ -137,7 +137,9 @@ export default class PostInfo extends React.Component {
     // });
   }
 
-  checkOutPage = () => {
+  checkOutPage = (post,theView) => {
+    console.log("HELLOOOOOOO LINE 141 "+ JSON.stringify(theView))
+    this.scrollView.scrollToEnd();
     if (this.state.color == "" && this.state.size == "") {
       this.setState({checkedbox1: false, checkedbox2: false});
     }
@@ -176,9 +178,9 @@ export default class PostInfo extends React.Component {
     let size = this.state.sizeOption;
     return(
       <View style={styles.container}>
-        <ScrollView>
+        <ScrollView ref={scrollView => this.scrollView = scrollView}>
           <Image
-            style={{ maxWidth: '100%', height: 250 }}
+            style={{ maxWidth: '100%', height: 200 }}
             source={{ url: this.state.featured_deal_image }}
           />
           <View style={styles.description}>
@@ -203,9 +205,11 @@ export default class PostInfo extends React.Component {
                 <View style={{ flexDirection: 'row', padding: 10 }}>
                   <Text style={{
                       textAlign: 'right', 
-                      fontSize: 13,
+                      fontSize: 15,
                       marginLeft: 0,
                       opacity: 0.54,
+                      width: 120,
+                      textAlign: 'right' 
                     }}>
                     Dollar Price:
                   </Text>
@@ -213,7 +217,7 @@ export default class PostInfo extends React.Component {
                     style={{
                       marginLeft: 10,
                       textAlign: 'left', 
-                      fontSize: 13,
+                      fontSize: 15,
                     }}
                   >      
                     {"$"+this.state.pay_in_dollar}
@@ -221,8 +225,6 @@ export default class PostInfo extends React.Component {
                 </View>
             </View>
             <View style={{ 
-              borderBottomColor: '#dbd8ce',
-              borderBottomWidth: 1,
               flex: 3,              
               flexDirection: 'row',
               padding: 10,
@@ -233,6 +235,8 @@ export default class PostInfo extends React.Component {
                       fontSize: 15,
                       marginRight: 0,
                       opacity: 0.54,
+                      width: 120,
+                      textAlign: 'right' 
                     }}>
                     Crypto Price:
                   </Text>
@@ -253,7 +257,8 @@ export default class PostInfo extends React.Component {
                       color: 'green',
                       borderWidth: 2,
                       borderColor: 'green',
-                      borderRadius: 5
+                      borderRadius: 5,
+                      marginBottom: 20,
                     }}
                   >      
                     {' ' + this.convertToPercentage(
@@ -292,7 +297,9 @@ export default class PostInfo extends React.Component {
             flex: 3,
             flexDirection: 'row',
             padding: 10,
-            }}>                
+            borderBottomColor: '#dbd8ce',
+            borderBottomWidth: 1,
+          }}>                
             <View style={{ flexDirection: 'row', padding: 10, flex: 3 }}>
               <Text style={{
                   textAlign: 'left', 
@@ -300,13 +307,14 @@ export default class PostInfo extends React.Component {
                   marginLeft: 0,
                   flex: 1,
                   flexWrap: 'wrap'
-                }}>
+              }}>
                 {this.state.description}
               </Text>
             </View>
           </View>
 
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>     
+          <View style={{marginTop: 20, flexDirection: 'row', justifyContent: 'space-between',               borderBottomColor: '#dbd8ce',
+              borderBottomWidth: 1, }}>     
             <View style={{marginLeft: 20, width: 150}}>
             {this.state.checkedbox1 == false && <Text style={{color: 'red'}}>Please Select A Size</Text>}
               <Dropdown
@@ -327,31 +335,36 @@ export default class PostInfo extends React.Component {
               />
             </View>
           </View>        
-          <View style={{ flex: 1, marginTop: 10, alignItems: 'center', justifyContent: 'center' }}>
-            <TouchableOpacity
-              style={{                      
-                paddingTop:20,
-                paddingBottom:20,
-              }}
-              key={this.state.id}
-              onPress={() => this.checkOutPage(this.state)}
-            >
-              <LinearGradient
-                colors={[  '#fff4cc','#efb404','#d1a31d']}
-                style={{
-                  borderWidth: 1,
-                  borderRadius: 5, width:300, padding: 15, alignItems: 'center', borderRadius: 5 }}>
-                <Text
+          <KeyboardAvoidingView behavior="padding">
+          >
+            <View style={{ flex: 1, marginTop: 10, alignItems: 'center', justifyContent: 'center' }}>
+              <TouchableOpacity
+                style={{                      
+                  paddingTop:20,
+                  paddingBottom:20,
+                }}
+                key={this.state.id}
+                onPress={() => {
+                  this.checkOutPage();                               
+                }}                                
+              >
+                <LinearGradient
+                  colors={[  '#fff4cc','#efb404','#d1a31d']}
                   style={{
-                    backgroundColor: 'transparent',
-                    fontSize: 15,
-                    color: 'black',
-                  }}>
-                  Checkout
-                </Text>
-              </LinearGradient>
-            </TouchableOpacity>
-          </View>
+                    borderWidth: 1,
+                    borderRadius: 5, width:300, height: 50,padding: 15, alignItems: 'center', borderRadius: 5 }}>
+                  <Text
+                    style={{
+                      backgroundColor: 'transparent',
+                      fontSize: 15,
+                      color: 'black',
+                    }}>
+                    Checkout
+                  </Text>
+                </LinearGradient>
+              </TouchableOpacity>
+            </View>
+          </KeyboardAvoidingView>
         </ScrollView>
       </View>
     );
@@ -366,6 +379,8 @@ const styles = StyleSheet.create({
     // flexDirection: 'column',
   },
   description: {
+    borderBottomColor: '#dbd8ce',
+    borderBottomWidth: 1,
     flex: 3,
     backgroundColor: 'white',
     borderWidth: 0,
