@@ -1,4 +1,4 @@
-let url = 'https://amc-web.herokuapp.com' || 'http://localhost:3001';
+let url = 'https://acceptmycrypto.herokuapp.com' || 'http://localhost:3001';
 
 export const _signUp = (username, email, password, cryptoProfile) => {
   return fetch(url + '/register/', {

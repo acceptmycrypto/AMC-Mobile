@@ -11,7 +11,7 @@ import {
   Linking,
   Button
 } from 'react-native';
-import { WebBrowser,  } from 'expo';
+import { WebBrowser } from 'expo';
 import {
   _signUp,
   _login,
@@ -253,15 +253,15 @@ export default class LaunchScreen extends React.Component {
   };
 
   render() {
-    // const isLoggedIn = this.state.isLoggedIn;
+    const firsLaunch = this.state.firsLaunch;
 
     // if (this.state.isLoggedIn === true) {
     //   // return <NavStack />;
     // } else {
-    if (this.state.firsLaunch === null) {
+    if (firsLaunch === null) {
       // DISPLAY BEFORE REGISTRATION IS SHOWN
       return null;
-    } else if (this.state.firsLaunch == true) {
+    } else if (firsLaunch == true) {
       // REGISTRATION PAGE
       return (
         // <View style={styles.container}>
