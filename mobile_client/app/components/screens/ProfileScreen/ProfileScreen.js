@@ -11,7 +11,8 @@ import {
   ImageBackground,
   StackActions,
   NavigationActions,
-  Image
+  Image,
+  CheckBox
 } from 'react-native';
 import { Ionicons, FontAwesome } from '@expo/vector-icons';
 import { LinearGradient } from 'expo';
@@ -21,21 +22,22 @@ import {
 } from '../../../../src/services/UserProfileService';
 import CustomMultiPicker from 'react-native-multiple-select-list';
 import { _verifier } from '../../../../src/services/AuthService';
+import { Switch, Swipeable } from 'react-native-gesture-handler';
 
 export default class ProfileScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       // id: 0,
-      // username: '',
-      // email: '',
-      // password: '',
-      // firstname: '',
-      // lastname: '',
-      // cryptoOptions: {},
-      // cryptoProfile: []
-      // isLoggedIn: false,
-      // isPassingProps: false
+      username: '',
+      email: '',
+      password: '',
+      firstname: '',
+      lastname: '',
+      cryptoOptions: {},
+      cryptoProfile: [],
+      isLoggedIn: false,
+      isPassingProps: false,
         crypto_view: "owned",
         user_info: [],
         user_crypto: [],
@@ -44,8 +46,14 @@ export default class ProfileScreen extends React.Component {
         users_cryptos_id: null,
         current_crypto_name: null,
         friends_array: [],
-        transactions: []
+        transactions: [],
+        switchSelected: false
     };
+  }
+
+    // updates state
+  setCurrentState = (crypto_view, qr, add_address, users_cryptos_id, current_crypto_name) => {
+    this.setState({ crypto_view, qr, add_address, users_cryptos_id, current_crypto_name });
   }
 
   checkToken = async () => {
@@ -89,6 +97,27 @@ export default class ProfileScreen extends React.Component {
   // 	  isPassingProps: true
   //   })
   // }
+  handleToggleChange = (value) => {
+
+    if (value) { // if checkbox is checked show interested coins
+      this.setCurrentState("interested", false, false, null, null); // crypto_view, qr, add_address, users_cryptos_id, current_crypto_name
+
+      // this.hideOrShowCoin("show");
+      this.setState({
+        switchSelected: value
+        })
+        console.log(this.state);
+
+    } else { // if checkbox is not checked show owned coins
+      this.setCurrentState("owned", false, false, null, null); //crypto_view, qr, add_address, users_cryptos_id, current_crypto_name
+
+      // this.hideOrShowCoin("show");
+      this.setState({
+        switchSelected: value
+        })
+    }
+    console.log(this.state);
+  }
 
   componentWillMount = async () => {
     try {
@@ -146,13 +175,29 @@ export default class ProfileScreen extends React.Component {
         }
         {userData.photo == 'fa-user-tie' || userData.photo == 'fa-user-astronaut'
           ? <FontAwesome name="user" size={110} style={{color:'#2e4158'}} />
-          : <FontAwesome name={userData.photo.slice(3)} size={110} style={{color:'#2e4158'}} />
+          : <FontAwesome name={userData.photo.slice(3)} size={100} style={{color:'#2e4158'}} />
         } 
         </LinearGradient>
-        <Text style={{color: 'white', fontSize: 22, alignSelf: 'center', marginTop: 3}}>{userData.username}</Text> 
+        <Text style={{color: 'white', fontSize: 22, alignSelf: 'center', margin: 3}}>{userData.username}</Text> 
         
       </View>
       )}
+
+      <View style={{flex: 2, justifyContent: "center", alignItems:"center"}}>
+      <Switch disabled={false} value={this.state.switchSelected} style={{ marginTop: 0, backgroundColor: '#49cdb7', borderRadius: 17,  transform: [{ scaleX: 1.2 }, { scaleY: 1.2 }] }} onTintColor={'#2196F3'} tintColor={'#49cdb7'}
+        onValueChange={(value) => { this.handleToggleChange(value)}} ></Switch>
+      
+      <View style={{flex: 1, marginTop: 10}}>
+          {this.state.crypto_view === "owned"
+            ? <View>
+                <Text style={{color: 'white', fontSize:16}}>CRYPTO YOU OWN</Text>
+                
+              </View>
+            : <Text style={{color: 'white', fontSize:16}}>CRYPTO YOU ARE INTERESTED IN</Text>
+          }
+      </View>
+
+      </View>
        
      
         {/* <View style={styles.selector}>
@@ -197,12 +242,21 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     // justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#2e4158'
+    backgroundColor: '#2e4158',
+    margin: 0
   },
   profileImageView: {
     flex: 1,
     alignSelf: 'center',
-    margin: 15,
-    position: 'absolute',
+    marginTop: 15, 
+    marginBottom: 40
+    // position: 'absolute',
   },
+  switch:{
+    // position: 'relative',
+    // width: 120,
+    // height: 34,
+  }
+
+
 });
