@@ -6,3 +6,4 @@ package-lock.json
 #For Mobile
 .expo/*
 npm-debug.*
+.idea
