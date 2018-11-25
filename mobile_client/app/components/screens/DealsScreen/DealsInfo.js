@@ -14,7 +14,7 @@ import {
   Picker
 } from "react-native";
 import { Button } from "react-native-elements";
-import { _verifier } from "../../../../src/AuthentificationService";
+import { _verifier } from "../../../../src/services/AuthService";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { _loadOnePosts } from './DealsService';
 import { LinearGradient } from 'expo';
@@ -34,9 +34,9 @@ export default class PostInfo extends React.Component {
       pay_in_crypto:""
     }
   };
-  
+
   checkToken = async () => {
-    
+
     try {
       const value = await AsyncStorage.getItem('token');
       if (value !== null) {
@@ -117,7 +117,7 @@ export default class PostInfo extends React.Component {
 
   checkOutPage = post => {
     console.log("LINE 115 IN POST.JS FILE: " + JSON.stringify(post));
-    this.props.navigation.navigate('AddPost', { 
+    this.props.navigation.navigate('DealsCheckout', {
       id: post.id,
       deal_name: post.deal_name,
       description: post.deal_description,

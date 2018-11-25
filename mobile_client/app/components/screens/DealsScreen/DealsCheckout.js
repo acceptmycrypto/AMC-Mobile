@@ -7,40 +7,65 @@ import {
   Image,
   TouchableOpacity,
   ActivityIndicator,
-  ScrollView
+  ScrollView,
+  Animated
 } from 'react-native';
 import { Button } from 'react-native-elements';
-// import { _addPosts } from './PostService'
 import { _verifier } from "../../../../src//services/AuthService";
+
+//creates a class for FadeIn View Animation
+class FadeInView extends React.Component {
+  state = {
+    fadeAnim: new Animated.Value(0),  // Initial value for opacity: 0
+  }
+
+  componentDidMount() {
+    Animated.timing(                  // Animate over time
+      this.state.fadeAnim,            // The animated value to drive
+      {
+        toValue: 1,                   // Animate to opacity: 1 (opaque)
+        duration: 1000,              // Make it take a while
+      }
+    ).start();                        // Starts the animation
+  }
+
+  render() {
+    let { fadeAnim } = this.state;
+
+    return (
+      <Animated.View                 // Special animatable View
+        style={{
+          ...this.props.style,
+          opacity: fadeAnim,         // Bind opacity to animated value
+        }}
+      >
+        {this.props.children}
+      </Animated.View>
+    );
+  }
+}
 
 export default class DealsCheckout extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      id: 1,
-      location_id: 2,
-      title: 'Untitled',
-      price: 0,
-      information: 'Contact chef for description',
-      ingredients: '',
+      fadeAnim: new Animated.Value(0),
+      full_name: "",
+      address: "",
+      city: "",
+      postal_code: "",
+      state: "",
+      status: false
     };
   }
 
-  createPost = () => {
-    let title = this.state.title;
-    let location_id = this.state.location_id;
-    let user_id = this.state.id;
-    let price = parseFloat(this.state.price);
-    let information = this.state.information;
-    let ingredients = [];
-
-    ingredients.push(this.state.ingredients);
-
-    _addPosts(title, location_id, user_id, price, information, ingredients);
-
-    this.props.navigation.navigate('Search')
-    //then redirects to post tab
-  };
+  checkAddress = () => {
+    if(this.state.full_name && this.state.address && this.state.city && this.state.postal_code && this.state.state){
+      this.setState({status: true})
+    }else{
+      this.setState({status: false})
+    }
+  }
 
   checkToken = async () => {
     try {
@@ -80,43 +105,68 @@ export default class DealsCheckout extends React.Component {
   render() {
     return (
       <ScrollView style={styles.container}>
+      //Address View
         <View style={styles.postStyle}>
-          <Text>Title: </Text>
+          <Text style={{fontSize: 20, marginBottom: 5}}>Shipping</Text>
           <TextInput
+            ref="full_name"
             style={styles.inputStyle}
-            placeholder="Title..."
-            onChangeText={title => this.setState({ title })}
+            placeholder="Full name"
+            onChangeText={full_name => this.setState({ full_name }, this.checkAddress)}
+            returnKeyType={'next'}
+            onSubmitEditing={()=>this.address.focus()}
           />
-
-          <Text style={styles.spacing}>Description:</Text>
           <TextInput
-            style={(styles.inputStyle, styles.descriptionStyle)}
-            multiline={false}
-            placeholder="Description..."
-            onChangeText={information => this.setState({ information })}
-          />
-
-          <Text style={styles.spacing}>Ingredients:</Text>
-          <TextInput
+            ref={address => this.address = address}
             style={styles.inputStyle}
-            multiline={true}
-            placeholder="Insert a comma after every ingredients..."
-            onChangeText={ingredients => this.setState({ ingredients })}
+            placeholder="Address"
+            onChangeText={address => this.setState({ address }, this.checkAddress)}
+            returnKeyType={'next'}
+            onSubmitEditing={()=>this.city.focus()}
           />
-
-          <Text style={styles.spacing}>Price:</Text>
           <TextInput
+            ref={city => this.city = city}
             style={styles.inputStyle}
-            placeholder="$0.00"
-            onChangeText={price => this.setState({ price })}
+            placeholder="City"
+            onChangeText={city => this.setState({ city }, this.checkAddress)}
+            returnKeyType={'next'}
+            onSubmitEditing={()=>this.state_loc.focus()}
           />
-          <Button
-            buttonStyle={styles.buttonStyle}
-            color="white"
-            title="Submit"
-            onPress={this.createPost}
+          <TextInput
+            ref={state => this.state_loc = state}
+            style={styles.inputStyle}
+            placeholder="State"
+            onChangeText={state => this.setState({ state }, this.checkAddress)}
+            returnKeyType={'next'}
+            onSubmitEditing={()=>this.postal_code.focus()}
+          />
+          <TextInput
+            ref={postal_code => this.postal_code = postal_code}
+            keyboardType="numeric"
+            style={styles.inputStyle}
+            placeholder="Zip Code"
+            onChangeText={ postal_code => {
+            this.setState({postal_code}, this.checkAddress)
+            }}
+            returnKeyType={'done'}
           />
         </View>
+        {
+        this.state.status ?
+        <FadeInView>
+          <TextInput
+            ref={postal_code => this.postal_code = postal_code}
+            keyboardType="numeric"
+            style={styles.inputStyle}
+            placeholder="Zip Code"
+            onChangeText={ postal_code => {
+            this.setState({postal_code}, this.checkAddress)
+            }}
+            returnKeyType={'done'}
+          />
+        </FadeInView>
+          : null
+        }
       </ScrollView>
     );
   }
@@ -133,24 +183,8 @@ const styles = StyleSheet.create({
   },
   inputStyle: {
     borderWidth: 1,
-    borderColor: '#f4511e',
+    borderColor: '#2e4158',
     backgroundColor: 'white',
-    height: 50,
-  },
-  spacing: {
-    marginTop: 10,
-    marginBottom: 10,
-    fontSize: 20,
-  },
-  descriptionStyle: {
-    height: 200,
-    borderWidth: 1,
-    borderColor: '#f4511e',
-    backgroundColor: 'white',
-  },
-  buttonStyle: {
-    backgroundColor: 'tomato',
-    marginTop: 20,
-    borderRadius: 5,
+    marginBottom: 5,
   },
 });
