@@ -107,7 +107,7 @@ export default class PostInfo extends React.Component {
     return Math.round((priceInDollar - priceInCrypto) *  100)/ 100;
   };
 
-  componentDidMount() {
+  componentDidMount= () => {
     const { navigation } = this.props;
     this.setState({
       id: navigation.getParam('id', 'Data Not Available'),
