@@ -12,7 +12,10 @@ import {
   StackActions,
   NavigationActions,
   Image,
-  FlatList
+  FlatList,
+  TouchableHighlight, 
+  TextInput,
+  KeyboardAvoidingView
 } from 'react-native';
 import { Ionicons, FontAwesome } from '@expo/vector-icons';
 import { LinearGradient } from 'expo';
@@ -25,30 +28,32 @@ import { _verifier } from '../../../../src/services/AuthService';
 import { Switch} from 'react-native-gesture-handler';
 
 
+const styles = require('../../../assets/stylesheet/style');
+
 export default class ProfileScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       // id: 0,
-      username: '',
-      email: '',
-      password: '',
-      firstname: '',
-      lastname: '',
-      cryptoOptions: {},
+      // username: '',
+      // email: '',
+      // password: '',
+      // firstname: '',
+      // lastname: '',
+      cryptoOptionsLeft: {},
       cryptoProfile: [],
       isLoggedIn: false,
       isPassingProps: false,
-        crypto_view: "owned",
-        user_info: [],
-        user_crypto: [],
-        add_address: false,
-        qr: false,
-        users_cryptos_id: null,
-        current_crypto_name: null,
-        friends_array: [],
-        transactions: [],
-        switchSelected: false
+      crypto_view: "owned",
+      user_info: [],
+      user_crypto: [],
+      add_address: false,
+      users_cryptos_id: null,
+      current_crypto_name: null,
+      switchSelected: false,
+      showCrytoAddress: false,
+      new_address: "",
+      add_cryptos: false,
     };
   }
 
@@ -120,22 +125,34 @@ export default class ProfileScreen extends React.Component {
     console.log(this.state);
   }
 
-  componentWillMount = async () => {
+  componentWillMount =  () => {
     try {
-      const value = await AsyncStorage.getItem('token');
-      return _loadProfile(value).then(res => {
+      const valueToken =  AsyncStorage.getItem('token');
+      return _loadProfile(valueToken).then(res => {
         console.log(res);
 
-        let { user_info, user_crypto, friends_array, transactions } = res;
-        console.log(user_info, user_crypto, friends_array, transactions);
+        let { user_info, user_crypto, friends_array, transactions, remainging_cryptos } =  res;
+        console.log(user_info, user_crypto, friends_array, transactions, remainging_cryptos);
 
-        this.setState({ user_info, user_crypto, friends_array, transactions });
+         
+        // let cryptoOptionsLeft = {};
+  
+        // cryptos.map(crypto => {
+        //   let value = crypto.crypto_metadata_name;
+        //   let label =
+        //     crypto.crypto_metadata_name + ' ' + '(' + crypto.crypto_symbol + ')';
+        //   cryptoOptionsLeft[value] = label;
+        // });
+        // console.log("146 " , cryptoOptionsLeft);
+
+        this.setState({ user_info, user_crypto, friends_array, transactions});
         console.log(this.state);
       });
     } catch (error) {
       console.log('NO TOKEN!!!' + error);
     }
   };
+ 
 
   handleLogout = async () => {
     try {
@@ -149,11 +166,69 @@ export default class ProfileScreen extends React.Component {
     }
   };
 
-  handleAddressFormChange = (event) => {
-    let target = event.target;
-    target.remove();
+  handleAddressFormChange = (event, id, name) => {
+    console.log(id);
+    if(this.state.add_address == false ){
+      this.setState({
+        add_address: true,
+        users_cryptos_id: id,
+        current_crypto_name: name,
+        
+      })
+    } else{
+      this.setState({
+        add_address: false,
+        users_cryptos_id: null,
+        current_crypto_name: null,
+        
+      })
+    }
+  }
+
+  showAddress = (event) => {
+    if(this.state.showCrytoAddress){
+      this.setState({
+        showCrytoAddress: false
+      })
+    } else{
+      this.setState({
+        showCrytoAddress: true
+      })
+    }
 
   }
+
+  addAddress = async () =>{
+    try {
+      const value = await AsyncStorage.getItem('token');
+      return _updateCryptoTable(this.state.new_address, this.state.users_cryptos_id, value).then(res => {
+        console.log(res);
+
+        let { user_crypto, crypto_view, add_address } = res;
+        console.log(user_crypto, crypto_view, add_address);
+
+        this.setState({ user_crypto, crypto_view, add_address, switchSelected: false });
+        console.log(this.state);
+      });
+    } catch (error) {
+      console.log('NO TOKEN!!!' + error);
+    }
+
+  }
+
+  addMoreCryptos = () => {
+    if(this.state.add_cryptos){
+      this.setState({
+        add_cryptos: false
+      })
+    } else{
+      this.setState({
+        add_cryptos: true
+      })
+    }
+  }
+
+  
 
   render() {
     const { navigation } = this.props;
@@ -166,11 +241,12 @@ export default class ProfileScreen extends React.Component {
     // const status = navigation.getParam('isLoggedIn', 'n/a');
 
     // const validIcon = parseIconFromClassName('fas fa-chevron-left');
+
     return (
-      <View style={styles.container}>
+      <View style={additionalStyles.container}>
      
       {this.state.user_info.map((userData, i) =>
-      <View style={styles.profileImageView} key={"user" + i} >
+      <View style={additionalStyles.profileImageView} key={"user" + i} >
             <LinearGradient
           colors={['#49cdb7', '#1ab7db']}
           start={{x: 0.85, y: 0.85}}
@@ -185,58 +261,120 @@ export default class ProfileScreen extends React.Component {
           : <FontAwesome name={userData.photo.slice(3)} size={70} style={{color:'#2e4158'}} />
         } 
         </LinearGradient>
-        <Text style={{color: 'white', fontSize: 22, alignSelf: 'center', margin: 3}}>{userData.username}</Text> 
+        <Text style={{color: 'white', fontSize: 22, alignSelf: 'center', marginTop: 3}}>{userData.username}</Text> 
         
       </View>
       )}
 
-      <View style={{flex: 2, justifyContent: "center", alignItems:"center"}}>
-      <Switch disabled={false} value={this.state.switchSelected} style={{ marginTop: 0, backgroundColor: '#49cdb7', borderRadius: 17,  transform: [{ scaleX: 1.2 }, { scaleY: 1.2 }] }} onTintColor={'#2196F3'} tintColor={'#49cdb7'}
-        onValueChange={(value) => { this.handleToggleChange(value)}} ></Switch>
-      
-      <View style={{flex: 1, marginTop: 10}}>
-          {this.state.crypto_view === "interested"
-            ? <View>
-                <Text style={{color: 'white', fontSize:16, marginBottom: 5, alignSelf: "center"}}>CRYPTO YOU ARE INTERESTED IN</Text>
-                <ScrollView className="cryptoWallet"> 
-                {this.state.user_crypto.map((crypto, i) =>
-                  <View key={"interested " + i}>
-                    {
-                      (crypto.crypto_address === null)
-                          ? <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', width: '100%'}}>
-                              <Image className="cryptoImage" style={{alignContent:"flex-start", width: 50, height: 50}}  data-name={crypto.crypto_metadata_name} source={{url: crypto.crypto_logo}} data-id={crypto.id} onPress={(event)=>{this.handleAddressFormChange(event)}}></Image>
-                              <Text style={{marginLeft: 20, color: 'white', fontSize: 18 }}>{crypto.crypto_metadata_name}</Text>
-                          </View>
-                          : null
+      {!this.state.add_address && !this.state.add_cryptos && <View style={{flex: 2, justifyContent: "center", alignItems:"center"}}>
+          <Switch disabled={false} value={this.state.switchSelected} style={{ marginTop: 15, backgroundColor: '#49cdb7', borderRadius: 17,  transform: [{ scaleX: 1.2 }, { scaleY: 1.2 }] }} onTintColor={'#2196F3'} tintColor={'#49cdb7'}
+            onValueChange={(value) => { this.handleToggleChange(value)}} ></Switch>
+          
+          <View style={{flex: 1, marginTop: 10}}>
+              {this.state.crypto_view === "interested"
+                ? <View>
+                    <Text style={{color: 'white', fontSize:16, marginBottom: 5, alignSelf: "center"}}>CRYPTO YOU ARE INTERESTED IN</Text>
+                    <ScrollView className="cryptoWallet"> 
+                    {this.state.user_crypto.map((crypto, i) =>
+                      <View key={"interested " + i}>
+                        {
+                          (crypto.crypto_address === null)
+                              ? <TouchableHighlight style={{flex: 1, flexDirection: 'column', alignItems: 'center', width: '100%'}} onPress={(event)=>{this.handleAddressFormChange(event, crypto["id"], crypto["crypto_metadata_name"])}}>
+                                <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', width: '100%'}}>
+                                  <Image className="cryptoImage" style={{alignContent:"flex-start", width: 50, height: 50}}  data-name={crypto.crypto_metadata_name} source={{url: crypto.crypto_logo}} data-id={crypto.id}></Image>
+                                  <Text style={{marginLeft: 20, color: 'white', fontSize: 18 }}>{crypto.crypto_metadata_name}</Text>
+                                </View>
+                              </TouchableHighlight>
+                              : null
+                        }
+                      </View>
+                      )
                     }
+                    </ScrollView>
                   </View>
-                  )
-                }
-                </ScrollView>
-              </View>
-            : <View>
-                <Text style={{color: 'white', fontSize:16, marginBottom: 5, alignSelf: "center"}}>CRYPTO YOU OWN</Text>
-                <ScrollView className="cryptoWallet"> 
-                {this.state.user_crypto.map((crypto, i) =>
-                  <View key={"owned " + i} style={{marginTop:10}}>
-                    {
-                      (crypto.crypto_address !== null)
-                          ? <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', width: '100%'}}>
-                              <Image className="cryptoImage" style={{alignContent:"flex-start", width: 50, height: 50}}  data-name={crypto.crypto_metadata_name} source={{url: crypto.crypto_logo}} data-id={crypto.id} onPress={(event)=>{this.handleAddressFormChange(event)}}></Image>
-                              <Text style={{marginLeft: 20, color: 'white', fontSize: 18 }}>{crypto.crypto_metadata_name}</Text>
-                          </View>
-                          : null
+                : <View>
+                    <Text style={{color: 'white', fontSize:16, marginBottom: 5, alignSelf: "center"}}>CRYPTO YOU OWN</Text>
+                    <ScrollView className="cryptoWallet"> 
+                    {this.state.user_crypto.map((crypto, i) =>
+                      <View key={"owned " + i} style={{marginTop:10}}>
+                        {
+                          (crypto.crypto_address !== null)
+                              ? <TouchableHighlight style={{flex: 1, flexDirection: 'column', alignItems: 'center', width: '100%'}} onPress={(event)=>{this.showAddress(event)}}>
+                                  <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', width: '100%'}}>
+                                      <Image className="cryptoImage" style={{alignContent:"flex-start", width: 50, height: 50}}  data-name={crypto.crypto_metadata_name} source={{url: crypto.crypto_logo}} data-id={crypto.id}></Image>
+                                      <Text style={{marginLeft: 20, color: 'white', fontSize: 18 }}>{crypto.crypto_metadata_name}</Text>
+                                  </View>
+                                </TouchableHighlight>
+                              : null
+                        }
+                        { this.state.showCrytoAddress
+                          ? <Text style={{color: 'white', marginTop: 10, marginBottom: 10, textAlign: "center"}} selectable={true}>{crypto.crypto_address}</Text>
+                          : null 
+                        }
+                      </View>
+                      )
                     }
+                    </ScrollView>
+                  
                   </View>
-                  )
-                }
-                </ScrollView>
-              
-              </View>
-          }
-      </View>
+              }
+          </View>
 
+      </View>}
+
+      {this.state.add_address && <View style={{flex: 2}}>
+        <ScrollView>
+          <TouchableHighlight style={{flexDirection: 'row' }} onPress={this.handleAddressFormChange}><Text style={{marginLeft: 'auto' , fontSize: 20, color: "white"}}>X</Text></TouchableHighlight>
+        <TextInput
+            style={additionalStyles.textInput}
+            underlineColorAndroid="transparent"
+            placeholder="Enter Address"
+            placeholderTextColor="#58697e"
+            onChangeText={new_address => this.setState({ new_address })}
+            value={this.state.new_address}
+          />
+          <View style={{backgroundColor:"green", borderRadius: 10, marginTop: 20}}>
+            <Button
+            onPress={this.addAddress}
+            title={"Add " + this.state.current_crypto_name + " Address"}
+            color="white"
+            ></Button>
+          </View> 
+        </ScrollView>
       </View>
+  
+      }
+      {this.state.add_cryptos && <View style={{flex: 2, width: '90%'}}>
+          <TouchableHighlight style={{flexDirection: 'row' }} onPress={this.addMoreCryptos}><Text style={{marginLeft: 'auto' , fontSize: 20, color: "white"}}>X</Text></TouchableHighlight>
+          <KeyboardAvoidingView style={{width:"100%"}} behavior="position" enabled>
+          <CustomMultiPicker
+              style={{width:"100%", marginBottom: 60}}
+              options={this.state.cryptoOptionsLeft}
+              search={true} // should show search bar?
+              multiple={true} //
+              placeholder={'Search'}
+              placeholderTextColor={'#58697e'}
+              returnValue={'value'} // label or value
+              callback={res => {
+                this.setState({
+                  cryptoProfile: res
+                });
+              }} // callback, array of selected items
+              rowBackgroundColor={'#66dac7'}
+              rowHeight={51}
+              rowRadius={10}
+              iconColor={'black'}
+              iconSize={30}
+              selectedIconName={'md-checkmark-circle-outline'}
+              unselectedIconName={'ios-radio-button-off-outline'}
+              scrollViewHeight={163}
+              selected={[]} // list of options which are selected by default
+            />
+            
+          </KeyboardAvoidingView>
+      </View>
+      
+      }
        
      
         {/* <View style={styles.selector}>
@@ -269,28 +407,48 @@ export default class ProfileScreen extends React.Component {
             Why do I need to select cryptos?
           </Text>
         </View> */}
-        {/* <Button title="Logout" onPress={this.handleLogout} /> */}
+        <View style={{flexDirection:"row", margin: 10}}>
+          {this.state.user_crypto.length < 10 && !this.state.add_cryptos
+            ? <View style={{ backgroundColor:"green", borderRadius: 10 }}><Button color="white" title="Add Other Cryptos" onPress={this.addMoreCryptos}></Button></View>
+            : null
+          }
+          {this.state.add_cryptos && <View style={{backgroundColor:"green", borderRadius: 10}}><Button title="Update Crypto Portfolio" color="white" onPress={this.updateCryptoPortfolio}></Button></View>
+          }
+          <View style={{ marginLeft: 10, backgroundColor:"black", borderRadius: 10}}><Button color= "white" title="Logout" onPress={this.handleLogout} /></View>
+        </View>
       </View>
+      
     );
   }
 }
 
-const styles = StyleSheet.create({
+const additionalStyles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
     // justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#2e4158',
-    margin: 0
+    margin: 0,
+    marginBottom: 0
   },
   profileImageView: {
     flex: 1,
     alignSelf: 'center',
     marginTop: 15, 
-    // marginBottom: 40
+    marginBottom: 0,
+
     // position: 'absolute',
   },
-
+  textInput:{
+    flex: 2,
+    // height: 55,
+    width: '100%',
+    borderBottomWidth: 1,
+    borderColor: '#445366',
+    padding: 5,
+    fontSize: 20,
+    color: '#fff'
+  }
 
 });
