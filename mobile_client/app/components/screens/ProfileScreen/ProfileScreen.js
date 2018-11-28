@@ -40,6 +40,7 @@ export default class ProfileScreen extends React.Component {
       // password: '',
       // firstname: '',
       // lastname: '',
+      cryptoOptions:{},
       cryptoOptionsLeft: {},
       cryptoProfile: [],
       isLoggedIn: false,
@@ -125,15 +126,25 @@ export default class ProfileScreen extends React.Component {
     console.log(this.state);
   }
 
-  componentWillMount =  () => {
+  componentWillMount = async () => {
     try {
-      const valueToken =  AsyncStorage.getItem('token');
+      const valueToken = await AsyncStorage.getItem('token');
       return _loadProfile(valueToken).then(res => {
         console.log(res);
 
-        let { user_info, user_crypto, friends_array, transactions, remainging_cryptos } =  res;
-        console.log(user_info, user_crypto, friends_array, transactions, remainging_cryptos);
+        let { user_info, user_crypto, friends_array, transactions, cryptos} =  res;
+        console.log(user_info, user_crypto, friends_array, transactions, cryptos);
 
+
+        let cryptoOptions = {};
+
+        cryptos.map(crypto => {
+          let value = crypto.crypto_metadata_name;
+          let label =
+            crypto.crypto_metadata_name + ' ' + '(' + crypto.crypto_symbol + ')';
+          cryptoOptions[value] = label;
+        });
+    
          
         // let cryptoOptionsLeft = {};
   
@@ -145,7 +156,7 @@ export default class ProfileScreen extends React.Component {
         // });
         // console.log("146 " , cryptoOptionsLeft);
 
-        this.setState({ user_info, user_crypto, friends_array, transactions});
+        this.setState({ user_info, user_crypto, friends_array, transactions, cryptoOptions});
         console.log(this.state);
       });
     } catch (error) {
@@ -186,6 +197,7 @@ export default class ProfileScreen extends React.Component {
   }
 
   showAddress = (event) => {
+
     if(this.state.showCrytoAddress){
       this.setState({
         showCrytoAddress: false
@@ -331,7 +343,6 @@ export default class ProfileScreen extends React.Component {
             placeholder="Enter Address"
             placeholderTextColor="#58697e"
             onChangeText={new_address => this.setState({ new_address })}
-            value={this.state.new_address}
           />
           <View style={{backgroundColor:"green", borderRadius: 10, marginTop: 20}}>
             <Button
@@ -349,7 +360,7 @@ export default class ProfileScreen extends React.Component {
           <KeyboardAvoidingView style={{width:"100%"}} behavior="position" enabled>
           <CustomMultiPicker
               style={{width:"100%", marginBottom: 60}}
-              options={this.state.cryptoOptionsLeft}
+              options={this.state.cryptoOptions}
               search={true} // should show search bar?
               multiple={true} //
               placeholder={'Search'}
