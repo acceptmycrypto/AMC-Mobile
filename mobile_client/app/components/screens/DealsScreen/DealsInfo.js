@@ -134,8 +134,7 @@ export default class PostInfo extends React.Component {
     // });
   }
 
-  checkOutPage = (post,theView) => {
-    console.log("HELLOOOOOOO LINE 141 "+ JSON.stringify(theView))
+  checkOutPage () {
     this.scrollView.scrollToEnd();
     if (this.state.color == "" && this.state.size == "") {
       this.setState({checkedbox1: false, checkedbox2: false});
@@ -204,8 +203,9 @@ export default class PostInfo extends React.Component {
                       fontSize: 15,
                       marginLeft: 0,
                       opacity: 0.54,
-                      width: 90,
-                      textAlign: 'right' 
+                      width: 100,
+                      textAlign: 'right',
+                      marginLeft: -13
                     }}>
                     Dollar Price:
                   </Text>
@@ -229,8 +229,9 @@ export default class PostInfo extends React.Component {
                   <Text style={{
                       fontSize: 15,
                       opacity: 0.54,
-                      width: 90,
-                      textAlign: 'right', 
+                      width: 100,
+                      textAlign: 'right',
+                      marginLeft: -13 
                     }}>
                     Crypto Price:
                   </Text>
