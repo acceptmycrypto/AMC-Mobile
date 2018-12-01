@@ -7,7 +7,7 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import Venues from '../../screens/VenuesScreen/VenuesScreen'
 import Deals from '../../screens/DealsScreen/DealsScreen';
 import DealsInfo from '../../screens/DealsScreen/DealsInfo';
-import AddPost from '../../screens/DealsScreen/AddPost';
+import DealsCheckout from '../../screens/DealsScreen/DealsCheckout';
 import ProfileScreen from '../../screens/ProfileScreen/ProfileScreen';
 import LogoTitle from './LogoTitle';
 
@@ -43,8 +43,8 @@ const DealsStack = createStackNavigator(
     DealsInfo: {
       screen: DealsInfo
     },
-    AddPost: {
-      screen: AddPost
+    DealsCheckout: {
+      screen: DealsCheckout
     }
   },
   {
