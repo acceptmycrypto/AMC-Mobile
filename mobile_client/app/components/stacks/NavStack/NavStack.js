@@ -3,54 +3,53 @@ import {
   createStackNavigator,
   createBottomTabNavigator
 } from 'react-navigation';
-import Ionicons from '@expo/vector-icons/Ionicons';
-import BrowseScreen from '../../screens/BrowseScreen/BrowseScreen';
-import Post from '../../screens/Post/Post';
-import PostInfo from '../../screens/Post/PostInfo';
-import AddPost from '../../screens/Post/AddPost';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import Venues from '../../screens/VenuesScreen/VenuesScreen'
+import Deals from '../../screens/DealsScreen/DealsScreen';
+import DealsInfo from '../../screens/DealsScreen/DealsInfo';
+import DealsCheckout from '../../screens/DealsScreen/DealsCheckout';
 import ProfileScreen from '../../screens/ProfileScreen/ProfileScreen';
-// import Login from "../../screens/LaunchScreen/components/Login";
-// import Register from "../../screens/LaunchScreen/components/Register";
-import SettingsScreen from '../../screens/SettingsScreen/SettingsScreen';
-import CartScreen from '../../screens/CartScreen/CartScreen';
 import LogoTitle from './LogoTitle';
 
 const header = {
-  // headerTitle: <LogoTitle />,
+  headerTitle: <LogoTitle />,
   headerStyle: {
-    backgroundColor: '#f4511e'
+    backgroundColor: '#66dac7',
+    // alignSelf: 'center'
   },
-  headerTintColor: '#fff',
-  headerTitleStyle: {
-    fontWeight: 'bold'
-  }
+  // headerTintColor: '#fff',
+  // headerTitleStyle: {
+  //   alignSelf: 'center'
+  // }
 };
 
-const BrowseStack = createStackNavigator(
+const VenuesStack = createStackNavigator(
   {
-    Browse: {
-      screen: BrowseScreen
+    Venues: {
+      screen: Venues
     }
   },
   {
-    navigationOptions: header
+    navigationOptions: header,
+    headerLayoutPreset: 'center'
   }
 );
 
-const PostStack = createStackNavigator(
+const DealsStack = createStackNavigator(
   {
-    Search: {
-      screen: Post
+    Deals: {
+      screen: Deals
     },
-    PostInfo: {
-      screen: PostInfo
+    DealsInfo: {
+      screen: DealsInfo
     },
-    AddPost: {
-      screen: AddPost
+    DealsCheckout: {
+      screen: DealsCheckout
     }
   },
   {
-    navigationOptions: header
+    navigationOptions: header,
+    headerLayoutPreset: 'center'
   }
 );
 
@@ -61,68 +60,48 @@ const ProfileStack = createStackNavigator(
     }
   },
   {
-    navigationOptions: header
-  }
-);
-
-const SettingsStack = createStackNavigator(
-  {
-    Settings: {
-      screen: SettingsScreen
-    }
-  },
-  {
-    navigationOptions: header
-  }
-);
-
-const CartStack = createStackNavigator(
-  {
-    Cart: {
-      screen: CartScreen
-    }
-  },
-  {
-    navigationOptions: header
+    navigationOptions: header,
+    headerLayoutPreset: 'center'
   }
 );
 
 export default createBottomTabNavigator(
   {
-    Browse: BrowseStack,
-    Search: PostStack,
+    Venues: VenuesStack,
+    Deals: DealsStack,
     Profile: ProfileStack,
-    Settings: SettingsStack,
-    Cart: CartStack
   },
   {
     navigationOptions: ({ navigation }) => ({
       tabBarIcon: ({ focused, horizontal, tintColor }) => {
         const { routeName } = navigation.state;
         let iconName;
-        if (routeName === 'Browse') {
-          iconName = `ios-planet${focused ? '' : '-outline'}`;
-        } else if (routeName === 'Search') {
-          iconName = `ios-search${focused ? '' : '-outline'}`;
+        if (routeName === 'Venues') {
+          iconName = `home${focused ? '' : '-outline'}`;
+        } else if (routeName === 'Deals') {
+          iconName = `${focused ? 'tag-multiple' : 'tag-outline'}`;
         } else if (routeName === 'Profile') {
-          iconName = `ios-person${focused ? '' : '-outline'}`;
-        } else if (routeName === 'Settings') {
-          iconName = `ios-settings${focused ? '' : '-outline'}`;
-        } else if (routeName === 'Cart') {
-          iconName = `ios-cart${focused ? '' : '-outline'}`;
+          iconName = `account-box${focused ? '' : '-outline'}`;
         }
         return (
-          <Ionicons
+          <MaterialCommunityIcons
             name={iconName}
             size={horizontal ? 20 : 25}
             color={tintColor}
+            style={{ backgroundColor: '#2e4158' }}
           />
         );
       }
     }),
     tabBarOptions: {
-      activeTintColor: 'tomato',
-      inactiveTintColor: 'gray'
+      style: {
+        backgroundColor: '#2e4158',
+        borderTopColor: '#40556e',
+        borderTopWidth: 3
+      },
+      activeTintColor: '#66dac7',
+      inactiveTintColor: '#fff',
+      showLabel: false
     }
   }
 );

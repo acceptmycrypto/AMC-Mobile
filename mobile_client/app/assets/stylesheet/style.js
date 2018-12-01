@@ -3,9 +3,10 @@ const React = require('react-native');
 const { StyleSheet } = React;
 
 module.exports = StyleSheet.create({
+  // LAUNCH SCREEN
   flexRow: {
     flexDirection: 'row',
-    marginTop: 65
+    marginTop: 25
   },
   font25: {
     fontSize: 25
@@ -28,9 +29,9 @@ module.exports = StyleSheet.create({
     // alignSelf: 'stretch',
   },
   logo: {
-    flex: .8,
+    flex: 0.8,
     resizeMode: 'contain',
-    marginTop: 40,
+    marginTop: 40
     // width: '100%',
     // height: '30%',
     // alignItems: 'center',
@@ -57,13 +58,14 @@ module.exports = StyleSheet.create({
   },
   textInput: {
     height: 35,
+    // height: '5%',
     width: '80%',
     // backgroundColor: '#fff',
     borderBottomWidth: 1,
     // borderRadius: 4,
     borderColor: '#445366',
     padding: 5,
-    margin: 8,
+    // margin: 8,
     fontSize: 15,
     color: '#fff'
     // fontWeight: 'bold',
@@ -108,7 +110,7 @@ module.exports = StyleSheet.create({
     borderRadius: 25,
     backgroundColor: '#52c4b9',
     width: '70%',
-    marginTop: 10,
+    marginTop: 15,
     marginBottom: 15
   },
   buttonText: {
@@ -130,7 +132,7 @@ module.exports = StyleSheet.create({
     // },
     // shadowOpacity: 100,
     fontSize: 13,
-    fontWeight: '500',
+    fontWeight: '500'
     // fontWeight: 'bold',
     // background-color: #52c4b9;
     // color: #fff;
@@ -141,14 +143,15 @@ module.exports = StyleSheet.create({
     // font-size: .8em;
     // font-weight: 500;
   },
-  dropdown: {
-    width: '80%',
-    marginTop: -15
+  selector: {
+    width: '80%'
+    // marginTop: -15
   },
-  dropdownText: {
+  selectorText: {
     alignSelf: 'center',
-    marginBottom: 30,
-    color: 'blue',
+    marginTop: 10,
+    marginBottom: 20,
+    color: '#66dac7',
     textDecorationLine: 'underline'
   },
   termsTop: {
@@ -165,7 +168,52 @@ module.exports = StyleSheet.create({
     justifyContent: 'space-around'
   },
   registerGap: {
-    flex: 0.85,
+    flex: 0.8,
     justifyContent: 'space-around'
+  },
+
+  // DEALS SCREEN
+  dealsContainer: {
+    flex: 1,
+    backgroundColor: '#2e4158',
+    alignSelf: 'stretch',
+    flexDirection: 'column'
+  },
+  textStyle: {
+    marginTop: 10,
+    fontSize: 12,
+    fontWeight: '200'
+  },
+  postStyle: {
+    backgroundColor: 'white',
+    borderWidth: 1,
+    borderColor: 'grey',
+    padding: 10,
+    flexDirection: 'row'
+  },
+  searchStyle: {
+    // backgroundColor: "#2e4158",
+    // padding: 8,
+    // marginBottom: 5,
+    // marginLeft: 5,
+    // width: '100%',
+    // height: 45,
+
+    // height: 35,
+    flex: 1,
+    // width: '95%',
+    borderBottomWidth: 1,
+    borderColor: '#445366',
+    padding: 5,
+    marginTop: 2,
+    marginBottom: 5,
+    marginLeft: 10,
+    marginRight: 10,
+    fontSize: 15,
+    color: '#fff'
+  },
+  searchBarStyle: {
+    flexDirection: 'row',
+    marginTop: 5
   }
 });
