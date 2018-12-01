@@ -9,11 +9,13 @@ import {
   ActivityIndicator,
   ScrollView,
   Animated,
+  AsyncStorage
   } from 'react-native';
 import { Button } from 'react-native-elements';
-import { _verifier } from "../../../../src//services/AuthService";
+import { _verifier, _loadCryptocurrencies } from "../../../../src/services/AuthService";
 import { LinearGradient } from 'expo';
 import { Dropdown } from 'react-native-material-dropdown';
+import { _fetchTransactionInfo } from '../../../../src/services/DealServices';
 
 export default class DealsCheckout extends React.Component {
   constructor(props) {
@@ -24,27 +26,35 @@ export default class DealsCheckout extends React.Component {
       address: "",
       city: "",
       zipCode: "",
-      state: undefined,
-      states:[
-        {label: 'AL', Value: 'Alabama'},{label: 'AK', Value: 'Alaska'},{label: 'AZ', Value: 'Arizona'},{label: 'AR', Value: 'Arkansas'},
-        {label: 'CA', Value: 'California'},{label: 'CO', Value: 'Colorado'},{label: 'CT', Value: 'Connecticut'},
-        {label: 'DE', Value: 'Delaware'},{label: 'FL', Value: 'Florida'},{label: 'GA', Value: 'Georgia'},{label: 'HI', Value: 'Hawaii'},
-        {label: 'ID', Value: 'Idaho'},{label: 'IL', Value: 'Illinois'},{label: 'IN', Value: 'Indiana'},{label: 'IA', Value: 'Iowa'},
-        {label: 'KS', Value: 'Kansas'},{label: 'KY', Value: 'Kentucky'},{label: 'LA', Value: 'Louisiana'},
-        {label: 'ME', Value: 'Maine'},{label: 'MD', Value: 'Maryland'},{label: 'MA', Value: 'Massachusetts'},{label: 'MI', Value: 'Michigan'},
-        {label: 'MN', Value: 'Minnesota'},{label: 'MS', Value: 'Mississippi'},{label: 'MO', Value: 'Missouri'},{label: 'MT', Value: 'Montana'},
-        {label: 'NE', Value: 'Nebraska'},{label: 'NV', Value: 'Nevada'},{label: 'NH', Value: 'New Hampshire'},{label: 'NJ', Value: 'New Jersey'},
-        {label: 'NM', Value: 'New Mexico'},{label: 'NY', Value: 'New York'},{label: 'NC', Value: 'North Carolina'},{label: 'ND', Value: 'North Dakota'},
-        {label: 'OH', Value: 'Ohio'},{label: 'OK', Value: 'Oklahoma'},{label: 'OR', Value: 'Oregon'},{label: 'PA', Value: 'Pennsylvania'},
-        {label: 'RI', Value: 'Rhode Island'},{label: 'SC', Value: 'South Carolina'},{label: 'SD', Value: 'South Dakota'},{label: 'TN', Value: 'Tennessee'},
-        {label: 'TX', Value: 'Texas'},{label: 'UT', Value: 'Utah'},{label: 'VT', Value: 'Vermont'},{label: 'VA', Value: 'Virginia'},
-        {label: 'WA', Value: 'Washington'},{label: 'WV', Value: 'West Virginia'},{label: 'WI', Value: 'Wisconsin'},{label: 'WY', Value: 'Wyoming'},
+      state: "",
+      states:[ {label: 'AL', value: 'Alabama'},{label: 'AK', value: 'Alaska'},{label: 'AZ', value: 'Arizona'},{label: 'AR', value: 'Arkansas'},
+        {label: 'CA', value: 'California'},{label: 'CO', value: 'Colorado'},{label: 'CT', value: 'Connecticut'},
+        {label: 'DE', value: 'Delaware'},{label: 'FL', value: 'Florida'},{label: 'GA', value: 'Georgia'},{label: 'HI', value: 'Hawaii'},
+        {label: 'ID', value: 'Idaho'},{label: 'IL', value: 'Illinois'},{label: 'IN', value: 'Indiana'},{label: 'IA', value: 'Iowa'},
+        {label: 'KS', value: 'Kansas'},{label: 'KY', value: 'Kentucky'},{label: 'LA', value: 'Louisiana'},
+        {label: 'ME', value: 'Maine'},{label: 'MD', value: 'Maryland'},{label: 'MA', value: 'Massachusetts'},{label: 'MI', value: 'Michigan'},
+        {label: 'MN', value: 'Minnesota'},{label: 'MS', value: 'Mississippi'},{label: 'MO', value: 'Missouri'},{label: 'MT', value: 'Montana'},
+        {label: 'NE', value: 'Nebraska'},{label: 'NV', value: 'Nevada'},{label: 'NH', value: 'New Hampshire'},{label: 'NJ', value: 'New Jersey'},
+        {label: 'NM', value: 'New Mexico'},{label: 'NY', value: 'New York'},{label: 'NC', value: 'North Carolina'},{label: 'ND', value: 'North Dakota'},
+        {label: 'OH', value: 'Ohio'},{label: 'OK', value: 'Oklahoma'},{label: 'OR', value: 'Oregon'},{label: 'PA', value: 'Pennsylvania'},
+        {label: 'RI', value: 'Rhode Island'},{label: 'SC', value: 'South Carolina'},{label: 'SD', value: 'South Dakota'},{label: 'TN', value: 'Tennessee'},
+        {label: 'TX', value: 'Texas'},{label: 'UT', value: 'Utah'},{label: 'VT', value: 'Vermont'},{label: 'VA', value: 'Virginia'},
+        {label: 'WA', value: 'Washington'},{label: 'WV', value: 'West Virginia'},{label: 'WI', value: 'Wisconsin'},{label: 'WY', value: 'Wyoming'}
       ],
-      payment: "",
+      amount: "",
       viewPaymentMethod: false,
-      formOfPayment: "",
+      cryptoOptions: [],
+      crypto_name: "",
+      crypto_symbol: "",
       paymentSelected: false,
       paymentReceived: false,
+      deal_id: "",
+      deal_name: "",
+      featured_deal_image: "",
+      pay_in_dollar: "",
+      pay_in_crypto: "",
+      size: "",
+      color: ""
     };
   }
 
@@ -63,7 +73,28 @@ export default class DealsCheckout extends React.Component {
     }).start()
    }
 
+  /*getQRCode = async () => {
+    try {
+      const token = await AsyncStorage.getItem('token');
+      if(token !== null){
+        console.log("what are you token? : " + token);
+        let crypto_name = this.state.crypto_name;
+        let crypto_symbol = this.state.crypto_symbol;
+        let deal_id = this.state.deal_id;
+        let amount = this.state.pay_in_crypto;
+        return _fetchTransactionInfo(crypto_name, crypto_symbol, deal_id, amount, token)
+        .then(transactionData => {
+          this.setState({transactionData});
+          console.log(this.state.transactionData);
+        })
+      }
+    } catch (error) {
+      console.log("no token wtf: " + error);
+    }
+  }*/
+
   checkToken = async () => {
+
     try {
       const value = await AsyncStorage.getItem('token');
       if (value !== null) {
@@ -94,72 +125,121 @@ export default class DealsCheckout extends React.Component {
     }
   };
 
+  componentDidMount() {
+    const { navigation } = this.props;
+      this.setState({
+        deal_id: navigation.getParam('deal_id', ''),
+        deal_name: navigation.getParam('deal_name', ''),
+        featured_deal_image: navigation.getParam('featured_deal_image', ''),
+        pay_in_dollar: navigation.getParam('pay_in_dollar',''),
+        pay_in_crypto: navigation.getParam('pay_in_crypto',''),
+        size: navigation.getParam('size', ''),
+        color: navigation.getParam('color', '')
+      });
+  }
+
   componentWillMount() {
     this.checkToken();
+
+    _loadCryptocurrencies().then(cryptos => {
+      let cryptoOptions = [];
+
+      cryptos.map(crypto => {
+        let optionObj = {};
+        optionObj.value = {crypto_symbol: crypto.crypto_symbol, crypto_name: crypto.crypto_metadata_name};
+        optionObj.label = crypto.crypto_metadata_name + " (" + crypto.crypto_symbol + ")";
+
+        cryptoOptions.push(optionObj);
+      });
+      this.setState({ cryptoOptions });
+    });
   }
 
   render() {
     return (
-      <ScrollView style={styles.container}>
-        {/*Will include a sticky section at the top from previous page with the deals info but in a smaller form*/}
+    <View style={styles.container}>
+      {/*Will include a sticky section at the top from previous page with the deals info but in a smaller form*/}
+        <View style={{borderBottomColor: '#dbd8ce',
+          borderBottomWidth: 1,
+          flexDirection: 'row',
+          padding: 10,}}>
+          <Image
+            style={{width: 50, height: 50,}}
+            source={{url:this.state.featured_deal_image}}
+            />
+          <View style={{flex:1, flexDirection:'column', marginLeft: 10,}}>
+            <Text style={{fontWeight: 'bold', }}>{this.state.deal_name} </Text>
+            <View style={{flexDirection: 'row', marginBottom: 2}}>
+              <View style={{flexDirection: 'row',width:'40%' }}>
+                <Text style={{fontWeight: 'bold', }}>Size: </Text><Text>{this.state.size} </Text>
+              </View>
+              <View style={{flexDirection: 'row', marginBottom: 2}}>
+                <Text style={{fontWeight: 'bold',}}>Color:</Text><Text> {this.state.color} </Text>
+              </View>
+            </View>
+            <View style={{flexDirection:'row'}}>
+              <View style={{flexDirection: 'row', width: '40%'}}>
+              <Text style={{fontWeight: 'bold', }}>Price: </Text><Text>${this.state.pay_in_dollar}</Text>
+              </View>
+              <View style={{flexDirection: 'row'}}>
+              <Text style={{fontWeight: 'bold', color: 'green'}}>Cryptocurrency:</Text><Text style={{color: 'green'}}> ${this.state.pay_in_crypto}</Text>
+              </View>
+            </View>
+          </View>
+        </View>
+      <ScrollView>
         {/*Address View*/}
-        <View style={styles.postStyle}>
-          <Text style={{fontSize: 25, marginBottom: 10, textAlign: 'center', borderBottomColor: '#dbd8ce', borderBottomWidth: 2}}>Shipping</Text>
-          <Text style={{fontSize: 12, color: '#cccccc'}}>Full Name</Text>
+        <View style={[styles.postStyle, {borderBottomColor: '#000000', borderBottomWidth: 2, marginBottom: 10}]}>
+          <Text style={{fontSize: 25, marginVertical: 5, borderBottomColor: '#dbd8ce', borderBottomWidth: 2, fontWeight: 'bold'}}>Shipping:</Text>
+          <Text style={{fontSize: 16,}}>Full Name</Text>
           <TextInput
             ref="fullName"
             style={styles.inputStyle}
-            placeholder="Full name"
+            placeholder="ex: John Smith"
             onChangeText={fullName => this.setState({ fullName }, this.checkAddress)}
             returnKeyType={'next'}
             onSubmitEditing={()=>this.address.focus()}
           />
-          <Text style={{fontSize: 12, color: '#cccccc'}}>Address</Text>
+          <Text style={{fontSize: 16,}}>Address</Text>
           <TextInput
             ref={address => this.address = address}
             style={styles.inputStyle}
-            placeholder="Address"
+            placeholder="Ex: 123 Main Street"
             onChangeText={address => this.setState({ address }, this.checkAddress)}
             returnKeyType={'next'}
             onSubmitEditing={()=>this.city.focus()}
           />
-          <Text style={{fontSize: 12, color: '#cccccc'}}>City</Text>
+          <Text style={{fontSize: 16,}}>City</Text>
           <TextInput
             ref={city => this.city = city}
             style={styles.inputStyle}
-            placeholder="City"
+            placeholder="Ex: San Francisco"
             onChangeText={city => this.setState({ city }, this.checkAddress)}
             returnKeyType={'next'}
-            onSubmitEditing={() => {this.states}}
           />
-          {/*State TextInput will be a dropdown menu with USA states*/}
           <View style={{flex: 1, flexDirection: 'row'}}>
-            <View style={{width: 100}}>
-           { /*<TextInput
-              ref={state => this.state_loc = state}
-              style={[styles.inputStyle, {width: '98%'}]}
-              placeholder="State"
-              onChangeText={state => this.setState({ state }, this.checkAddress)}
-              returnKeyType={'next'}
-              onSubmitEditing={()=>this.zipCode.focus()}
-            />*/}
+            <View style={{width: 125}}>
               <Dropdown
+                baseColor="#000000"
+                textColor="#000000"
                 label='State'
                 data={this.state.states}
-                onChangeText= {(value) => this.setState({state: value,}, this.checkAddress) }
+                onChangeText= {(value, index) => this.setState({state: value,}, this.checkAddress) }
               />
             </View>
-            <View style={{flex: 1}}>
-              <Text style={{fontSize: 12, color: '#cccccc', textAlign: 'left'}}>Zip Code</Text>
+            <View style={{flex: 1, marginLeft: 5}}>
+              <Text style={{fontSize: 16, textAlign: 'left'}}>Zip Code</Text>
               <TextInput
                 ref={zipCode => this.zipCode = zipCode}
                 keyboardType="numeric"
-                style={[styles.inputStyle, {width: '98%'}]}
+                style={[styles.inputStyle, {width: '95%'}]}
                 maxLength={5}
-                placeholder="Zip Code"
+                placeholder=""
                 onChangeText={ zipCode => {
-                this.setState({zipCode}, this.checkAddress)
+                this.setState({zipCode})
                 }}
+                returnKeyType={'done'}
+                onSubmitEditing={() => {this.checkAddress()}}
               />
             </View>
           </View>
@@ -167,45 +247,44 @@ export default class DealsCheckout extends React.Component {
         {/*Payment Method View*/}
         {
           this.state.viewPaymentMethod ?
-            <Animated.View style={[styles.postStyle,{opacity: this.state.fadeValue}]}>
+            <Animated.View style={[styles.postStyle,{opacity: this.state.fadeValue, marginBottom: 10}]}>
               {this.fadeInAnimation()}
-              <Text style={{fontSize: 25, marginBottom: 5, textAlign: 'center'}}>Form of Payment</Text>
-              {/*This TextInput needs to be a dropdown*/}
-              <TextInput
-                ref="payment_type"
-                style={styles.inputStyle}
-                placeholder="Form of Payment"
-                onChangeText={ payment => this.setState({ payment })}
-                returnKeyType={'done'}
-              />
+              <Text style={{fontSize: 25,fontWeight: 'bold', paddingVertical: 5, borderBottomColor: '#dbd8ce', borderBottomWidth: 2,}}>Form of Payment:</Text>
+              <View style={{width: '100%'}}>
+                <Dropdown
+                  baseColor="#999999"
+                  label='Select form of cryptocurrency'
+                  data={this.state.cryptoOptions}
+                  onChangeText= {(value, index) => {
+                    this.setState({crypto_name: value.crypto_name, crypto_symbol: value.crypto_symbol, paymentSelected: true})}}
+                />
+                {/*Image of QR code load here*/}
+                {
+                  /*this.state.paymentSelected ? this.getQRCode() : null*/
+                }
+              </View>
             </Animated.View>
           : null
          }
-
-       <View style={{ flex: 1, flexDirection: 'column' ,marginTop: 10, alignItems: 'center', justifyContent: 'flex-end', position: 'relative', bottom: 0 }}>
-         <TouchableOpacity
-           style={{
-             paddingTop:20,
-             paddingBottom:20,
-           }}
-         >
-           <LinearGradient
+         <View style={{ flex: 1, flexDirection: 'column',}}>
+           <TouchableOpacity style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+             <LinearGradient
              colors={ this.state.paymentReceived ? ['#fff4cc','#efb404','#d1a31d'] : ['#ffffff','#cccccc','#999999']}
-             style={{
-               borderWidth: 1,
-               borderRadius: 5, width:390, padding: 15, alignItems: 'center', borderRadius: 5,}}>
-             <Text
+             style={{flex: 1, borderWidth: 1, borderRadius: 5, padding: 15, width: 300,justifyContent: 'center', alignItems: 'center', borderRadius: 5}}>
+               <Text
                style={{
-                 backgroundColor: 'transparent',
-                 fontSize: 15,
-                 color: 'black',
+               backgroundColor: 'transparent',
+               fontSize: 15,
+               color: 'black',
+               textAlign: 'center',
                }}>
-               Checkout
-             </Text>
-           </LinearGradient>
-         </TouchableOpacity>
-        </View>
+                 Checkout
+               </Text>
+             </LinearGradient>
+           </TouchableOpacity>
+         </View>
       </ScrollView>
+    </View>
     );
   }
 }

@@ -156,21 +156,14 @@ export default class PostInfo extends React.Component {
         featured_deal_image: this.state.featured_deal_image,
         pay_in_dollar: this.state.pay_in_dollar,
         pay_in_crypto: this.state.pay_in_crypto,
-        size: this.state.sizeOption,
-        color: this.state.colorOption,
+        size: this.state.size,
+        color: this.state.color,
       });
     }
   };
 
   render() {
 
-    // if(this.state.isLoading){
-    //   return (
-    //     <View>
-    //       <ActivityIndicator />
-    //     </View>
-    //   );
-    // }
     console.log(this.state);
     let colors = this.state.colorOption;
     let size = this.state.sizeOption;
@@ -309,7 +302,7 @@ export default class PostInfo extends React.Component {
             </View>
           </View>
 
-          <View style={{marginTop: 20, flexDirection: 'row', justifyContent: 'space-between',               borderBottomColor: '#dbd8ce',
+          <View style={{marginTop: 20, flexDirection: 'row', justifyContent: 'space-between', borderBottomColor: '#dbd8ce',
               borderBottomWidth: 1, }}>     
             <View style={{marginLeft: 20, width: 150}}>
             {this.state.checkedbox1 == false && <Text style={{color: 'red'}}>Please Select A Size</Text>}
@@ -372,7 +365,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white',
     alignSelf: 'stretch',
-    // flexDirection: 'column',
   },
   description: {
     borderBottomColor: '#dbd8ce',
@@ -382,15 +374,6 @@ const styles = StyleSheet.create({
     borderWidth: 0,
     borderColor: 'grey',
   },
-  // checkoutButton: {
-  //   textAlign: 'center', 
-  //   margin: 5,
-  //   borderRadius: 25,
-  //   backgroundColor: '#52c4b9',
-  //   width: '70%',
-  //   marginTop: 10,
-  //   marginBottom: 15
-  // },
   buttonText: {
     height: 30,
     backgroundColor: '#52c4b9',
