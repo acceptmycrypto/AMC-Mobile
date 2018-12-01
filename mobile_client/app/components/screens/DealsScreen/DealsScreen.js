@@ -237,6 +237,7 @@ export default class Post extends React.Component {
                           <Text
                             style={{
                               // alignContent: "flex-end",
+                              fontSize: 11,
                               opacity: 0.54,
                               marginTop: 20,
                               textAlign: 'right', 
@@ -249,6 +250,7 @@ export default class Post extends React.Component {
                           <Text
                             style={{
                               // alignContent: "flex-end",
+                              fontSize: 11,
                               marginLeft: 0,
                               marginTop: 20,
                               marginLeft: 10,
@@ -263,6 +265,7 @@ export default class Post extends React.Component {
                           <Text
                             style={{
                               // alignContent: "flex-end",
+                              fontSize: 11,
                               opacity: 0.54,
                               marginLeft: 0,
                               marginTop: 20,
@@ -276,6 +279,7 @@ export default class Post extends React.Component {
                           <Text
                             style={{
                               // alignContent: "flex-end",
+                              fontSize: 11,
                               color: 'green',
                               marginLeft: 0,
                               marginTop: 20,
@@ -288,12 +292,10 @@ export default class Post extends React.Component {
 
                           <Text
                             style={{
-                              // alignContent: "flex-end",
                               fontSize: 11,
                               color: 'green',
                               marginLeft: 0,
                               marginTop: 20,
-                              marginLeft: 10,
                               borderWidth: 2,
                               borderColor: 'green',
                               borderRadius: 5
