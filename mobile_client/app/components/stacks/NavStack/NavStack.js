@@ -31,7 +31,7 @@ const VenuesStack = createStackNavigator(
   },
   {
     navigationOptions: header,
-    headerLayoutPreset: 'center'
+    headerLayoutPreset: 'center',
   }
 );
 

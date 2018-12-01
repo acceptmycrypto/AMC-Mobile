@@ -34,12 +34,6 @@ export default class ProfileScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      // id: 0,
-      // username: '',
-      // email: '',
-      // password: '',
-      // firstname: '',
-      // lastname: '',
       cryptoOptions:{},
       cryptoOptionsLeft: {},
       cryptoProfile: [],
@@ -461,5 +455,4 @@ const additionalStyles = StyleSheet.create({
     fontSize: 20,
     color: '#fff'
   }
-
 });
