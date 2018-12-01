@@ -96,7 +96,7 @@ export default class Post extends React.Component {
   }
 
   handleBackPress = () => {
-    BackHandler.exitApp(); // works best when the goBack is async
+    BackHandler.exitApp();
     return true;
   };
 
@@ -117,9 +117,6 @@ export default class Post extends React.Component {
                 return postData.deal_name.includes(this.state.search);
               });
               this.setState({ dealsData: searchData });
-            },
-            function() {
-              this.setState({ search: '' });
             }
           )
           .catch(err => console.log(err));

@@ -1,4 +1,4 @@
-let url = 'https://amc-web.herokuapp.com' || 'http://localhost:3001';
+let url = 'https://acceptmycrypto.herokuapp.com' || 'http://localhost:3001';
 
 export async function _updateCryptoTable(crypto_address, id, token) {
   const crypto_settings = {
@@ -31,15 +31,15 @@ export async function _updateCryptoTable(crypto_address, id, token) {
     body: JSON.stringify({ token })
   };
 
-  const userProfileData = await fetch(url + '/profile', user_settings);
-  const user_info = await userProfileData.json();
+  // const userProfileData = await fetch(url + '/profile', user_settings);
+  // const user_info = await userProfileData.json();
 
   const userCryptoData = await fetch(url + '/profile/crypto', user_settings);
   const user_crypto = await userCryptoData.json();
   const crypto_view = await 'owned';
   const add_address = await false;
 
-  return { user_info, user_crypto, crypto_view, add_address };
+  return { user_crypto, crypto_view, add_address };
 }
 
 export async function _loadProfile(token) {
@@ -66,5 +66,11 @@ export async function _loadProfile(token) {
   );
   const transactions = await profile_transactions.json();
 
-  return { user_info, user_crypto, friends_array, transactions };
+  // const remaining_options = await fetch(url + '/crypto/left', settings);
+  // const remaining_cryptos = await remaining_options.json();
+
+  const cryptocurrencies = await fetch(url + '/cryptocurrencies/');
+  const cryptos = await cryptocurrencies.json();
+
+  return { user_info, user_crypto, friends_array, transactions, cryptos};
 }
