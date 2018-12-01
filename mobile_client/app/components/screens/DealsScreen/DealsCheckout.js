@@ -9,12 +9,12 @@ import {
   ActivityIndicator,
   ScrollView,
   Animated,
+  AsyncStorage
   } from 'react-native';
 import { Button } from 'react-native-elements';
-import { _verifier } from "../../../../src//services/AuthService";
+import { _verifier, _loadCryptocurrencies } from "../../../../src/services/AuthService";
 import { LinearGradient } from 'expo';
 import { Dropdown } from 'react-native-material-dropdown';
-import { _loadCryptocurrencies } from '../../../../src/services/AuthService';
 import { _fetchTransactionInfo } from '../../../../src/services/DealServices';
 
 export default class DealsCheckout extends React.Component {
@@ -48,6 +48,13 @@ export default class DealsCheckout extends React.Component {
       crypto_symbol: "",
       paymentSelected: false,
       paymentReceived: false,
+      deal_id: "",
+      deal_name: "",
+      featured_deal_image: "",
+      pay_in_dollar: "",
+      pay_in_crypto: "",
+      size: "",
+      color: ""
     };
   }
 
@@ -66,7 +73,28 @@ export default class DealsCheckout extends React.Component {
     }).start()
    }
 
+  /*getQRCode = async () => {
+    try {
+      const token = await AsyncStorage.getItem('token');
+      if(token !== null){
+        console.log("what are you token? : " + token);
+        let crypto_name = this.state.crypto_name;
+        let crypto_symbol = this.state.crypto_symbol;
+        let deal_id = this.state.deal_id;
+        let amount = this.state.pay_in_crypto;
+        return _fetchTransactionInfo(crypto_name, crypto_symbol, deal_id, amount, token)
+        .then(transactionData => {
+          this.setState({transactionData});
+          console.log(this.state.transactionData);
+        })
+      }
+    } catch (error) {
+      console.log("no token wtf: " + error);
+    }
+  }*/
+
   checkToken = async () => {
+
     try {
       const value = await AsyncStorage.getItem('token');
       if (value !== null) {
@@ -100,7 +128,7 @@ export default class DealsCheckout extends React.Component {
   componentDidMount() {
     const { navigation } = this.props;
       this.setState({
-        deal_id: navigation.getParam('id', ''),
+        deal_id: navigation.getParam('deal_id', ''),
         deal_name: navigation.getParam('deal_name', ''),
         featured_deal_image: navigation.getParam('featured_deal_image', ''),
         pay_in_dollar: navigation.getParam('pay_in_dollar',''),
@@ -112,13 +140,14 @@ export default class DealsCheckout extends React.Component {
 
   componentWillMount() {
     this.checkToken();
-    return _loadCryptocurrencies().then(cryptos => {
+
+    _loadCryptocurrencies().then(cryptos => {
       let cryptoOptions = [];
 
       cryptos.map(crypto => {
         let optionObj = {};
-        optionObj.value = crypto.crypto_metadata_name;
-        optionObj.label = crypto.crypto_metadata_name + ' ' + '(' + crypto.crypto_symbol + ')';
+        optionObj.value = {crypto_symbol: crypto.crypto_symbol, crypto_name: crypto.crypto_metadata_name};
+        optionObj.label = crypto.crypto_metadata_name + " (" + crypto.crypto_symbol + ")";
 
         cryptoOptions.push(optionObj);
       });
@@ -127,7 +156,6 @@ export default class DealsCheckout extends React.Component {
   }
 
   render() {
-    console.log('Props from DealsInfo: ', this.state.deal_id, this.state.deal_name, this.state.pay_in_dollar, this.state.pay_in_crypto, this.state.size, this.state.color);
     return (
     <View style={styles.container}>
       {/*Will include a sticky section at the top from previous page with the deals info but in a smaller form*/}
@@ -161,9 +189,9 @@ export default class DealsCheckout extends React.Component {
         </View>
       <ScrollView>
         {/*Address View*/}
-        <View style={[styles.postStyle, {borderBottomColor: '#000000', borderBottomWidth: 2, marginBottom: 5}]}>
+        <View style={[styles.postStyle, {borderBottomColor: '#000000', borderBottomWidth: 2, marginBottom: 10}]}>
           <Text style={{fontSize: 25, marginVertical: 5, borderBottomColor: '#dbd8ce', borderBottomWidth: 2, fontWeight: 'bold'}}>Shipping:</Text>
-          <Text style={{fontSize: 16, color: '#999999'}}>Full Name</Text>
+          <Text style={{fontSize: 16,}}>Full Name</Text>
           <TextInput
             ref="fullName"
             style={styles.inputStyle}
@@ -172,7 +200,7 @@ export default class DealsCheckout extends React.Component {
             returnKeyType={'next'}
             onSubmitEditing={()=>this.address.focus()}
           />
-          <Text style={{fontSize: 16, color: '#999999'}}>Address</Text>
+          <Text style={{fontSize: 16,}}>Address</Text>
           <TextInput
             ref={address => this.address = address}
             style={styles.inputStyle}
@@ -181,7 +209,7 @@ export default class DealsCheckout extends React.Component {
             returnKeyType={'next'}
             onSubmitEditing={()=>this.city.focus()}
           />
-          <Text style={{fontSize: 16, color: '#999999'}}>City</Text>
+          <Text style={{fontSize: 16,}}>City</Text>
           <TextInput
             ref={city => this.city = city}
             style={styles.inputStyle}
@@ -192,14 +220,15 @@ export default class DealsCheckout extends React.Component {
           <View style={{flex: 1, flexDirection: 'row'}}>
             <View style={{width: 125}}>
               <Dropdown
-                baseColor="#999999"
+                baseColor="#000000"
+                textColor="#000000"
                 label='State'
                 data={this.state.states}
                 onChangeText= {(value, index) => this.setState({state: value,}, this.checkAddress) }
               />
             </View>
             <View style={{flex: 1, marginLeft: 5}}>
-              <Text style={{fontSize: 16, color: '#999999', textAlign: 'left'}}>Zip Code</Text>
+              <Text style={{fontSize: 16, textAlign: 'left'}}>Zip Code</Text>
               <TextInput
                 ref={zipCode => this.zipCode = zipCode}
                 keyboardType="numeric"
@@ -218,7 +247,7 @@ export default class DealsCheckout extends React.Component {
         {/*Payment Method View*/}
         {
           this.state.viewPaymentMethod ?
-            <Animated.View style={[styles.postStyle,{opacity: this.state.fadeValue, marginBottom: 400}]}>
+            <Animated.View style={[styles.postStyle,{opacity: this.state.fadeValue, marginBottom: 10}]}>
               {this.fadeInAnimation()}
               <Text style={{fontSize: 25,fontWeight: 'bold', paddingVertical: 5, borderBottomColor: '#dbd8ce', borderBottomWidth: 2,}}>Form of Payment:</Text>
               <View style={{width: '100%'}}>
@@ -226,30 +255,35 @@ export default class DealsCheckout extends React.Component {
                   baseColor="#999999"
                   label='Select form of cryptocurrency'
                   data={this.state.cryptoOptions}
-                  onChangeText= {(value, index) => this.setState({crypto_name: value})}
+                  onChangeText= {(value, index) => {
+                    this.setState({crypto_name: value.crypto_name, crypto_symbol: value.crypto_symbol, paymentSelected: true})}}
                 />
+                {/*Image of QR code load here*/}
+                {
+                  /*this.state.paymentSelected ? this.getQRCode() : null*/
+                }
               </View>
             </Animated.View>
           : null
          }
+         <View style={{ flex: 1, flexDirection: 'column',}}>
+           <TouchableOpacity style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+             <LinearGradient
+             colors={ this.state.paymentReceived ? ['#fff4cc','#efb404','#d1a31d'] : ['#ffffff','#cccccc','#999999']}
+             style={{flex: 1, borderWidth: 1, borderRadius: 5, padding: 15, width: 300,justifyContent: 'center', alignItems: 'center', borderRadius: 5}}>
+               <Text
+               style={{
+               backgroundColor: 'transparent',
+               fontSize: 15,
+               color: 'black',
+               textAlign: 'center',
+               }}>
+                 Checkout
+               </Text>
+             </LinearGradient>
+           </TouchableOpacity>
+         </View>
       </ScrollView>
-      <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'center', position: 'absolute', bottom: 0}}>
-        <TouchableOpacity style={{flex: 1, justifyContent: 'center'}}>
-          <LinearGradient
-          colors={ this.state.paymentReceived ? ['#fff4cc','#efb404','#d1a31d'] : ['#ffffff','#cccccc','#999999']}
-          style={{flex: 1, borderWidth: 1, borderRadius: 5, padding: 15, justifyContent: 'center', borderRadius: 5}}>
-            <Text
-            style={{
-            backgroundColor: 'transparent',
-            fontSize: 15,
-            color: 'black',
-            textAlign: 'center',
-            }}>
-              Checkout
-            </Text>
-          </LinearGradient>
-        </TouchableOpacity>
-      </View>
     </View>
     );
   }
