@@ -28,6 +28,7 @@ export default class PostInfo extends React.Component {
       isLoading: false,
       data: {},
       id: "",
+      deal_id: "",
       deal_name:"",
       description:"",
       featured_deal_image:"",
@@ -110,7 +111,7 @@ export default class PostInfo extends React.Component {
   componentDidMount() {
     const { navigation } = this.props;
     this.setState({
-      id: navigation.getParam('id', 'Data Not Available'),
+      deal_id: navigation.getParam('id', 'Data Not Available'),
       deal_name: navigation.getParam("deal_name", "N/A"),
       description: navigation.getParam("description", "N/A"),
       featured_deal_image: navigation.getParam("featured_deal_image", "N/A"),
@@ -148,8 +149,8 @@ export default class PostInfo extends React.Component {
     } 
     else if(this.state.size != "" && this.state.color != "") {
       this.setState({checkedbox1: true, checkedbox2: true});
-      this.props.navigation.navigate('AddPost', {
-        id: this.state.id,
+      this.props.navigation.navigate('DealsCheckout', {
+        deal_id: this.state.deal_id,
         deal_name: this.state.deal_name,
         description: this.state.deal_description,
         featured_deal_image: this.state.featured_deal_image,

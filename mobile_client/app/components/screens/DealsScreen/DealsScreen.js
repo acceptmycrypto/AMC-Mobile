@@ -101,6 +101,7 @@ export default class Post extends React.Component {
   };
 
   convertToPercentage = (priceInDollar, priceInCrypto) => {
+    
     return parseInt(((priceInDollar - priceInCrypto) / priceInDollar) * 100);
   };
 
@@ -133,8 +134,8 @@ export default class Post extends React.Component {
       deal_name: post.deal_name,
       description: post.deal_description,
       featured_deal_image: post.featured_deal_image,
-      pay_in_dollar: post.pay_in_dollar,
-      pay_in_crypto: post.pay_in_crypto
+      pay_in_dollar: post.pay_in_dollar.toFixed(2),
+      pay_in_crypto: post.pay_in_crypto.toFixed(2)
      });
   };
 
@@ -233,9 +234,11 @@ export default class Post extends React.Component {
                           <Text
                             style={{
                               // alignContent: "flex-end",
+                              fontSize: 11,
                               opacity: 0.54,
-                              marginLeft: 0,
-                              marginTop: 20
+                              marginTop: 20,
+                              textAlign: 'right', 
+                              width:50
                             }}
                           >
                             Dollar:
@@ -244,12 +247,14 @@ export default class Post extends React.Component {
                           <Text
                             style={{
                               // alignContent: "flex-end",
+                              fontSize: 11,
                               marginLeft: 0,
                               marginTop: 20,
-                              marginLeft: 10
+                              marginLeft: 10,
+                              width: 60
                             }}
                           >
-                            {'$' + item.pay_in_dollar}
+                            {'$' + item.pay_in_dollar.toFixed(2)}
                           </Text>
                         </View>
 
@@ -257,24 +262,15 @@ export default class Post extends React.Component {
                           <Text
                             style={{
                               // alignContent: "flex-end",
+                              fontSize: 11,
                               opacity: 0.54,
                               marginLeft: 0,
-                              marginTop: 20
+                              marginTop: 20,
+                              textAlign: 'right', 
+                              width:50
                             }}
                           >
                             Crypto:
-                          </Text>
-
-                          <Text
-                            style={{
-                              // alignContent: "flex-end",
-                              color: 'green',
-                              marginLeft: 0,
-                              marginTop: 20,
-                              marginLeft: 10
-                            }}
-                          >
-                            {'$' + item.pay_in_crypto}
                           </Text>
 
                           <Text
@@ -285,6 +281,18 @@ export default class Post extends React.Component {
                               marginLeft: 0,
                               marginTop: 20,
                               marginLeft: 10,
+                              width: 60
+                            }}
+                          >
+                            {'$' + item.pay_in_crypto.toFixed(2)}
+                          </Text>
+
+                          <Text
+                            style={{
+                              fontSize: 11,
+                              color: 'green',
+                              marginLeft: 0,
+                              marginTop: 20,
                               borderWidth: 2,
                               borderColor: 'green',
                               borderRadius: 5

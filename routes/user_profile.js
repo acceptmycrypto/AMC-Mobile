@@ -108,7 +108,20 @@ router.post("/profile/user/transactions", verifyToken, function(req, res) {
   });
 
 
- 
+ //grab the cryptos list for user to select
+router.post("/crypto/left", verifyToken, function(req, res) {
+    let id = req.decoded._id;
+    connection.query(
+      'SELECT crypto_metadata.crypto_name, crypto_metadata.crypto_symbol FROM crypto_metadata WHERE crypto_metadata.crypto_name NOT IN (SELECT crypto_metadata.crypto_name FROM users_cryptos LEFT JOIN crypto_metadata ON users_cryptos.crypto_id = crypto_metadata.id WHERE users_cryptos.user_id = ?)',
+      [id],
+      function(error, results, fields) {
+  
+        if (error) throw error;
+  
+        res.json(results);
+      }
+    );
+  });
 
 
 function shuffle(array) {

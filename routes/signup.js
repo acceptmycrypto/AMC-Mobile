@@ -88,8 +88,9 @@ router.post('/register', function(req, res) {
                       }
                     );
 
+                    let url = 'https://acceptmycrypto.herokuapp.com' || 'http://localhost:3001';
                     //use sendgrid to send email
-                    let link = "http://localhost:3001/email-verify/" + userID + "/" + result[0].email_verification_token;
+                    let link = url + "/email-verify/" + userID + "/" + result[0].email_verification_token;
 
                     const email_verification = {
                       to: req.body.email,
