@@ -40,11 +40,11 @@ export default class PostInfo extends React.Component {
       colorOption: [{value: 'Red',}, {value: 'Blue',}, {value: 'Green',}]
     }
   };
-  
+
   checkOutpage = post => {
     console.log("LINE 115 IN POST.JS FILE: " + JSON.stringify(post));
-    
-      this.props.navigation.navigate('DealsInfo', { 
+
+      this.props.navigation.navigate('DealsInfo', {
         id: post.id,
         deal_name: post.deal_name,
         description: post.deal_description,
@@ -57,7 +57,7 @@ export default class PostInfo extends React.Component {
   };
 
   checkToken = async () => {
-    
+
     try {
       const value = await AsyncStorage.getItem('token');
       if (value !== null) {
@@ -97,7 +97,7 @@ export default class PostInfo extends React.Component {
   //     isLoading: false,
   //   })
   // }
-  
+
   convertToPercentage = (priceInDollar, priceInCrypto) => {
     return parseInt(((priceInDollar - priceInCrypto) / priceInDollar) * 100);
   };
@@ -117,7 +117,7 @@ export default class PostInfo extends React.Component {
       description: navigation.getParam("description", "N/A"),
       featured_deal_image: navigation.getParam("featured_deal_image", "N/A"),
       pay_in_dollar: navigation.getParam("pay_in_dollar", "N/A"),
-      pay_in_crypto: navigation.getParam("pay_in_crypto", "N/A")  
+      pay_in_crypto: navigation.getParam("pay_in_crypto", "N/A")
     });
 
     // return _loadOnePosts(id).then(resJSON => {
@@ -138,17 +138,17 @@ export default class PostInfo extends React.Component {
 
   checkOutPage = post => {
     console.log(" ---- Hello from line 134 ---- " + JSON.stringify(this.state));
-    
+
     if(this.state.size == "") {
       this.setState({checkedbox1: false});
-    } 
+    }
     else if (this.state.color == ""){
       this.setState({checkedbox2: false});
     }
     else if(this.state.size != "" && this.state.color != "") {
       this.setState({checkedbox1: true});
       this.setState({checkedbox2: true});
-      this.props.navigation.navigate('AddPost', {
+      this.props.navigation.navigate('DealsCheckout', {
         id: this.state.id,
         deal_name: this.state.deal_name,
         description: this.state.deal_description,
@@ -181,27 +181,27 @@ export default class PostInfo extends React.Component {
             source={{ url: this.state.featured_deal_image }}
           />
           <View style={styles.description}>
-            <View style={{ 
+            <View style={{
               flexDirection: 'row' ,
             }}>
               <Text
                 style={{
                   maxWidth: '100%',
                   fontSize: 20,
-                  padding: 10,                  
+                  padding: 10,
                 }}
-              >      
+              >
                 {this.state.deal_name}
               </Text>
             </View>
-            <View style={{ 
+            <View style={{
               flex: 3,
               flexDirection: 'row',
               padding: 10,
-              }}>                
+              }}>
                 <View style={{ flexDirection: 'row', padding: 10 }}>
                   <Text style={{
-                      textAlign: 'right', 
+                      textAlign: 'right',
                       fontSize: 13,
                       marginLeft: 0,
                       opacity: 0.54,
@@ -211,24 +211,24 @@ export default class PostInfo extends React.Component {
                   <Text
                     style={{
                       marginLeft: 10,
-                      textAlign: 'left', 
+                      textAlign: 'left',
                       fontSize: 13,
                     }}
-                  >      
+                  >
                     {"$"+this.state.pay_in_dollar}
                   </Text>
                 </View>
             </View>
-            <View style={{ 
+            <View style={{
               borderBottomColor: '#dbd8ce',
               borderBottomWidth: 1,
-              flex: 3,              
+              flex: 3,
               flexDirection: 'row',
               padding: 10,
-              }}>                
+              }}>
                 <View style={{ flexDirection: 'row', padding: 10 }}>
                   <Text style={{
-                      textAlign: 'right', 
+                      textAlign: 'right',
                       fontSize: 15,
                       marginRight: 0,
                       opacity: 0.54,
@@ -238,23 +238,23 @@ export default class PostInfo extends React.Component {
                   <Text
                     style={{
                       marginLeft: 10,
-                      textAlign: 'left', 
+                      textAlign: 'left',
                       fontSize: 15,
                     }}
-                  >      
+                  >
                     {"$"+this.state.pay_in_crypto}
                   </Text>
                   <Text
                     style={{
                       marginLeft: 5,
-                      textAlign: 'left', 
+                      textAlign: 'left',
                       fontSize: 15,
                       color: 'green',
                       borderWidth: 2,
                       borderColor: 'green',
                       borderRadius: 5
                     }}
-                  >      
+                  >
                     {' ' + this.convertToPercentage(
                     this.state.pay_in_dollar,
                     this.state.pay_in_crypto
@@ -263,7 +263,7 @@ export default class PostInfo extends React.Component {
                   </Text>
                   <Text style={{
                       marginLeft: 5,
-                      textAlign: 'left', 
+                      textAlign: 'left',
                       fontSize: 14,
                       color: 'blue',
                     }}>
@@ -272,14 +272,14 @@ export default class PostInfo extends React.Component {
                 </View>
             </View>
           </View>
-          <View style={{ 
+          <View style={{
             flex: 3,
             flexDirection: 'row',
             padding: 10,
-            }}>                
+            }}>
               <View style={{ flexDirection: 'row', padding: 10 }}>
                 <Text style={{
-                    textAlign: 'left', 
+                    textAlign: 'left',
                     fontSize: 20,
                     marginLeft: 0,
                   }}>
@@ -287,14 +287,14 @@ export default class PostInfo extends React.Component {
                 </Text>
               </View>
           </View>
-          <View style={{ 
+          <View style={{
             flex: 3,
             flexDirection: 'row',
             padding: 10,
-            }}>                
+            }}>
             <View style={{ flexDirection: 'row', padding: 10, flex: 3 }}>
               <Text style={{
-                  textAlign: 'left', 
+                  textAlign: 'left',
                   fontSize: 13,
                   marginLeft: 0,
                   flex: 1,
@@ -316,10 +316,10 @@ export default class PostInfo extends React.Component {
             label='Select a color...'
             data={colors}
             onChangeText= {(value, index) => this.setState({color: value,}) }
-          />          
+          />
           <View style={{ flex: 1, marginTop: 10, alignItems: 'center', justifyContent: 'center' }}>
             <TouchableOpacity
-              style={{                      
+              style={{
                 paddingTop:20,
                 paddingBottom:20,
               }}
@@ -362,7 +362,7 @@ const styles = StyleSheet.create({
     borderColor: 'grey',
   },
   // checkoutButton: {
-  //   textAlign: 'center', 
+  //   textAlign: 'center',
   //   margin: 5,
   //   borderRadius: 25,
   //   backgroundColor: '#52c4b9',
