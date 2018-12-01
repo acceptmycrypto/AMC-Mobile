@@ -155,8 +155,8 @@ export default class PostInfo extends React.Component {
         featured_deal_image: this.state.featured_deal_image,
         pay_in_dollar: this.state.pay_in_dollar,
         pay_in_crypto: this.state.pay_in_crypto,
-        size: this.state.sizeOption,
-        color: this.state.colorOption,
+        size: this.state.size,
+        color: this.state.color,
       });
     }
   };
