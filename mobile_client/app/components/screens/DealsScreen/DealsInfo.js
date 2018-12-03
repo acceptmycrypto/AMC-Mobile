@@ -325,7 +325,6 @@ export default class PostInfo extends React.Component {
             </View>
           </View>        
           <KeyboardAvoidingView behavior="padding">
-          >
             <View style={{ flex: 1, marginTop: 10, alignItems: 'center', justifyContent: 'center' }}>
               <TouchableOpacity
                 style={{                      

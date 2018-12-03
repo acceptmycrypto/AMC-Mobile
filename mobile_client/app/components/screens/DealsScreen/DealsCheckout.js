@@ -47,6 +47,7 @@ export default class DealsCheckout extends React.Component {
       crypto_name: "",
       crypto_symbol: "",
       paymentSelected: false,
+      transactionData: "",
       paymentReceived: false,
       deal_id: "",
       deal_name: "",
@@ -73,25 +74,20 @@ export default class DealsCheckout extends React.Component {
     }).start()
    }
 
-  /*getQRCode = async () => {
-    try {
-      const token = await AsyncStorage.getItem('token');
-      if(token !== null){
-        console.log("what are you token? : " + token);
-        let crypto_name = this.state.crypto_name;
-        let crypto_symbol = this.state.crypto_symbol;
-        let deal_id = this.state.deal_id;
-        let amount = this.state.pay_in_crypto;
-        return _fetchTransactionInfo(crypto_name, crypto_symbol, deal_id, amount, token)
-        .then(transactionData => {
-          this.setState({transactionData});
-          console.log(this.state.transactionData);
-        })
-      }
-    } catch (error) {
-      console.log("no token wtf: " + error);
-    }
-  }*/
+  getQRCode = async () => {
+    const value = await AsyncStorage.getItem('token');
+    let token = JSON.parse(JSON.stringify(value));
+    console.log("what are you token? : " + token);
+    let crypto_name = this.state.crypto_name;
+    let crypto_symbol = this.state.crypto_symbol;
+    let deal_id = this.state.deal_id;
+    let amount = this.state.pay_in_crypto;
+    this.setState( () => { return _fetchTransactionInfo(crypto_name, crypto_symbol, deal_id, amount, token)
+      .then(transactionData => {
+        this.setState({transactionData});
+      })
+    });
+  }
 
   checkToken = async () => {
 
@@ -165,7 +161,7 @@ export default class DealsCheckout extends React.Component {
           padding: 10,}}>
           <Image
             style={{width: 50, height: 50,}}
-            source={{url:this.state.featured_deal_image}}
+            source={{uri:this.state.featured_deal_image}}
             />
           <View style={{flex:1, flexDirection:'column', marginLeft: 10,}}>
             <Text style={{fontWeight: 'bold', }}>{this.state.deal_name} </Text>
@@ -256,18 +252,30 @@ export default class DealsCheckout extends React.Component {
                   label='Select form of cryptocurrency'
                   data={this.state.cryptoOptions}
                   onChangeText= {(value, index) => {
-                    this.setState({crypto_name: value.crypto_name, crypto_symbol: value.crypto_symbol, paymentSelected: true})}}
+                    this.setState({crypto_name: value.crypto_name, crypto_symbol: value.crypto_symbol, paymentSelected: true}, this.getQRCode)}}
                 />
                 {/*Image of QR code load here*/}
                 {
-                  /*this.state.paymentSelected ? this.getQRCode() : null*/
+                  (this.state.paymentSelected && this.state.transactionData) ?
+                    <View style={{marginTop: 10}}>
+                    <Text>Please send {this.state.transactionData.amount, this.state.crypto_symbol} to the below address: </Text>
+                    <Text>AcceptMyCrypto Payment Address: <Text style={{fontWeight: 'bold'}}>{this.state.transactionData.txn_id}</Text></Text>
+                    <View style={{justifyContent: 'center', alignItems: 'center', margin: 10, borderWidth: 2,}}>
+                    <Image
+                      style={{width: 300, height: 300,}}
+                      source={{uri: this.state.transactionData.qrcode_url}}
+                    />
+                    </View>
+                    </View>
+                  : null
                 }
               </View>
             </Animated.View>
           : null
          }
+         {/*Checkout Button*/}
          <View style={{ flex: 1, flexDirection: 'column',}}>
-           <TouchableOpacity style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+           <TouchableOpacity style={{flex: 1, justifyContent: 'center', alignItems: 'center', }}>
              <LinearGradient
              colors={ this.state.paymentReceived ? ['#fff4cc','#efb404','#d1a31d'] : ['#ffffff','#cccccc','#999999']}
              style={{flex: 1, borderWidth: 1, borderRadius: 5, padding: 15, width: 300,justifyContent: 'center', alignItems: 'center', borderRadius: 5}}>
