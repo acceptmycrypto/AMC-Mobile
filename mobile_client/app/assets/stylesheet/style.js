@@ -9,7 +9,8 @@ module.exports = StyleSheet.create({
     marginTop: 25
   },
   font25: {
-    fontSize: 25
+    fontSize: 25,
+    marginBottom: 25
   },
   font12: {
     fontSize: 12
@@ -161,16 +162,17 @@ module.exports = StyleSheet.create({
   },
   termsBottom: {
     fontSize: 12,
-    alignSelf: 'center'
+    alignSelf: 'center',
+    marginBottom: 30
   },
   loginGap: {
-    flex: 0.6,
+    flex: 1,
     justifyContent: 'space-around'
   },
-  registerGap: {
-    flex: 0.8,
-    justifyContent: 'space-around'
-  },
+  // registerGap: {
+  //   flex: 0.8,
+  //   justifyContent: 'space-around'
+  // },
 
   // DEALS SCREEN
   dealsContainer: {
