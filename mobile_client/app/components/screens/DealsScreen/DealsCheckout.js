@@ -290,6 +290,7 @@ export default class DealsCheckout extends React.Component {
                         animationOutTiming={1000}
                         backdropTransitionInTiming={1000}
                         backdropTransitionOutTiming={1000}
+                        onBackdropPress={() => this.setState({ isVisible: false })}
                       >
                         <View style={{
                           backgroundColor: "white",
@@ -340,7 +341,13 @@ export default class DealsCheckout extends React.Component {
          }
          {/*Checkout Button*/}
          <View style={{ flex: 1, flexDirection: 'column',}}>
-           <TouchableOpacity style={{flex: 1, justifyContent: 'center', alignItems: 'center', }}>
+           <TouchableOpacity
+            style={{
+              flex: 1,
+              justifyContent: 'center',
+              alignItems: 'center',
+             }}
+             >
              <LinearGradient
              colors={ this.state.paymentReceived ? ['#fff4cc','#efb404','#d1a31d'] : ['#ffffff','#cccccc','#999999']}
              style={{flex: 1, borderWidth: 1, borderRadius: 5, padding: 15, width: 300,justifyContent: 'center', alignItems: 'center', borderRadius: 5}}>
@@ -351,7 +358,15 @@ export default class DealsCheckout extends React.Component {
                color: 'black',
                textAlign: 'center',
                }}>
-                 Checkout
+                 {
+                  !this.state.viewPaymentMethod ?
+                  "Proceed to Payment Method"
+                  :
+                  !this.state.paymentReceived ?
+                  "Generate Payment Address"
+                  :
+                  "Review Order"
+                 }
                </Text>
              </LinearGradient>
            </TouchableOpacity>
