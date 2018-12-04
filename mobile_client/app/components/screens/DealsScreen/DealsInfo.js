@@ -172,7 +172,7 @@ export default class PostInfo extends React.Component {
         <ScrollView ref={scrollView => this.scrollView = scrollView}>
           <Image
             style={{ maxWidth: '100%', height: 200 }}
-            source={{ url: this.state.featured_deal_image }}
+            source={{ uri: this.state.featured_deal_image }}
           />
           <View style={styles.description}>
             <View style={{ 

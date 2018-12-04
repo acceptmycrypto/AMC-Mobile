@@ -9,13 +9,15 @@ import {
   ActivityIndicator,
   ScrollView,
   Animated,
-  AsyncStorage
+  AsyncStorage,
   } from 'react-native';
+import Modal from 'react-native-modal';
 import { Button } from 'react-native-elements';
 import { _verifier, _loadCryptocurrencies } from "../../../../src/services/AuthService";
 import { LinearGradient } from 'expo';
 import { Dropdown } from 'react-native-material-dropdown';
 import { _fetchTransactionInfo } from '../../../../src/services/DealServices';
+import countdownTimer from './DealsCountdown.js'
 
 export default class DealsCheckout extends React.Component {
   constructor(props) {
@@ -78,14 +80,38 @@ export default class DealsCheckout extends React.Component {
     const value = await AsyncStorage.getItem('token');
     let token = JSON.parse(JSON.stringify(value));
     console.log("what are you token? : " + token);
+
     let crypto_name = this.state.crypto_name;
     let crypto_symbol = this.state.crypto_symbol;
     let deal_id = this.state.deal_id;
     let amount = this.state.pay_in_crypto;
-    this.setState( () => { return _fetchTransactionInfo(crypto_name, crypto_symbol, deal_id, amount, token)
+    let shippingAddress = this.state.address;
+    let shippingCity = this.state.city;
+    let zipcode = this.state.zipCode;
+    let shippingState = this.state.state;
+    let fullName = this.state.fullName;
+    let selectedSize = this.state.size;
+    let selectedColor = this.state.color;
+
+    this.setState( () => {
+    return _fetchTransactionInfo(
+      crypto_name,
+      crypto_symbol,
+      deal_id,
+      amount,
+      token,
+      shippingAddress,
+      shippingCity,
+      zipcode,
+      shippingState,
+      fullName,
+      selectedSize,
+      selectedColor
+      )
       .then(transactionData => {
         this.setState({transactionData});
-      })
+        console.log(this.state.transactionData);
+      }, function(err){console.log(err);})
     });
   }
 
@@ -160,7 +186,7 @@ export default class DealsCheckout extends React.Component {
           flexDirection: 'row',
           padding: 10,}}>
           <Image
-            style={{width: 50, height: 50,}}
+            style={{alignItems: 'center'}}
             source={{uri:this.state.featured_deal_image}}
             />
           <View style={{flex:1, flexDirection:'column', marginLeft: 10,}}>
@@ -257,15 +283,54 @@ export default class DealsCheckout extends React.Component {
                 {/*Image of QR code load here*/}
                 {
                   (this.state.paymentSelected && this.state.transactionData) ?
-                    <View style={{marginTop: 10}}>
-                    <Text>Please send {this.state.transactionData.amount, this.state.crypto_symbol} to the below address: </Text>
-                    <Text>AcceptMyCrypto Payment Address: <Text style={{fontWeight: 'bold'}}>{this.state.transactionData.txn_id}</Text></Text>
-                    <View style={{justifyContent: 'center', alignItems: 'center', margin: 10, borderWidth: 2,}}>
-                    <Image
-                      style={{width: 300, height: 300,}}
-                      source={{uri: this.state.transactionData.qrcode_url}}
-                    />
-                    </View>
+                    <View>
+                      <Modal
+                        isVisible={this.state.transactionData != ""}
+                        animationInTiming={1000}
+                        animationOutTiming={1000}
+                        backdropTransitionInTiming={1000}
+                        backdropTransitionOutTiming={1000}
+                      >
+                        <View style={{
+                          backgroundColor: "white",
+                          padding: 22,
+                          justifyContent: "center",
+                          alignItems: "center",
+                          borderRadius: 4,
+                          borderColor: "rgba(0, 0, 0, 0.1)"}}
+                        >
+                          <View>
+                            <Text>Please send {this.state.transactionData.amount, this.state.crypto_symbol} to the below address: </Text>
+                            <Text>AcceptMyCrypto Payment Address: <Text style={{fontWeight: 'bold'}}>{this.state.transactionData.txn_id}</Text></Text>
+                          </View>
+                          <View style={{justifyContent: 'center', alignItems: 'center', margin: 10, borderWidth: 2,}}>
+                            <Image
+                              style={{width: 300, height: 300,}}
+                              source={{uri: this.state.transactionData.qrcode_url}}
+                            />
+                          </View>
+                          {/*Countdown timer*/}
+                          <View>
+                            <Text>*Your order will cancel in
+                              <Text style={{color: 'green', fontWeight: 'bold'}}>
+                              {/*Timer goes here*/}
+                              </Text>
+                            </Text>
+                          </View>
+
+                          {/*Touchable to change form of payment or cancel*/}
+                          <View style={{width: '100%', height: 40 ,backgroundColor: '#66dac7', borderRadius: 5, justifyContent: 'center', alignItems: 'center', marginVertical: 10}}>
+                            <TouchableOpacity>
+                              <Text style={{textAlign: 'center', color: '#ffffff', fontSize: 20, fontWeight: 'bold'}}>Edit Form Of Payment</Text>
+                            </TouchableOpacity>
+                         </View>
+                         <View style={{width: '100%', height: 40 ,backgroundColor: 'red', borderRadius: 5, justifyContent: 'center', alignItems: 'center'}}>
+                           <TouchableOpacity>
+                             <Text style={{textAlign: 'center', color: '#ffffff', fontSize: 20, fontWeight: 'bold'}}>Cancel Payment</Text>
+                           </TouchableOpacity>
+                          </View>
+                        </View>
+                      </Modal>
                     </View>
                   : null
                 }
