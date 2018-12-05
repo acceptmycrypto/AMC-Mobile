@@ -59,7 +59,6 @@ export default class DealsCheckout extends React.Component {
       color: ""
     };
   }
-
   cancelPurchase = () => {
     this.setState({
       transactionData: "",
@@ -93,12 +92,21 @@ export default class DealsCheckout extends React.Component {
     }
   }
 
-   fadeInAnimation = () => {
+  countdown = (time) => {
+    let hours = time /(60*60);
+    console.log(time)
+
+    return(
+      hours
+    );
+  }
+
+  fadeInAnimation = () => {
     Animated.timing(this.state.fadeValue,{
       toValue: 1,
       duration: 750,
     }).start()
-   }
+  }
 
   getQRCode = async () => {
     const value = await AsyncStorage.getItem('token');
@@ -135,6 +143,7 @@ export default class DealsCheckout extends React.Component {
       .then(transactionData => {
         this.setState({transactionData});
         console.log(this.state.transactionData);
+        console.log(this.state.transactionData.timeout);
       }, function(err){console.log(err);})
     });
   }
@@ -210,7 +219,7 @@ export default class DealsCheckout extends React.Component {
           flexDirection: 'row',
           padding: 10,}}>
           <Image
-            style={{alignItems: 'center'}}
+            style={{alignItems: 'center', width: 58, height: 58}}
             source={{uri:this.state.featured_deal_image}}
             />
           <View style={{flex:1, flexDirection:'column', marginLeft: 10,}}>
