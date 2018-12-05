@@ -17,7 +17,6 @@ import { _verifier, _loadCryptocurrencies } from "../../../../src/services/AuthS
 import { LinearGradient } from 'expo';
 import { Dropdown } from 'react-native-material-dropdown';
 import { _fetchTransactionInfo } from '../../../../src/services/DealServices';
-import countdownTimer from './DealsCountdown.js'
 
 export default class DealsCheckout extends React.Component {
   constructor(props) {
@@ -61,11 +60,36 @@ export default class DealsCheckout extends React.Component {
     };
   }
 
+  cancelPurchase = () => {
+    this.setState({
+      transactionData: "",
+      fullName: "",
+      address: "",
+      city: "",
+      zipCode: "",
+      state: "",
+      amount: "",
+      crypto_name: "",
+      crypto_symbol: "",
+      viewPaymentMethod: false,
+      paymentReceived: false,
+      paymentSelected: false
+    });
+    this.props.navigation.navigate('Deals', {});
+  }
+
+  changePayment = () => {
+    this.setState({
+      transactionData: "",
+      paymentSelected: false,
+    });
+  }
+
   checkAddress = () => {
     if(this.state.fullName && this.state.address && this.state.city && this.state.zipCode && this.state.state){
-      this.setState({viewPaymentMethod: true})
+      this.setState({viewPaymentMethod: true});
     }else{
-      this.setState({viewPaymentMethod: false, fadeValue: new Animated.Value(0)})
+      this.setState({viewPaymentMethod: false, fadeValue: new Animated.Value(0)});
     }
   }
 
@@ -290,7 +314,6 @@ export default class DealsCheckout extends React.Component {
                         animationOutTiming={1000}
                         backdropTransitionInTiming={1000}
                         backdropTransitionOutTiming={1000}
-                        onBackdropPress={() => this.setState({ isVisible: false })}
                       >
                         <View style={{
                           backgroundColor: "white",
@@ -321,12 +344,12 @@ export default class DealsCheckout extends React.Component {
 
                           {/*Touchable to change form of payment or cancel*/}
                           <View style={{width: '100%', height: 40 ,backgroundColor: '#66dac7', borderRadius: 5, justifyContent: 'center', alignItems: 'center', marginVertical: 10}}>
-                            <TouchableOpacity>
+                            <TouchableOpacity onPress={this.changePayment}>
                               <Text style={{textAlign: 'center', color: '#ffffff', fontSize: 20, fontWeight: 'bold'}}>Edit Form Of Payment</Text>
                             </TouchableOpacity>
                          </View>
                          <View style={{width: '100%', height: 40 ,backgroundColor: 'red', borderRadius: 5, justifyContent: 'center', alignItems: 'center'}}>
-                           <TouchableOpacity>
+                           <TouchableOpacity onPress={this.cancelPurchase}>
                              <Text style={{textAlign: 'center', color: '#ffffff', fontSize: 20, fontWeight: 'bold'}}>Cancel Payment</Text>
                            </TouchableOpacity>
                           </View>
