@@ -66,11 +66,26 @@ export async function _loadProfile(token) {
   );
   const transactions = await profile_transactions.json();
 
-  // const remaining_options = await fetch(url + '/crypto/left', settings);
-  // const remaining_cryptos = await remaining_options.json();
+  const remaining_options = await fetch(url + '/crypto/left', settings);
+  const remaining_cryptos = await remaining_options.json();
 
-  const cryptocurrencies = await fetch(url + '/cryptocurrencies/');
-  const cryptos = await cryptocurrencies.json();
+  // const cryptocurrencies = await fetch(url + '/cryptocurrencies/');
+  // const cryptos = await cryptocurrencies.json();
 
-  return { user_info, user_crypto, friends_array, transactions, cryptos};
+  return { user_info, user_crypto, friends_array, transactions, remaining_cryptos};
+}
+
+export function _addCryptos(token, cryptoProfile){
+  return fetch(url + '/add/cryptos', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ token, cryptoProfile  })
+  }).then(res =>{
+    console.log(res);
+    res.json()
+});
+
 }
