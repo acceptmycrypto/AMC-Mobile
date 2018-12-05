@@ -217,7 +217,8 @@ export default class ProfileScreen extends React.Component {
   addMoreCryptos = () => {
     if (this.state.add_cryptos) {
       this.setState({
-        add_cryptos: false
+        add_cryptos: false,
+        cryptoProfile: []
       })
     } else {
       this.setState({
@@ -247,8 +248,8 @@ export default class ProfileScreen extends React.Component {
             add_cryptos: false,
             crypto_view: "interested",
             user_crypto, 
-            cryptoOptionsLeft
-
+            cryptoOptionsLeft, 
+            cryptoProfile: []
           });
         });
       }
