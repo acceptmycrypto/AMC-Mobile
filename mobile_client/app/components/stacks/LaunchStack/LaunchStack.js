@@ -11,50 +11,25 @@ const launchHeader = {
   headerStyle: {
     backgroundColor: '#66dac7',
     height: 130
-    // alignSelf: 'center'
-  },
-  // headerTintColor: '#fff',
-  // headerTitleStyle: {
-  //   alignSelf: 'center'
-  // }
-  gesturesEnabled: false,
-  // headerLayoutPreset: 'center'
+  }
 };
-
-// const mainHeader = {
-//   headerTitle: <LogoTitle />,
-//   headerStyle: {
-//     backgroundColor: '#66dac7',
-//     // alignSelf: 'center'
-//   },
-//   // headerTintColor: '#fff',
-//   // headerTitleStyle: {
-//   //   alignSelf: 'center'
-//   // }
-// };
 
 export default (LaunchStack = createStackNavigator(
   {
     Launch: {
       screen: LaunchScreen,
       navigationOptions: launchHeader,
-      // headerLayoutPreset: 'center'
 	},
     Main: {
       screen: NavStack,
       navigationOptions: {
-        header: null
-      },
-      // headerLayoutPreset: 'center'
+        header: null,
+        gesturesEnabled: false
+      }
     }
   },
   {
     mode: 'modal',
-    // headerMode: 'none',
-    // navigationOptions: {
-    //   header: null,
-    //   gesturesEnabled: false
-    // },
     headerLayoutPreset: 'center'
   }
 ));

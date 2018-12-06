@@ -183,7 +183,7 @@ module.exports = StyleSheet.create({
   },
   textStyle: {
     marginTop: 10,
-    fontSize: 12,
+    fontSize: 15,
     fontWeight: '200'
   },
   postStyle: {

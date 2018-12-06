@@ -10,6 +10,7 @@ import {
   ScrollView,
   Animated,
   AsyncStorage,
+  BackHandler
   } from 'react-native';
 import Modal from 'react-native-modal';
 import { Button } from 'react-native-elements';
@@ -175,6 +176,10 @@ export default class DealsCheckout extends React.Component {
   };
 
   componentDidMount() {
+    this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+      this.props.navigation.goBack();
+      return true;
+    });
     const { navigation } = this.props;
       this.setState({
         deal_id: navigation.getParam('deal_id', ''),
@@ -202,6 +207,10 @@ export default class DealsCheckout extends React.Component {
       });
       this.setState({ cryptoOptions });
     });
+  }
+
+  componentWillUnmount() {
+    this.backHandler.remove();
   }
 
   render() {
@@ -235,9 +244,12 @@ export default class DealsCheckout extends React.Component {
             </View>
           </View>
         </View>
-      </View>
       <ScrollView
-          keyboardShouldPersistTaps='handled'
+        alwaysBounceVertical={true}
+        keyboardDismissMode="on-drag"
+        keyboardDismissMode="interactive"
+        keyboardShouldPersistTaps="handled"
+        overScrollMode="never"
       >
         {/*Address View*/}
         <View style={[styles.postStyle, {borderBottomColor: '#000000', borderBottomWidth: 2, marginBottom: 10}]}>

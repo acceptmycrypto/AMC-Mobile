@@ -11,7 +11,8 @@ import {
   FlatList,
   ScrollView,
   AsyncStorage,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+  BackHandler
 } from "react-native";
 import { Button } from "react-native-elements";
 import { _verifier } from "../../../../src/services/AuthService";
@@ -109,6 +110,10 @@ export default class PostInfo extends React.Component {
   };
 
   componentDidMount() {
+    this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+      this.props.navigation.goBack();
+      return true;
+    });
     const { navigation } = this.props;
     this.setState({
       deal_id: navigation.getParam('id', 'Data Not Available'),
@@ -133,6 +138,10 @@ export default class PostInfo extends React.Component {
     // .catch(err => {
     //   console.log(err);
     // });
+  }
+
+  componentWillUnmount() {
+    this.backHandler.remove();
   }
 
   checkOutPage = (post,theView) => {
@@ -231,6 +240,7 @@ export default class PostInfo extends React.Component {
                   <Text
                     style={{
                       textAlign: 'left', 
+                      color: 'green',
                       fontSize: 15,
                       width: 67,
                       marginLeft: 10,                
