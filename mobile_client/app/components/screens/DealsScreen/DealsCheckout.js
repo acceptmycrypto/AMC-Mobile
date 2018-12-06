@@ -12,7 +12,8 @@ import {
   Animated,
   AsyncStorage,
   BackHandler,
-  Clipboard
+  Clipboard,
+  Linking,
   } from 'react-native';
 import Modal from 'react-native-modal';
 import { Button } from 'react-native-elements';
@@ -147,6 +148,19 @@ export default class DealsCheckout extends React.Component {
     } catch (error) {
       console.log(err);
     }
+  }
+
+  redirect = () => {
+    Clipboard.setString(this.state.transactionData.txn_id);
+    Alert.alert('Payment Address has been copied, redirecting to CoinBase...');
+    setTimeout(() => {Linking.canOpenURL('Coinbase://app').then( supported => {
+      if (!supported) {
+          Linking.openURL('https://coinbase.com')
+        } else {
+          return Linking.openURL('Coinbase://app');
+        }
+      }).catch(err => console.error('An error occurred', err));
+    }, 2500);
   }
 
   checkToken = async () => {
@@ -349,9 +363,8 @@ export default class DealsCheckout extends React.Component {
                         >
                           <View>
                             <Text>Please send <Text style={{fontWeight: 'bold'}}>{this.state.transactionData.amount + " " + this.state.crypto_symbol}</Text> to the below address: </Text>
-                            <Text>
-                              AcceptMyCrypto Payment Address: { ' ' }
-                              <Text
+                            <Text>AcceptMyCrypto Payment Address: { ' ' }</Text>
+                             <View style={{borderWidth: 2, padding: 1}}> <Text
                                 style={{fontWeight: 'bold'}}
                                 selectable={true}
                                 onPress={() => {Clipboard.setString(
@@ -361,15 +374,22 @@ export default class DealsCheckout extends React.Component {
                                 }
                                >
                                 {this.state.transactionData.txn_id}
-                              </Text>
-                            </Text>
+                              </Text></View>
                           </View>
-                          <View style={{justifyContent: 'center', alignItems: 'center', margin: 10, borderWidth: 2,}}>
+                          <TouchableOpacity
+                            style={{
+                              justifyContent: 'center',
+                              alignItems: 'center',
+                              margin: 10,
+                              borderWidth: 2,
+                            }}
+                            onPress={this.redirect}
+                          >
                             <Image
                               style={{width: 300, height: 300,}}
                               source={{uri: this.state.transactionData.qrcode_url}}
                             />
-                          </View>
+                          </TouchableOpacity>
                           {/*Countdown timer*/}
                           <View>
                             <Text>*Your order will cancel in { ' ' }
