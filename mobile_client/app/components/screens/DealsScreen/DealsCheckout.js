@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {
   StyleSheet,
+  Alert,
   Text,
   TextInput,
   View,
@@ -10,7 +11,8 @@ import {
   ScrollView,
   Animated,
   AsyncStorage,
-  BackHandler
+  BackHandler,
+  Clipboard
   } from 'react-native';
 import Modal from 'react-native-modal';
 import { Button } from 'react-native-elements';
@@ -119,28 +121,32 @@ export default class DealsCheckout extends React.Component {
     let selectedSize = this.state.size;
     let selectedColor = this.state.color;
 
-    this.setState( () => {
-    return _fetchTransactionInfo(
-      crypto_name,
-      crypto_symbol,
-      deal_id,
-      amount,
-      token,
-      shippingAddress,
-      shippingCity,
-      zipcode,
-      shippingState,
-      fullName,
-      selectedSize,
-      selectedColor
-      )
-      .then(transactionData => {
-        this.setState({transactionData});
-        console.log(this.state.transactionData);
-        console.log(this.state.transactionData.timeout);
-        this.setState({timeout: this.state.transactionData.timeout});
-      }, function(err){console.log(err);})
-    });
+    try {
+      if(token !== null){
+        return _fetchTransactionInfo(
+          crypto_name,
+          crypto_symbol,
+          deal_id,
+          amount,
+          token,
+          shippingAddress,
+          shippingCity,
+          zipcode,
+          shippingState,
+          fullName,
+          selectedSize,
+          selectedColor
+          )
+          .then(transactionData => {
+            this.setState({transactionData});
+            console.log(this.state.transactionData);
+            console.log(this.state.transactionData.timeout);
+            this.setState({timeout: this.state.transactionData.timeout});
+          }, function(err){console.log(err);});
+      }
+    } catch (error) {
+      console.log(err);
+    }
   }
 
   checkToken = async () => {
@@ -343,7 +349,20 @@ export default class DealsCheckout extends React.Component {
                         >
                           <View>
                             <Text>Please send <Text style={{fontWeight: 'bold'}}>{this.state.transactionData.amount + " " + this.state.crypto_symbol}</Text> to the below address: </Text>
-                            <Text>AcceptMyCrypto Payment Address: <Text style={{fontWeight: 'bold'}}>{this.state.transactionData.txn_id}</Text></Text>
+                            <Text>
+                              AcceptMyCrypto Payment Address: { ' ' }
+                              <Text
+                                style={{fontWeight: 'bold'}}
+                                selectable={true}
+                                onPress={() => {Clipboard.setString(
+                                  this.state.transactionData.txn_id);
+                                  Alert.alert('Payment Address has been copied, please proceed to your Crypto Wallet to Pay')
+                                  }
+                                }
+                               >
+                                {this.state.transactionData.txn_id}
+                              </Text>
+                            </Text>
                           </View>
                           <View style={{justifyContent: 'center', alignItems: 'center', margin: 10, borderWidth: 2,}}>
                             <Image
@@ -353,7 +372,7 @@ export default class DealsCheckout extends React.Component {
                           </View>
                           {/*Countdown timer*/}
                           <View>
-                            <Text>*Your order will cancel in
+                            <Text>*Your order will cancel in { ' ' }
                               <Text style={{color: 'green', fontWeight: 'bold'}}>
                               {/*Timer goes here*/}
                                  <TimerCountdown
@@ -369,7 +388,7 @@ export default class DealsCheckout extends React.Component {
 
                           {/*Touchable to change form of payment or cancel*/}
                           <View style={{width: '100%', height: 40 ,backgroundColor: '#66dac7', borderRadius: 5, justifyContent: 'center', alignItems: 'center', marginVertical: 10}}>
-                            <TouchableOpacity onPress={this.changePayment}>
+                            <TouchableOpacity onPress={this.cancelPurchase}>
                               <Text style={{textAlign: 'center', color: 'green', fontSize: 20, fontWeight: 'bold'}}>Done</Text>
                             </TouchableOpacity>
                          </View>
