@@ -17,6 +17,7 @@ import { _verifier, _loadCryptocurrencies } from "../../../../src/services/AuthS
 import { LinearGradient } from 'expo';
 import { Dropdown } from 'react-native-material-dropdown';
 import { _fetchTransactionInfo } from '../../../../src/services/DealServices';
+import TimerCountdown from 'react-native-timer-countdown';
 
 export default class DealsCheckout extends React.Component {
   constructor(props) {
@@ -56,7 +57,8 @@ export default class DealsCheckout extends React.Component {
       pay_in_dollar: "",
       pay_in_crypto: "",
       size: "",
-      color: ""
+      color: "",
+      timeout: null
     };
   }
   cancelPurchase = () => {
@@ -90,15 +92,6 @@ export default class DealsCheckout extends React.Component {
     }else{
       this.setState({viewPaymentMethod: false, fadeValue: new Animated.Value(0)});
     }
-  }
-
-  countdown = (time) => {
-    let hours = time /(60*60);
-    console.log(time)
-
-    return(
-      hours
-    );
   }
 
   fadeInAnimation = () => {
@@ -144,6 +137,7 @@ export default class DealsCheckout extends React.Component {
         this.setState({transactionData});
         console.log(this.state.transactionData);
         console.log(this.state.transactionData.timeout);
+        this.setState({timeout: this.state.transactionData.timeout});
       }, function(err){console.log(err);})
     });
   }
@@ -344,9 +338,16 @@ export default class DealsCheckout extends React.Component {
                           </View>
                           {/*Countdown timer*/}
                           <View>
-                            <Text>*Your order will cancel in
+                            <Text>*Your order will cancel in 
                               <Text style={{color: 'green', fontWeight: 'bold'}}>
                               {/*Timer goes here*/}
+                                 <TimerCountdown
+                                    initialSecondsRemaining={1000*this.state.transactionData.timeout}
+                                    onTimeElapsed={() => this.setState({timeout: 0})}
+                                    allowFontScaling={true}
+                                    style={{ fontSize: 20 }}
+                                 />
+                                 { this.state.timeout == 0 ? this.cancelPurchase : null }
                               </Text>
                             </Text>
                           </View>
@@ -379,7 +380,7 @@ export default class DealsCheckout extends React.Component {
               justifyContent: 'center',
               alignItems: 'center',
              }}
-             >
+           >
              <LinearGradient
              colors={ this.state.paymentReceived ? ['#fff4cc','#efb404','#d1a31d'] : ['#ffffff','#cccccc','#999999']}
              style={{flex: 1, borderWidth: 1, borderRadius: 5, padding: 15, width: 300,justifyContent: 'center', alignItems: 'center', borderRadius: 5}}>
