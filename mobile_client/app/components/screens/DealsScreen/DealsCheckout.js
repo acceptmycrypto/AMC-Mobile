@@ -364,8 +364,8 @@ export default class DealsCheckout extends React.Component {
                           <View>
                             <Text>Please send <Text style={{fontWeight: 'bold'}}>{this.state.transactionData.amount + " " + this.state.crypto_symbol}</Text> to the below address: </Text>
                             <Text>AcceptMyCrypto Payment Address: { ' ' }</Text>
-                             <View style={{borderWidth: 2, padding: 1}}> <Text
-                                style={{fontWeight: 'bold'}}
+                             <View style={{borderWidth: 2, padding: 2, backgroundColor: '#ffffcc'}}> <Text
+                                style={{fontWeight: 'bold', textAlign: 'center'}}
                                 selectable={true}
                                 onPress={() => {Clipboard.setString(
                                   this.state.transactionData.txn_id);
