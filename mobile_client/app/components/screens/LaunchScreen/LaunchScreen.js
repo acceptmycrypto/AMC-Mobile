@@ -42,8 +42,8 @@ export default class LaunchScreen extends React.Component {
       firsLaunch: null,
       id: 0,
       username: '',
-      email: 'audiopunk252@yahoo.com',
-      password: 'taylora',
+      email: '',
+      password: '',
       cryptoOptions: {},
       cryptoProfile: []
     };
