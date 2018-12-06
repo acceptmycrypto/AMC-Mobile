@@ -17,6 +17,7 @@
     "react-native-material-dropdown": "^0.11.1",
     "react-native-multiple-select-list": "^1.0.4",
     "react-native-picker-select": "^5.1.0",
+    "react-native-snap-carousel": "^3.7.5",
     "react-navigation": "2.18.0"
   }
 }

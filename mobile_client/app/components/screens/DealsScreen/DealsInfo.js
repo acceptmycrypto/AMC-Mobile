@@ -19,7 +19,8 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import { _loadOnePosts } from './DealsService';
 import { LinearGradient } from 'expo';
 import { Dropdown } from 'react-native-material-dropdown';
-
+import Carousel  from 'react-native-snap-carousel';
+import SliderEntry from './SliderEntry';
 export default class PostInfo extends React.Component {
 
   constructor(props) {
@@ -39,7 +40,39 @@ export default class PostInfo extends React.Component {
       checkedbox1: null,
       checkedbox2: null,
       sizeOption: [{value: 'Small',}, {value: 'Medium',}, {value: 'Large',}],
-      colorOption: [{value: 'Red',}, {value: 'Blue',}, {value: 'Green',}]
+      colorOption: [{value: 'Red',}, {value: 'Blue',}, {value: 'Green',}],
+      images: [
+        {
+            title: 'Beautiful and dramatic Antelope Canyon',
+            subtitle: 'Lorem ipsum dolor sit amet et nuncat mergitur',
+            illustration: 'https://i.imgur.com/UYiroysl.jpg'
+        },
+        {
+            title: 'Earlier this morning, NYC',
+            subtitle: 'Lorem ipsum dolor sit amet',
+            illustration: 'https://i.imgur.com/UPrs1EWl.jpg'
+        },
+        {
+            title: 'White Pocket Sunset',
+            subtitle: 'Lorem ipsum dolor sit amet et nuncat ',
+            illustration: 'https://i.imgur.com/MABUbpDl.jpg'
+        },
+        {
+            title: 'Acrocorinth, Greece',
+            subtitle: 'Lorem ipsum dolor sit amet et nuncat mergitur',
+            illustration: 'https://i.imgur.com/KZsmUi2l.jpg'
+        },
+        {
+            title: 'The lone tree, majestic landscape of New Zealand',
+            subtitle: 'Lorem ipsum dolor sit amet',
+            illustration: 'https://i.imgur.com/2nCt3Sbl.jpg'
+        },
+        {
+            title: 'Middle Earth, Germany',
+            subtitle: 'Lorem ipsum dolor sit amet',
+            illustration: 'https://ak1.ostkcdn.com/images/products/9542248/Safavieh-Malone-White-Chrome-Coffee-Table-a94e199e-40dd-42c9-9a08-510c6ab89575.jpg'
+        }
+    ]
     }
   };
   
@@ -161,6 +194,26 @@ export default class PostInfo extends React.Component {
       });
     }
   };
+  _renderItemWithParallax ({item, index}, parallaxProps) {
+    return (
+        <SliderEntry
+          data={item}
+          even={(index + 1) % 2 === 0}
+          parallax={true}
+          parallaxProps={parallaxProps}
+        />
+    );
+}
+  _renderItem ({item, index}) {
+    console.log("CHECKING IMAGES!!!!!!");
+    console.log(item);
+    console.log("CHECKING IMAGES!!!!!!");
+    return (
+        <View >
+            <Text>{ item.title } </Text>
+        </View>
+    );
+}
 
   render() {
 
@@ -170,9 +223,24 @@ export default class PostInfo extends React.Component {
     return(
       <View style={styles.container}>
         <ScrollView ref={scrollView => this.scrollView = scrollView}>
-          <Image
+          {/* <Image
             style={{ maxWidth: '100%', height: 200 }}
             source={{ url: this.state.featured_deal_image }}
+          /> */}
+          <Carousel
+            ref={(c) => { this._carousel = c; }}
+            data={this.state.images}
+            renderItem={this._renderItemWithParallax}
+            hasParallaxImages={true}
+            inactiveSlideScale={0.94}
+            inactiveSlideOpacity={0.7}
+            sliderWidth={450}
+            itemWidth={200}
+            loop={true}
+            loopClonesPerSide={2}
+            autoplay={true}
+            autoplayDelay={500}
+            autoplayInterval={10000}
           />
           <View style={styles.description}>
             <View style={{ 
