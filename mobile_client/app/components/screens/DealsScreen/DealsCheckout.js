@@ -217,31 +217,30 @@ export default class DealsCheckout extends React.Component {
     return (
     <View style={styles.container}>
       {/*Will include a sticky section at the top from previous page with the deals info but in a smaller form*/}
-        <View style={{borderBottomColor: '#dbd8ce',
-          borderBottomWidth: 1,
-          flexDirection: 'row',
-          padding: 10,}}>
-          <Image
-            style={{alignItems: 'center', width: 58, height: 58}}
-            source={{ uri:this.state.featured_deal_image }}
-            />
-          <View style={{flex:1, flexDirection:'column', marginLeft: 10,}}>
-            <Text style={{fontWeight: 'bold', }}>{this.state.deal_name} </Text>
-            <View style={{flexDirection: 'row', marginBottom: 2}}>
-              <View style={{flexDirection: 'row',width:'40%' }}>
-                <Text style={{fontWeight: 'bold', }}>Size: </Text><Text>{this.state.size} </Text>
-              </View>
-              <View style={{flexDirection: 'row', marginBottom: 2}}>
-                <Text style={{fontWeight: 'bold',}}>Color:</Text><Text> {this.state.color} </Text>
-              </View>
+      <View style={{borderBottomColor: '#dbd8ce',
+        borderBottomWidth: 1,
+        flexDirection: 'row',
+        padding: 10,}}>
+        <Image
+          style={{alignItems: 'center', width: 58, height: 58}}
+          source={{uri:this.state.featured_deal_image}}
+          />
+        <View style={{flex:1, flexDirection:'column', marginLeft: 10,}}>
+          <Text style={{fontWeight: 'bold', }}>{this.state.deal_name} </Text>
+          <View style={{flexDirection: 'row', marginBottom: 2}}>
+            <View style={{flexDirection: 'row',width:'40%' }}>
+              <Text style={{fontWeight: 'bold', }}>Size: </Text><Text>{this.state.size} </Text>
             </View>
-            <View style={{flexDirection:'row'}}>
-              <View style={{flexDirection: 'row', width: '40%'}}>
-              <Text style={{fontWeight: 'bold', }}>Price: </Text><Text>${this.state.pay_in_dollar}</Text>
-              </View>
-              <View style={{flexDirection: 'row'}}>
-              <Text style={{fontWeight: 'bold', color: 'green'}}>Cryptocurrency:</Text><Text style={{color: 'green'}}> ${this.state.pay_in_crypto}</Text>
-              </View>
+            <View style={{flexDirection: 'row', marginBottom: 2}}>
+              <Text style={{fontWeight: 'bold',}}>Color:</Text><Text> {this.state.color} </Text>
+            </View>
+          </View>
+          <View style={{flexDirection:'row'}}>
+            <View style={{flexDirection: 'row', width: '40%'}}>
+            <Text style={{fontWeight: 'bold', }}>Price: </Text><Text>${this.state.pay_in_dollar}</Text>
+            </View>
+            <View style={{flexDirection: 'row'}}>
+            <Text style={{fontWeight: 'bold', color: 'green'}}>Cryptocurrency:</Text><Text style={{color: 'green'}}> ${this.state.pay_in_crypto}</Text>
             </View>
           </View>
         </View>
@@ -342,7 +341,7 @@ export default class DealsCheckout extends React.Component {
                           borderColor: "rgba(0, 0, 0, 0.1)"}}
                         >
                           <View>
-                            <Text>Please send {this.state.transactionData.amount, this.state.crypto_symbol} to the below address: </Text>
+                            <Text>Please send <Text style={{fontWeight: 'bold'}}>{this.state.transactionData.amount + " " + this.state.crypto_symbol}</Text> to the below address: </Text>
                             <Text>AcceptMyCrypto Payment Address: <Text style={{fontWeight: 'bold'}}>{this.state.transactionData.txn_id}</Text></Text>
                           </View>
                           <View style={{justifyContent: 'center', alignItems: 'center', margin: 10, borderWidth: 2,}}>
@@ -353,7 +352,7 @@ export default class DealsCheckout extends React.Component {
                           </View>
                           {/*Countdown timer*/}
                           <View>
-                            <Text>*Your order will cancel in 
+                            <Text>*Your order will cancel in
                               <Text style={{color: 'green', fontWeight: 'bold'}}>
                               {/*Timer goes here*/}
                                  <TimerCountdown
@@ -370,14 +369,14 @@ export default class DealsCheckout extends React.Component {
                           {/*Touchable to change form of payment or cancel*/}
                           <View style={{width: '100%', height: 40 ,backgroundColor: '#66dac7', borderRadius: 5, justifyContent: 'center', alignItems: 'center', marginVertical: 10}}>
                             <TouchableOpacity onPress={this.changePayment}>
-                              <Text style={{textAlign: 'center', color: '#ffffff', fontSize: 20, fontWeight: 'bold'}}>Edit Form Of Payment</Text>
+                              <Text style={{textAlign: 'center', color: 'green', fontSize: 20, fontWeight: 'bold'}}>Done</Text>
                             </TouchableOpacity>
                          </View>
-                         <View style={{width: '100%', height: 40 ,backgroundColor: 'red', borderRadius: 5, justifyContent: 'center', alignItems: 'center'}}>
+                         {/*<View style={{width: '100%', height: 40 ,backgroundColor: 'red', borderRadius: 5, justifyContent: 'center', alignItems: 'center'}}>
                            <TouchableOpacity onPress={this.cancelPurchase}>
                              <Text style={{textAlign: 'center', color: '#ffffff', fontSize: 20, fontWeight: 'bold'}}>Cancel Payment</Text>
                            </TouchableOpacity>
-                          </View>
+                          </View>*/}
                         </View>
                       </Modal>
                     </View>

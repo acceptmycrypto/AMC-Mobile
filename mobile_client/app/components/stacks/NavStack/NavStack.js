@@ -39,7 +39,7 @@ const DealsStack = createStackNavigator(
       screen: DealsInfo
     },
     DealsCheckout: {
-      screen: DealsCheckout
+      screen: DealsCheckout,
     }
   },
   {
