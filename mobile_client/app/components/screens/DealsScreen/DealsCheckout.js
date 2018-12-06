@@ -244,6 +244,7 @@ export default class DealsCheckout extends React.Component {
             </View>
           </View>
         </View>
+       </View>
       <ScrollView
         alwaysBounceVertical={true}
         keyboardDismissMode="on-drag"
