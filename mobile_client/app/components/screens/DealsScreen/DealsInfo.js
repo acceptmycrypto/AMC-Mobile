@@ -319,7 +319,7 @@ export default class PostInfo extends React.Component {
               <Dropdown
                 label='Select a size...'
                 data={size}
-                onChangeText= {(value, index) => this.setState({size: value,}) }
+                onChangeText= {(value, index) => this.setState({size: value, checkedbox1: true}) }
                 style={{width: 100}}
               />
             </View>
@@ -329,7 +329,7 @@ export default class PostInfo extends React.Component {
               <Dropdown
                 label='Select a color...'
                 data={colors}
-                onChangeText= {(value, index) => this.setState({color: value,}) }
+                onChangeText= {(value, index) => this.setState({color: value, checkedbox2: true}) }
                 style={{width: 50}}
               />
             </View>

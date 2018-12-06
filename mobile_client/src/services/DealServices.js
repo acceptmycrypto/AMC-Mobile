@@ -28,7 +28,14 @@ export async function _fetchTransactionInfo(
   crypto_symbol,
   deal_id,
   amount,
-  token
+  token,
+  shippingAddress,
+  shippingCity,
+  zipcode,
+  shippingState,
+  fullName,
+  selectedSize,
+  selectedColor
 ) {
   return fetch(url + '/checkout', {
     method: 'POST',
@@ -36,6 +43,19 @@ export async function _fetchTransactionInfo(
       Accept: 'application/json',
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({ crypto_name, crypto_symbol, deal_id, amount, token })
+    body: JSON.stringify({
+      crypto_name,
+      crypto_symbol,
+      deal_id,
+      amount,
+      token,
+      shippingAddress,
+      shippingCity,
+      zipcode,
+      shippingState,
+      fullName,
+      selectedSize,
+      selectedColor
+    })
   }).then(res => res.json());
 }
