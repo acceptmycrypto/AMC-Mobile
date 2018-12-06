@@ -12,7 +12,8 @@ import {
   TouchableOpacity,
   Alert,
   Linking,
-  Button
+  Button,
+  ActivityIndicator
 } from 'react-native';
 import { WebBrowser } from 'expo';
 import {
@@ -41,8 +42,8 @@ export default class LaunchScreen extends React.Component {
       firsLaunch: null,
       id: 0,
       username: '',
-      email: '',
-      password: '',
+      email: 'audiopunk252@yahoo.com',
+      password: 'taylora',
       cryptoOptions: {},
       cryptoProfile: []
     };
@@ -120,7 +121,10 @@ export default class LaunchScreen extends React.Component {
         cryptoOptions[value] = label;
       });
       console.log(cryptoOptions);
-      this.setState({ cryptoOptions });
+      this.setState({ 
+        cryptoOptions,
+        isLoading: false
+       });
     });
   }
 
@@ -349,28 +353,34 @@ export default class LaunchScreen extends React.Component {
                 YOUR CRYPTOCURRENCY PORTFOLIO
               </Text>
               <View style={styles.selector}>
-                <CustomMultiPicker
-                  options={this.state.cryptoOptions}
-                  search={true} // should show search bar?
-                  multiple={true} //
-                  placeholder={'Search'}
-                  placeholderTextColor={'#58697e'}
-                  returnValue={'value'} // label or value
-                  callback={res => {
-                    this.setState({
-                      cryptoProfile: res
-                    });
-                  }} // callback, array of selected items
-                  rowBackgroundColor={'#66dac7'}
-                  rowHeight={41}
-                  rowRadius={10}
-                  iconColor={'black'}
-                  iconSize={30}
-                  selectedIconName={'md-checkmark-circle-outline'}
-                  unselectedIconName={'ios-radio-button-off-outline'}
-                  scrollViewHeight={193}
-                  selected={[]} // list of options which are selected by default
-                />
+                {this.state.isLoading ? (
+                  <View style={{ height: 240, justifyContent: 'center' }}>
+                    <ActivityIndicator />
+                  </View>
+                ) : (
+                  <CustomMultiPicker
+                    options={this.state.cryptoOptions}
+                    search={true} // should show search bar?
+                    multiple={true} //
+                    placeholder={'Search'}
+                    placeholderTextColor={'#58697e'}
+                    returnValue={'value'} // label or value
+                    callback={res => {
+                      this.setState({
+                        cryptoProfile: res
+                      });
+                    }} // callback, array of selected items
+                    rowBackgroundColor={'#66dac7'}
+                    rowHeight={41}
+                    rowRadius={10}
+                    iconColor={'black'}
+                    iconSize={30}
+                    selectedIconName={'md-checkmark-circle-outline'}
+                    unselectedIconName={'ios-radio-button-off-outline'}
+                    scrollViewHeight={193}
+                    selected={[]} // list of options which are selected by default
+                  />
+                )}
                 <Text
                   style={styles.selectorText}
                   onPress={this.handleCryptosLink}
@@ -394,7 +404,7 @@ export default class LaunchScreen extends React.Component {
             // Android Sign Up Screen
 
             <View
-              style={{ 
+              style={{
                 flex: 1,
                 alignItems: 'center'
               }}
@@ -468,7 +478,7 @@ export default class LaunchScreen extends React.Component {
                   onChangeText={password => this.setState({ password })}
                 />
               </KeyboardAwareScrollView>
-              <KeyboardAvoidingView 
+              <KeyboardAvoidingView
                 style={styles.selector}
                 behavior="position"
                 onTouchStart={() => this.moveInputs}
@@ -478,34 +488,40 @@ export default class LaunchScreen extends React.Component {
                   style={{
                     alignSelf: 'flex-start',
                     color: '#fff',
-                    marginTop: 15,
+                    marginTop: 15
                     // marginLeft: 40
                   }}
                 >
                   YOUR CRYPTOCURRENCY PORTFOLIO
                 </Text>
-                <CustomMultiPicker
-                  options={this.state.cryptoOptions}
-                  search={true} // should show search bar?
-                  multiple={true} //
-                  placeholder={'Search'}
-                  placeholderTextColor={'#58697e'}
-                  returnValue={'value'} // label or value
-                  callback={res => {
-                    this.setState({
-                      cryptoProfile: res
-                    });
-                  }} // callback, array of selected items
-                  rowBackgroundColor={'#66dac7'}
-                  rowHeight={41}
-                  rowRadius={10}
-                  iconColor={'black'}
-                  iconSize={30}
-                  selectedIconName={'md-checkmark-circle-outline'}
-                  unselectedIconName={'ios-radio-button-off-outline'}
-                  scrollViewHeight={165}
-                  selected={[]} // list of options which are selected by default
-                />
+                {this.state.isLoading ? (
+                  <View style={{ height: 240, justifyContent: 'center' }}>
+                    <ActivityIndicator />
+                  </View>
+                ) : (
+                  <CustomMultiPicker
+                    options={this.state.cryptoOptions}
+                    search={true} // should show search bar?
+                    multiple={true} //
+                    placeholder={'Search'}
+                    placeholderTextColor={'#58697e'}
+                    returnValue={'value'} // label or value
+                    callback={res => {
+                      this.setState({
+                        cryptoProfile: res
+                      });
+                    }} // callback, array of selected items
+                    rowBackgroundColor={'#66dac7'}
+                    rowHeight={41}
+                    rowRadius={10}
+                    iconColor={'black'}
+                    iconSize={30}
+                    selectedIconName={'md-checkmark-circle-outline'}
+                    unselectedIconName={'ios-radio-button-off-outline'}
+                    scrollViewHeight={193}
+                    selected={[]} // list of options which are selected by default
+                  />
+                )}
                 <Text
                   style={styles.selectorText}
                   onPress={this.handleCryptosLink}
