@@ -165,7 +165,8 @@ class CryptosRankings extends Component {
             >
               <Text
                 style={{
-                  alignSelf: 'center'
+                  alignSelf: 'center',
+                  color: '#66dac7'
                 }}
               >
                 Transactions
@@ -242,7 +243,8 @@ class CryptosRankings extends Component {
             >
               <Text
                 style={{
-                  alignSelf: 'center'
+                  alignSelf: 'center',
+                  color: '#66dac7'
                 }}
               >
                 Venues
