@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {
+  Platform,
   View,
   StyleSheet,
   Text,
@@ -16,6 +17,7 @@ import {
   TouchableHighlight,
   TextInput,
   KeyboardAvoidingView,
+  ActivityIndicator,
   Switch
 } from 'react-native';
 import { Ionicons, FontAwesome } from '@expo/vector-icons';
@@ -29,19 +31,19 @@ import CustomMultiPicker from 'react-native-multiple-select-list';
 import { _verifier } from '../../../../src/services/AuthService';
 // import { Switch} from 'react-native-gesture-handler';
 
-
 const styles = require('../../../assets/stylesheet/style');
 
 export default class ProfileScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      isLoading: true,
       // cryptoOptions:{},
       cryptoOptionsLeft: {},
       cryptoProfile: [],
       isLoggedIn: false,
       isPassingProps: false,
-      crypto_view: "owned",
+      crypto_view: 'owned',
       user_info: [],
       user_crypto: [],
       add_address: false,
@@ -49,15 +51,27 @@ export default class ProfileScreen extends React.Component {
       current_crypto_name: null,
       switchSelected: false,
       showCrytoAddress: false,
-      new_address: "",
-      add_cryptos: false,
+      new_address: '',
+      add_cryptos: false
     };
   }
 
   // updates state
-  setCurrentState = (crypto_view, qr, add_address, users_cryptos_id, current_crypto_name) => {
-    this.setState({ crypto_view, qr, add_address, users_cryptos_id, current_crypto_name });
-  }
+  setCurrentState = (
+    crypto_view,
+    qr,
+    add_address,
+    users_cryptos_id,
+    current_crypto_name
+  ) => {
+    this.setState({
+      crypto_view,
+      qr,
+      add_address,
+      users_cryptos_id,
+      current_crypto_name
+    });
+  };
 
   checkToken = async () => {
     try {
@@ -100,27 +114,27 @@ export default class ProfileScreen extends React.Component {
   // 	  isPassingProps: true
   //   })
   // }
-  handleToggleChange = (value) => {
-
-    if (value) { // if checkbox is checked show interested coins
-      this.setCurrentState("interested", false, false, null, null); // crypto_view, qr, add_address, users_cryptos_id, current_crypto_name
+  handleToggleChange = value => {
+    if (value) {
+      // if checkbox is checked show interested coins
+      this.setCurrentState('interested', false, false, null, null); // crypto_view, qr, add_address, users_cryptos_id, current_crypto_name
 
       // this.hideOrShowCoin("show");
       this.setState({
         switchSelected: value
-      })
+      });
       console.log(this.state);
-
-    } else { // if checkbox is not checked show owned coins
-      this.setCurrentState("owned", false, false, null, null); //crypto_view, qr, add_address, users_cryptos_id, current_crypto_name
+    } else {
+      // if checkbox is not checked show owned coins
+      this.setCurrentState('owned', false, false, null, null); //crypto_view, qr, add_address, users_cryptos_id, current_crypto_name
 
       // this.hideOrShowCoin("show");
       this.setState({
         switchSelected: value
-      })
+      });
     }
     console.log(this.state);
-  }
+  };
 
   componentWillMount = async () => {
     try {
@@ -130,7 +144,6 @@ export default class ProfileScreen extends React.Component {
 
         let { user_info, user_crypto, friends_array, transactions, remaining_cryptos } = res;
         console.log(user_info, user_crypto, friends_array, transactions, remaining_cryptos);
-
 
         let cryptoOptionsLeft = {};
 
@@ -150,7 +163,6 @@ export default class ProfileScreen extends React.Component {
     }
   };
 
-
   handleLogout = async () => {
     try {
       await AsyncStorage.removeItem('token');
@@ -169,50 +181,54 @@ export default class ProfileScreen extends React.Component {
       this.setState({
         add_address: true,
         users_cryptos_id: id,
-        current_crypto_name: name,
-
-      })
+        current_crypto_name: name
+      });
     } else {
       this.setState({
         add_address: false,
         users_cryptos_id: null,
-        current_crypto_name: null,
-
-      })
+        current_crypto_name: null
+      });
     }
-  }
+  };
 
-  showAddress = (event) => {
-
+  showAddress = event => {
     if (this.state.showCrytoAddress) {
       this.setState({
         showCrytoAddress: false
-      })
+      });
     } else {
       this.setState({
         showCrytoAddress: true
-      })
+      });
     }
-
-  }
+  };
 
   addAddress = async () => {
     try {
-      let value = await AsyncStorage.getItem('token');
-      return _updateCryptoTable(this.state.new_address, this.state.users_cryptos_id, value).then(res => {
+      const value = await AsyncStorage.getItem('token');
+      return _updateCryptoTable(
+        this.state.new_address,
+        this.state.users_cryptos_id,
+        value
+      ).then(res => {
         console.log(res);
 
         let { user_crypto, crypto_view, add_address } = res;
         console.log(user_crypto, crypto_view, add_address);
 
-        this.setState({ user_crypto, crypto_view, add_address, switchSelected: false });
+        this.setState({
+          user_crypto,
+          crypto_view,
+          add_address,
+          switchSelected: false
+        });
         console.log(this.state);
       });
     } catch (error) {
       console.log('NO TOKEN!!!' + error);
     }
-
-  }
+  };
 
   addMoreCryptos = () => {
     if (this.state.add_cryptos) {
@@ -223,7 +239,7 @@ export default class ProfileScreen extends React.Component {
     } else {
       this.setState({
         add_cryptos: true
-      })
+      });
     }
   }
 
@@ -253,30 +269,12 @@ export default class ProfileScreen extends React.Component {
           });
         });
       }
-
-
     } catch (error) {
       console.log('NO TOKEN!!!' + error);
     }
-
-
-
-
-
   }
 
-
-
   render() {
-    const { navigation } = this.props;
-    // const id = navigation.getParam('_id', 'n/a');
-    const username = navigation.getParam('username', 'n/a');
-    // const email = navigation.getParam('email', 'n/a');
-    // const firstname = navigation.getParam('firstname', 'n/a');
-    // const lastname = navigation.getParam('lastname', 'n/a');
-    // const create_date = navigation.getParam('create_date', 'n/a');
-    // const status = navigation.getParam('isLoggedIn', 'n/a');
-
     // const validIcon = parseIconFromClassName('fas fa-chevron-left');
 
     return (
@@ -469,10 +467,10 @@ const additionalStyles = StyleSheet.create({
     marginBottom: 0
   },
   profileImageView: {
-    flex: 1,
+    // flex: 1,
     alignSelf: 'center',
     marginTop: 15,
-    marginBottom: 0,
+    marginBottom: 10
 
     // position: 'absolute',
   },

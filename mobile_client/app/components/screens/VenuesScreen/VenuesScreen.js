@@ -34,62 +34,11 @@ class CryptosRankings extends Component {
 
   componentWillMount = () => {
     this.getCryptoData();
-    
-    // let cryptoData = [];
-
-    // cryptoData.push( JSON.stringify(cryptosRanking) + JSON.stringify(cryptosTransactions) );
-
-    // cryptoData.map(crypto => {
-    //   console.log(crypto)
-
-      // this.setState({ 
-      //   cryptoData: {
-      //     id: cryptosRanking[0].id,
-      //     name: cryptosRanking[0].crypto_name,
-      //     logo: cryptosRanking[0].crypto_logo,
-      //     symbol: cryptosRanking[0].crypto_symbol,
-      //     price: cryptosRanking[0].crypto_price,
-      //     venues: cryptosRanking[0].venues_count,
-      //     transactions: cryptosTransactions[0].total_transactions,
-      //     metaName: cryptosRanking[0].crypto_metadata_name,
-      //     link: cryptosRanking[0].crypto_link
-      //   }
-      // });
-
-    // })
-
-    // cryptoData.push({        
-    //   id: cryptosRanking[0].id,
-    //   name: cryptosRanking[0].crypto_name,
-    //   logo: cryptosRanking[0].crypto_logo,
-    //   symbol: cryptosRanking[0].crypto_symbol,
-    //   price: cryptosRanking[0].crypto_price,
-    //   venues: cryptosRanking[0].venues_count,
-    //   transactions: cryptosTransactions[0].total_transactions,
-    //   metaName: cryptosRanking[0].crypto_metadata_name,
-    //   link: cryptosRanking[0].crypto_link
-    // })
-
-    // console.log(cryptosRanking,cryptosTransactions,cryptoData)
   };
-
-  //   cryptoRankings = () => {
-  //     {this.state.cryptosRanking.map((crypto, i) => (
-  //         <tr key={crypto + i}>
-  //           <th scope="row">{i + 1}</th>
-  //           <td>
-  //             <img src={crypto.crypto_logo} alt="crypto-logo" />{' '}
-  //             {crypto.crypto_symbol}
-  //           </td>
-  //           <td>{crypto.venues_count}</td>
-  //           <td>{crypto.crypto_price}</td>
-  //         </tr>
-  //       ))}
-  //   }
 
   getCryptoData = async () => {
     let url = 'https://acceptmycrypto.herokuapp.com' || 'http://localhost:3001';
-    const cryptosList = await fetch(url + '/cryptos');
+    const cryptosList = await fetch(url + '/api/cryptosranking_venues');
     const cryptosPurchases = await fetch(url + '/api/cryptosranking_transactions');
     const cryptosRanking = await cryptosList.json();
     const cryptosTransactions = await cryptosPurchases.json();
@@ -102,14 +51,14 @@ class CryptosRankings extends Component {
     })
   }
 
-  _venuesKeyExtractor = (item, index) => JSON.stringify(item.id);
+  _keyExtractor = (item, index) => JSON.stringify(item.crypto_symbol);
 
-  _transactionsKeyExtractor = (item, index) => JSON.stringify(item.crypto_symbol);
+  // _transactionsKeyExtractor = (item, index) => JSON.stringify(item.crypto_symbol);
 
   searchCryptosRanking = async () => {
     let url = 'https://acceptmycrypto.herokuapp.com' || 'http://localhost:3001';
     try {
-      const cryptosList = await fetch(url + '/cryptos');
+      const cryptosList = await fetch(url + '/api/cryptosranking_venues');
       await cryptosList.json()
           .then(
             resJSON => {
@@ -137,7 +86,7 @@ class CryptosRankings extends Component {
               console.log(resJSON);
               let searchData = resJSON.filter(postData => {
                 console.log('POST ' + JSON.stringify(postData));
-                return postData.crypto_symbol.includes(this.state.transactionsSearch);
+                return postData.crypto_name.includes(this.state.transactionsSearch);
               });
               this.setState({ cryptosTransactions: searchData });
             }
@@ -245,7 +194,7 @@ class CryptosRankings extends Component {
 
           <FlatList
             data={this.state.cryptosRanking}
-            keyExtractor={this._venuesKeyExtractor}
+            keyExtractor={this._keyExtractor}
             refreshing={this.state.isFetching}
             onRefresh={() => this.onRefresh()}
             renderItem={({ item, index }) => {
@@ -258,9 +207,9 @@ class CryptosRankings extends Component {
                   <Text style={{ color: '#ffffff', marginTop: 5, marginLeft: 25, fontSize: 20 }}>{item.crypto_symbol}</Text>
                   </View>
                   {/* <Text style={{ color: '#66dac7', fontSize: 15, marginTop: 10, marginLeft: 10  }}>Venues</Text> */}
-                  <Text style={{ color: '#ffffff', fontSize: 20, marginTop: 5, marginLeft: 50, marginRight: 10, width: 15  }}>{item.venues_count}</Text>
+                  <Text style={{ color: '#ffffff', fontSize: 20, marginTop: 5, marginLeft: 50, marginRight: 10, width: 'auto'  }}>{item.venues_count}</Text>
                   {/* <Text style={{ color: '#66dac7', fontSize: 15, marginTop: 10  }}>Price $</Text> */}
-                  <Text style={{ color: '#ffffff', fontSize: 20, marginTop: 6, width: 120, textAlign: 'right'  }}>{item.crypto_price}</Text>
+                  <Text style={{ color: '#ffffff', fontSize: 20, marginTop: 6, width: 140, textAlign: 'right'  }}>{item.crypto_price}</Text>
                   </View>
                 </View>
               );
@@ -352,7 +301,7 @@ class CryptosRankings extends Component {
 
           <FlatList
             data={this.state.cryptosTransactions}
-            keyExtractor={this._transactionsKeyExtractor}
+            keyExtractor={this._keyExtractor}
             refreshing={this.state.isFetching}
             onRefresh={() => this.onRefresh()}
             renderItem={({ item, index }) => {
@@ -361,13 +310,13 @@ class CryptosRankings extends Component {
                 <View style={{ backgroundColor: '#2e4158', borderBottomColor: 'black', borderBottomWidth: 1, padding: 10 }}>
                   <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                   <View style={{ flexDirection: 'row', width: 120 }}>
-                  {/* <Image style={{ width: 30, height: 30, marginLeft: 20 }} source={{uri: item.crypto_logo}} /> */}
+                  <Image style={{ width: 30, height: 30, marginLeft: 20 }} source={{uri: item.crypto_logo}} />
                   <Text style={{ color: '#ffffff', marginTop: 5, marginLeft: 25, fontSize: 20 }}>{item.crypto_symbol}</Text>
                   </View>
                   {/* <Text style={{ color: '#66dac7', fontSize: 15, marginTop: 10, marginLeft: 10  }}>Venues</Text> */}
-                  <Text style={{ color: '#ffffff', fontSize: 20, marginTop: 5, marginLeft: 50, marginRight: 10, width: 15  }}>{item.total_transactions}</Text>
+                  <Text style={{ color: '#ffffff', fontSize: 20, marginTop: 5, marginLeft: 50, marginRight: 10, width: 'auto'  }}>{item.total_transactions}</Text>
                   {/* <Text style={{ color: '#66dac7', fontSize: 15, marginTop: 10  }}>Price $</Text> */}
-                  <Text style={{ color: '#ffffff', fontSize: 20, marginTop: 6, width: 120, textAlign: 'right'  }}>{item.crypto_price}</Text>
+                  <Text style={{ color: '#ffffff', fontSize: 20, marginTop: 6, width: 140, textAlign: 'right'  }}>{item.crypto_price}</Text>
                   </View>
                 </View>
               );

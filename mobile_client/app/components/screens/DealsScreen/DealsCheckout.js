@@ -10,6 +10,7 @@ import {
   ScrollView,
   Animated,
   AsyncStorage,
+  BackHandler
   } from 'react-native';
 import Modal from 'react-native-modal';
 import { Button } from 'react-native-elements';
@@ -175,6 +176,10 @@ export default class DealsCheckout extends React.Component {
   };
 
   componentDidMount() {
+    this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+      this.props.navigation.goBack();
+      return true;
+    });
     const { navigation } = this.props;
       this.setState({
         deal_id: navigation.getParam('deal_id', ''),
@@ -204,6 +209,10 @@ export default class DealsCheckout extends React.Component {
     });
   }
 
+  componentWillUnmount() {
+    this.backHandler.remove();
+  }
+
   render() {
     return (
     <View style={styles.container}>
@@ -214,7 +223,7 @@ export default class DealsCheckout extends React.Component {
           padding: 10,}}>
           <Image
             style={{alignItems: 'center', width: 58, height: 58}}
-            source={{uri:this.state.featured_deal_image}}
+            source={{ uri:this.state.featured_deal_image }}
             />
           <View style={{flex:1, flexDirection:'column', marginLeft: 10,}}>
             <Text style={{fontWeight: 'bold', }}>{this.state.deal_name} </Text>
@@ -236,7 +245,13 @@ export default class DealsCheckout extends React.Component {
             </View>
           </View>
         </View>
-      <ScrollView>
+      <ScrollView
+        alwaysBounceVertical={true}
+        keyboardDismissMode="on-drag"
+        keyboardDismissMode="interactive"
+        keyboardShouldPersistTaps="handled"
+        overScrollMode="never"
+      >
         {/*Address View*/}
         <View style={[styles.postStyle, {borderBottomColor: '#000000', borderBottomWidth: 2, marginBottom: 10}]}>
           <Text style={{fontSize: 25, marginVertical: 5, borderBottomColor: '#dbd8ce', borderBottomWidth: 2, fontWeight: 'bold'}}>Shipping:</Text>

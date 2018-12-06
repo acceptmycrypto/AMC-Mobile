@@ -69,8 +69,11 @@ export default class Post extends React.Component {
   }
 
   componentDidMount = () => {
-    BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
     this.getDealsData();
+    this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+      BackHandler.exitApp();
+      return true;
+    });
   };
 
   getDealsData = async () => {
@@ -92,13 +95,8 @@ export default class Post extends React.Component {
   }
 
   componentWillUnmount() {
-    BackHandler.removeEventListener('hardwareBackPress', this.handleBackPress);
+    this.backHandler.remove();
   }
-
-  handleBackPress = () => {
-    BackHandler.exitApp();
-    return true;
-  };
 
   convertToPercentage = (priceInDollar, priceInCrypto) => {
     
@@ -234,7 +232,7 @@ export default class Post extends React.Component {
                           <Text
                             style={{
                               // alignContent: "flex-end",
-                              fontSize: 11,
+                              fontSize: 13,
                               opacity: 0.54,
                               marginTop: 20,
                               textAlign: 'right', 
@@ -247,7 +245,7 @@ export default class Post extends React.Component {
                           <Text
                             style={{
                               // alignContent: "flex-end",
-                              fontSize: 11,
+                              fontSize: 13,
                               marginLeft: 0,
                               marginTop: 20,
                               marginLeft: 10,
@@ -262,7 +260,7 @@ export default class Post extends React.Component {
                           <Text
                             style={{
                               // alignContent: "flex-end",
-                              fontSize: 11,
+                              fontSize: 13,
                               opacity: 0.54,
                               marginLeft: 0,
                               marginTop: 20,
@@ -276,7 +274,7 @@ export default class Post extends React.Component {
                           <Text
                             style={{
                               // alignContent: "flex-end",
-                              fontSize: 11,
+                              fontSize: 13,
                               color: 'green',
                               marginLeft: 0,
                               marginTop: 20,
@@ -289,7 +287,7 @@ export default class Post extends React.Component {
 
                           <Text
                             style={{
-                              fontSize: 11,
+                              fontSize: 13,
                               color: 'green',
                               marginLeft: 0,
                               marginTop: 20,
