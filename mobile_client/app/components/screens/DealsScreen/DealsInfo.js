@@ -172,7 +172,7 @@ export default class PostInfo extends React.Component {
         <ScrollView ref={scrollView => this.scrollView = scrollView}>
           <Image
             style={{ maxWidth: '100%', height: 200 }}
-            source={{ url: this.state.featured_deal_image }}
+            source={{ uri: this.state.featured_deal_image }}
           />
           <View style={styles.description}>
             <View style={{ 
@@ -309,7 +309,7 @@ export default class PostInfo extends React.Component {
               <Dropdown
                 label='Select a size...'
                 data={size}
-                onChangeText= {(value, index) => this.setState({size: value,}) }
+                onChangeText= {(value, index) => this.setState({size: value, checkedbox1: true}) }
                 style={{width: 100}}
               />
             </View>
@@ -319,13 +319,12 @@ export default class PostInfo extends React.Component {
               <Dropdown
                 label='Select a color...'
                 data={colors}
-                onChangeText= {(value, index) => this.setState({color: value,}) }
+                onChangeText= {(value, index) => this.setState({color: value, checkedbox2: true}) }
                 style={{width: 50}}
               />
             </View>
           </View>        
           <KeyboardAvoidingView behavior="padding">
-          >
             <View style={{ flex: 1, marginTop: 10, alignItems: 'center', justifyContent: 'center' }}>
               <TouchableOpacity
                 style={{                      

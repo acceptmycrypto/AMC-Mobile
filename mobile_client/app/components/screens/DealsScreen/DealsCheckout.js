@@ -9,13 +9,15 @@ import {
   ActivityIndicator,
   ScrollView,
   Animated,
-  AsyncStorage
+  AsyncStorage,
   } from 'react-native';
+import Modal from 'react-native-modal';
 import { Button } from 'react-native-elements';
 import { _verifier, _loadCryptocurrencies } from "../../../../src/services/AuthService";
 import { LinearGradient } from 'expo';
 import { Dropdown } from 'react-native-material-dropdown';
 import { _fetchTransactionInfo } from '../../../../src/services/DealServices';
+import TimerCountdown from 'react-native-timer-countdown';
 
 export default class DealsCheckout extends React.Component {
   constructor(props) {
@@ -47,6 +49,7 @@ export default class DealsCheckout extends React.Component {
       crypto_name: "",
       crypto_symbol: "",
       paymentSelected: false,
+      transactionData: "",
       paymentReceived: false,
       deal_id: "",
       deal_name: "",
@@ -54,44 +57,90 @@ export default class DealsCheckout extends React.Component {
       pay_in_dollar: "",
       pay_in_crypto: "",
       size: "",
-      color: ""
+      color: "",
+      timeout: null
     };
+  }
+  cancelPurchase = () => {
+    this.setState({
+      transactionData: "",
+      fullName: "",
+      address: "",
+      city: "",
+      zipCode: "",
+      state: "",
+      amount: "",
+      crypto_name: "",
+      crypto_symbol: "",
+      viewPaymentMethod: false,
+      paymentReceived: false,
+      paymentSelected: false
+    });
+    this.props.navigation.navigate('Deals', {});
+  }
+
+  changePayment = () => {
+    this.setState({
+      transactionData: "",
+      paymentSelected: false,
+    });
   }
 
   checkAddress = () => {
     if(this.state.fullName && this.state.address && this.state.city && this.state.zipCode && this.state.state){
-      this.setState({viewPaymentMethod: true})
+      this.setState({viewPaymentMethod: true});
     }else{
-      this.setState({viewPaymentMethod: false, fadeValue: new Animated.Value(0)})
+      this.setState({viewPaymentMethod: false, fadeValue: new Animated.Value(0)});
     }
   }
 
-   fadeInAnimation = () => {
+  fadeInAnimation = () => {
     Animated.timing(this.state.fadeValue,{
       toValue: 1,
       duration: 750,
     }).start()
-   }
+  }
 
-  /*getQRCode = async () => {
-    try {
-      const token = await AsyncStorage.getItem('token');
-      if(token !== null){
-        console.log("what are you token? : " + token);
-        let crypto_name = this.state.crypto_name;
-        let crypto_symbol = this.state.crypto_symbol;
-        let deal_id = this.state.deal_id;
-        let amount = this.state.pay_in_crypto;
-        return _fetchTransactionInfo(crypto_name, crypto_symbol, deal_id, amount, token)
-        .then(transactionData => {
-          this.setState({transactionData});
-          console.log(this.state.transactionData);
-        })
-      }
-    } catch (error) {
-      console.log("no token wtf: " + error);
-    }
-  }*/
+  getQRCode = async () => {
+    const value = await AsyncStorage.getItem('token');
+    let token = JSON.parse(JSON.stringify(value));
+    console.log("what are you token? : " + token);
+
+    let crypto_name = this.state.crypto_name;
+    let crypto_symbol = this.state.crypto_symbol;
+    let deal_id = this.state.deal_id;
+    let amount = this.state.pay_in_crypto;
+    let shippingAddress = this.state.address;
+    let shippingCity = this.state.city;
+    let zipcode = this.state.zipCode;
+    let shippingState = this.state.state;
+    let fullName = this.state.fullName;
+    let selectedSize = this.state.size;
+    let selectedColor = this.state.color;
+
+    this.setState( () => {
+    return _fetchTransactionInfo(
+      crypto_name,
+      crypto_symbol,
+      deal_id,
+      amount,
+      token,
+      shippingAddress,
+      shippingCity,
+      zipcode,
+      shippingState,
+      fullName,
+      selectedSize,
+      selectedColor
+      )
+      .then(transactionData => {
+        this.setState({transactionData});
+        console.log(this.state.transactionData);
+        console.log(this.state.transactionData.timeout);
+        this.setState({timeout: this.state.transactionData.timeout});
+      }, function(err){console.log(err);})
+    });
+  }
 
   checkToken = async () => {
 
@@ -164,8 +213,8 @@ export default class DealsCheckout extends React.Component {
           flexDirection: 'row',
           padding: 10,}}>
           <Image
-            style={{width: 50, height: 50,}}
-            source={{url:this.state.featured_deal_image}}
+            style={{alignItems: 'center', width: 58, height: 58}}
+            source={{uri:this.state.featured_deal_image}}
             />
           <View style={{flex:1, flexDirection:'column', marginLeft: 10,}}>
             <Text style={{fontWeight: 'bold', }}>{this.state.deal_name} </Text>
@@ -256,18 +305,82 @@ export default class DealsCheckout extends React.Component {
                   label='Select form of cryptocurrency'
                   data={this.state.cryptoOptions}
                   onChangeText= {(value, index) => {
-                    this.setState({crypto_name: value.crypto_name, crypto_symbol: value.crypto_symbol, paymentSelected: true})}}
+                    this.setState({crypto_name: value.crypto_name, crypto_symbol: value.crypto_symbol, paymentSelected: true}, this.getQRCode)}}
                 />
                 {/*Image of QR code load here*/}
                 {
-                  /*this.state.paymentSelected ? this.getQRCode() : null*/
+                  (this.state.paymentSelected && this.state.transactionData) ?
+                    <View>
+                      <Modal
+                        isVisible={this.state.transactionData != ""}
+                        animationInTiming={1000}
+                        animationOutTiming={1000}
+                        backdropTransitionInTiming={1000}
+                        backdropTransitionOutTiming={1000}
+                      >
+                        <View style={{
+                          backgroundColor: "white",
+                          padding: 22,
+                          justifyContent: "center",
+                          alignItems: "center",
+                          borderRadius: 4,
+                          borderColor: "rgba(0, 0, 0, 0.1)"}}
+                        >
+                          <View>
+                            <Text>Please send {this.state.transactionData.amount, this.state.crypto_symbol} to the below address: </Text>
+                            <Text>AcceptMyCrypto Payment Address: <Text style={{fontWeight: 'bold'}}>{this.state.transactionData.txn_id}</Text></Text>
+                          </View>
+                          <View style={{justifyContent: 'center', alignItems: 'center', margin: 10, borderWidth: 2,}}>
+                            <Image
+                              style={{width: 300, height: 300,}}
+                              source={{uri: this.state.transactionData.qrcode_url}}
+                            />
+                          </View>
+                          {/*Countdown timer*/}
+                          <View>
+                            <Text>*Your order will cancel in 
+                              <Text style={{color: 'green', fontWeight: 'bold'}}>
+                              {/*Timer goes here*/}
+                                 <TimerCountdown
+                                    initialSecondsRemaining={1000*this.state.transactionData.timeout}
+                                    onTimeElapsed={() => this.setState({timeout: 0})}
+                                    allowFontScaling={true}
+                                    style={{ fontSize: 20 }}
+                                 />
+                                 { this.state.timeout == 0 ? this.cancelPurchase : null }
+                              </Text>
+                            </Text>
+                          </View>
+
+                          {/*Touchable to change form of payment or cancel*/}
+                          <View style={{width: '100%', height: 40 ,backgroundColor: '#66dac7', borderRadius: 5, justifyContent: 'center', alignItems: 'center', marginVertical: 10}}>
+                            <TouchableOpacity onPress={this.changePayment}>
+                              <Text style={{textAlign: 'center', color: '#ffffff', fontSize: 20, fontWeight: 'bold'}}>Edit Form Of Payment</Text>
+                            </TouchableOpacity>
+                         </View>
+                         <View style={{width: '100%', height: 40 ,backgroundColor: 'red', borderRadius: 5, justifyContent: 'center', alignItems: 'center'}}>
+                           <TouchableOpacity onPress={this.cancelPurchase}>
+                             <Text style={{textAlign: 'center', color: '#ffffff', fontSize: 20, fontWeight: 'bold'}}>Cancel Payment</Text>
+                           </TouchableOpacity>
+                          </View>
+                        </View>
+                      </Modal>
+                    </View>
+                  : null
                 }
               </View>
             </Animated.View>
           : null
          }
+         {/*Checkout Button*/}
          <View style={{ flex: 1, flexDirection: 'column',}}>
-           <TouchableOpacity style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+           <TouchableOpacity
+            style={{
+              flex: 1,
+              justifyContent: 'center',
+              alignItems: 'center',
+             }}
+           >
              <LinearGradient
              colors={ this.state.paymentReceived ? ['#fff4cc','#efb404','#d1a31d'] : ['#ffffff','#cccccc','#999999']}
              style={{flex: 1, borderWidth: 1, borderRadius: 5, padding: 15, width: 300,justifyContent: 'center', alignItems: 'center', borderRadius: 5}}>
@@ -278,7 +391,15 @@ export default class DealsCheckout extends React.Component {
                color: 'black',
                textAlign: 'center',
                }}>
-                 Checkout
+                 {
+                  !this.state.viewPaymentMethod ?
+                  "Proceed to Payment Method"
+                  :
+                  !this.state.paymentReceived ?
+                  "Generate Payment Address"
+                  :
+                  "Review Order"
+                 }
                </Text>
              </LinearGradient>
            </TouchableOpacity>
