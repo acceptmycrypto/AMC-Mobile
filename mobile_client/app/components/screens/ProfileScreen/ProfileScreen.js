@@ -162,14 +162,10 @@ export default class ProfileScreen extends React.Component {
         remaining_cryptos.map(crypto => {
           let value = crypto.crypto_name;
           let label =
-            crypto.crypto_name +
-            ' ' +
-            '(' +
-            crypto.crypto_symbol +
-            ')';
+            crypto.crypto_name + ' ' + '(' + crypto.crypto_symbol + ')';
           cryptoOptionsLeft[value] = label;
         });
-        console.log("146 " , cryptoOptionsLeft);
+        console.log('146 ', cryptoOptionsLeft);
 
         this.setState({
           user_info,
@@ -277,15 +273,16 @@ export default class ProfileScreen extends React.Component {
 
           remaining_cryptos.map(crypto => {
             let value = crypto.crypto_name;
-            let label = crypto.crypto_name + ' ' + '(' + crypto.crypto_symbol + ')';
+            let label =
+              crypto.crypto_name + ' ' + '(' + crypto.crypto_symbol + ')';
             cryptoOptionsLeft[value] = label;
           });
 
           this.setState({
             add_cryptos: false,
-            crypto_view: "interested",
-            user_crypto, 
-            cryptoOptionsLeft, 
+            crypto_view: 'interested',
+            user_crypto,
+            cryptoOptionsLeft,
             cryptoProfile: []
           });
         });
@@ -293,7 +290,7 @@ export default class ProfileScreen extends React.Component {
     } catch (error) {
       console.log('NO TOKEN!!!' + error);
     }
-  }
+  };
 
   render() {
     // const validIcon = parseIconFromClassName('fas fa-chevron-left');
@@ -559,24 +556,24 @@ export default class ProfileScreen extends React.Component {
                     marginTop: 20
                   }}
                 >
-                <TouchableOpacity
-                style={{
-                  borderRadius: 10,
-                  backgroundColor: 'green'
-                }}
-                onPress={this.addAddress}
-              >
-                <Text
-                  style={{
-                    color: 'white',
-                    textAlign: 'center',
-                    padding: 8,
-                    fontSize: 18
-                  }}
-                >
-                  Add {this.state.current_crypto_name} Address
-                </Text>
-              </TouchableOpacity>
+                  <TouchableOpacity
+                    style={{
+                      borderRadius: 10,
+                      backgroundColor: 'green'
+                    }}
+                    onPress={this.addAddress}
+                  >
+                    <Text
+                      style={{
+                        color: 'white',
+                        textAlign: 'center',
+                        padding: 8,
+                        fontSize: 18
+                      }}
+                    >
+                      Add {this.state.current_crypto_name} Address
+                    </Text>
+                  </TouchableOpacity>
                 </View>
               </ScrollView>
             </View>
