@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {
   StyleSheet,
+  Alert,
   Text,
   TextInput,
   View,
@@ -11,8 +12,9 @@ import {
   Animated,
   AsyncStorage,
   BackHandler,
-  Clipboard
-} from 'react-native';
+  Clipboard,
+  Linking,
+  } from 'react-native';
 import Modal from 'react-native-modal';
 import { Button } from 'react-native-elements';
 import {
@@ -171,7 +173,7 @@ export default class DealsCheckout extends React.Component {
     let selectedColor = this.state.color;
 
     try {
-      if (token !== null) {
+      if(token !== null){
         return _fetchTransactionInfo(
           crypto_name,
           crypto_symbol,
@@ -185,22 +187,31 @@ export default class DealsCheckout extends React.Component {
           fullName,
           selectedSize,
           selectedColor
-        ).then(
-          transactionData => {
-            this.setState({ transactionData });
+          )
+          .then(transactionData => {
+            this.setState({transactionData});
             console.log(this.state.transactionData);
             console.log(this.state.transactionData.timeout);
-            this.setState({ timeout: this.state.transactionData.timeout });
-          },
-          function(err) {
-            console.log(err);
-          }
-        );
+            this.setState({timeout: this.state.transactionData.timeout});
+          }, function(err){console.log(err);});
       }
     } catch (error) {
-      console.log(error);
+      console.log(err);
     }
-  };
+  }
+
+  redirect = () => {
+    Clipboard.setString(this.state.transactionData.txn_id);
+    Alert.alert('Payment Address has been copied, redirecting to CoinBase...');
+    setTimeout(() => {Linking.canOpenURL('Coinbase://app').then( supported => {
+      if (!supported) {
+          Linking.openURL('https://coinbase.com')
+        } else {
+          return Linking.openURL('Coinbase://app');
+        }
+      }).catch(err => console.error('An error occurred', err));
+    }, 2500);
+  }
 
   checkToken = async () => {
     try {
@@ -320,96 +331,67 @@ export default class DealsCheckout extends React.Component {
             </View>
           </View>
         </View>
-        <ScrollView
-          alwaysBounceVertical={true}
-          keyboardDismissMode="on-drag"
-          keyboardDismissMode="interactive"
-          keyboardShouldPersistTaps="handled"
-          overScrollMode="never"
-        >
-          {/*Address View*/}
-          <View
-            style={[
-              styles.postStyle,
-              {
-                borderBottomColor: '#000000',
-                borderBottomWidth: 2,
-                marginBottom: 10
-              }
-            ]}
-          >
-            <Text
-              style={{
-                fontSize: 25,
-                marginVertical: 5,
-                borderBottomColor: '#dbd8ce',
-                borderBottomWidth: 2,
-                fontWeight: 'bold'
-              }}
-            >
-              Shipping:
-            </Text>
-            <Text style={{ fontSize: 16 }}>Full Name</Text>
-            <TextInput
-              ref="fullName"
-              style={styles.inputStyle}
-              placeholder="ex: John Smith"
-              onChangeText={fullName =>
-                this.setState({ fullName }, this.checkAddress)
-              }
-              returnKeyType={'next'}
-              onSubmitEditing={() => this.address.focus()}
-            />
-            <Text style={{ fontSize: 16 }}>Address</Text>
-            <TextInput
-              ref={address => (this.address = address)}
-              style={styles.inputStyle}
-              placeholder="Ex: 123 Main Street"
-              onChangeText={address =>
-                this.setState({ address }, this.checkAddress)
-              }
-              returnKeyType={'next'}
-              onSubmitEditing={() => this.city.focus()}
-            />
-            <Text style={{ fontSize: 16 }}>City</Text>
-            <TextInput
-              ref={city => (this.city = city)}
-              style={styles.inputStyle}
-              placeholder="Ex: San Francisco"
-              onChangeText={city => this.setState({ city }, this.checkAddress)}
-              returnKeyType={'next'}
-            />
-            <View style={{ flex: 1, flexDirection: 'row' }}>
-              <View style={{ width: 125 }}>
-                <Dropdown
-                  baseColor="#000000"
-                  textColor="#000000"
-                  label="State"
-                  data={this.state.states}
-                  onChangeText={(value, index) =>
-                    this.setState({ state: value }, this.checkAddress)
-                  }
-                />
-              </View>
-              <View style={{ flex: 1, marginLeft: 5 }}>
-                <Text style={{ fontSize: 16, textAlign: 'left' }}>
-                  Zip Code
-                </Text>
-                <TextInput
-                  ref={zipCode => (this.zipCode = zipCode)}
-                  keyboardType="numeric"
-                  style={[styles.inputStyle, { width: '95%' }]}
-                  maxLength={5}
-                  placeholder=""
-                  onChangeText={zipCode => {
-                    this.setState({ zipCode });
-                  }}
-                  returnKeyType={'done'}
-                  onSubmitEditing={() => {
-                    this.checkAddress();
-                  }}
-                />
-              </View>
+       </View>
+      <ScrollView
+        alwaysBounceVertical={true}
+        keyboardDismissMode="on-drag"
+        keyboardDismissMode="interactive"
+        keyboardShouldPersistTaps="handled"
+        overScrollMode="never"
+      >
+        {/*Address View*/}
+        <View style={[styles.postStyle, {borderBottomColor: '#000000', borderBottomWidth: 2, marginBottom: 10}]}>
+          <Text style={{fontSize: 25, marginVertical: 5, borderBottomColor: '#dbd8ce', borderBottomWidth: 2, fontWeight: 'bold'}}>Shipping:</Text>
+          <Text style={{fontSize: 16,}}>Full Name</Text>
+          <TextInput
+            ref="fullName"
+            style={styles.inputStyle}
+            placeholder="ex: John Smith"
+            onChangeText={fullName => this.setState({ fullName }, this.checkAddress)}
+            returnKeyType={'next'}
+            onSubmitEditing={()=>this.address.focus()}
+          />
+          <Text style={{fontSize: 16,}}>Address</Text>
+          <TextInput
+            ref={address => this.address = address}
+            style={styles.inputStyle}
+            placeholder="Ex: 123 Main Street"
+            onChangeText={address => this.setState({ address }, this.checkAddress)}
+            returnKeyType={'next'}
+            onSubmitEditing={()=>this.city.focus()}
+          />
+          <Text style={{fontSize: 16,}}>City</Text>
+          <TextInput
+            ref={city => this.city = city}
+            style={styles.inputStyle}
+            placeholder="Ex: San Francisco"
+            onChangeText={city => this.setState({ city }, this.checkAddress)}
+            returnKeyType={'next'}
+          />
+          <View style={{flex: 1, flexDirection: 'row'}}>
+            <View style={{width: 125}}>
+              <Dropdown
+                baseColor="#000000"
+                textColor="#000000"
+                label='State'
+                data={this.state.states}
+                onChangeText= {(value, index) => this.setState({state: value,}, this.checkAddress) }
+              />
+            </View>
+            <View style={{flex: 1, marginLeft: 5}}>
+              <Text style={{fontSize: 16, textAlign: 'left'}}>Zip Code</Text>
+              <TextInput
+                ref={zipCode => this.zipCode = zipCode}
+                keyboardType="numeric"
+                style={[styles.inputStyle, {width: '95%'}]}
+                maxLength={5}
+                placeholder=""
+                onChangeText={ zipCode => {
+                this.setState({zipCode})
+                }}
+                returnKeyType={'done'}
+                onSubmitEditing={() => {this.checkAddress()}}
+              />
             </View>
           </View>
           {/*Payment Method View*/}
@@ -504,20 +486,41 @@ export default class DealsCheckout extends React.Component {
                             borderWidth: 2
                           }}
                         >
-                          <Image
-                            style={{ width: 300, height: 300 }}
-                            source={{
-                              uri: this.state.transactionData.qrcode_url
+                          <View>
+                            <Text>Please send <Text style={{fontWeight: 'bold'}}>{this.state.transactionData.amount + " " + this.state.crypto_symbol}</Text> to the below address: </Text>
+                            <Text>AcceptMyCrypto Payment Address: { ' ' }</Text>
+                             <View style={{borderWidth: 2, padding: 2, backgroundColor: '#ffffcc'}}>
+                              <Text
+                                style={{fontWeight: 'bold', textAlign: 'center'}}
+                                selectable={true}
+                                onPress={() => {Clipboard.setString(
+                                  this.state.transactionData.txn_id);
+                                  Alert.alert('Payment Address has been copied, please proceed to your Crypto Wallet to Pay')
+                                  }
+                                }
+                               >
+                                {this.state.transactionData.txn_id}
+                              </Text>
+                            </View>
+                          </View>
+                          <TouchableOpacity
+                            style={{
+                              justifyContent: 'center',
+                              alignItems: 'center',
+                              margin: 10,
+                              borderWidth: 2,
                             }}
-                          />
-                        </View>
-                        {/*Countdown timer*/}
-                        <View>
-                          <Text>
-                            *Your order will cancel in{' '}
-                            <Text
-                              style={{ color: 'green', fontWeight: 'bold' }}
-                            >
+                            onPress={this.redirect}
+                          >
+                            <Image
+                              style={{width: 300, height: 300,}}
+                              source={{uri: this.state.transactionData.qrcode_url}}
+                            />
+                          </TouchableOpacity>
+                          {/*Countdown timer*/}
+                          <View>
+                            <Text>*Your order will cancel in { ' ' }
+                              <Text style={{color: 'green', fontWeight: 'bold'}}>
                               {/*Timer goes here*/}
                               <TimerCountdown
                                 initialSecondsRemaining={
@@ -536,33 +539,13 @@ export default class DealsCheckout extends React.Component {
                           </Text>
                         </View>
 
-                        {/*Touchable to change form of payment or cancel*/}
-                        {/* <View style={{width: '100%', height: 40 ,backgroundColor: '#66dac7', borderRadius: 5, justifyContent: 'center', alignItems: 'center', marginVertical: 10}}> */}
-                        <TouchableOpacity
-                          style={{
-                            width: '100%',
-                            height: 40,
-                            backgroundColor: '#66dac7',
-                            borderRadius: 5,
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            marginVertical: 10
-                          }}
-                          onPress={this.cancelPurchase}
-                        >
-                          <Text
-                            style={{
-                              textAlign: 'center',
-                              color: 'green',
-                              fontSize: 20,
-                              fontWeight: 'bold'
-                            }}
-                          >
-                            Done
-                          </Text>
-                        </TouchableOpacity>
-                        {/* </View> */}
-                        {/*<View style={{width: '100%', height: 40 ,backgroundColor: 'red', borderRadius: 5, justifyContent: 'center', alignItems: 'center'}}>
+                          {/*Touchable to change form of payment or cancel*/}
+                          <View style={{width: '100%', height: 40 ,backgroundColor: '#66dac7', borderRadius: 5, justifyContent: 'center', alignItems: 'center', marginVertical: 10}}>
+                            <TouchableOpacity onPress={this.cancelPurchase}>
+                              <Text style={{textAlign: 'center', color: 'green', fontSize: 20, fontWeight: 'bold'}}>Done</Text>
+                            </TouchableOpacity>
+                         </View>
+                         {/*<View style={{width: '100%', height: 40 ,backgroundColor: 'red', borderRadius: 5, justifyContent: 'center', alignItems: 'center'}}>
                            <TouchableOpacity onPress={this.cancelPurchase}>
                              <Text style={{textAlign: 'center', color: '#ffffff', fontSize: 20, fontWeight: 'bold'}}>Cancel Payment</Text>
                            </TouchableOpacity>

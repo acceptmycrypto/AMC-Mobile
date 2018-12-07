@@ -418,8 +418,8 @@ export default class LaunchScreen extends React.Component {
               {/* <View style={styles.registerGap} /> */}
             </KeyboardAwareScrollView>
           ) : (
-            // Android Sign Up Screen
 
+            // Android Sign Up Screen
             <View
               style={{
                 flex: 1,
