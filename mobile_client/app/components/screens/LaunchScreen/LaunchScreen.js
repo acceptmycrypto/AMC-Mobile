@@ -12,7 +12,8 @@ import {
   TouchableOpacity,
   Alert,
   Linking,
-  Button
+  Button,
+  ActivityIndicator
 } from 'react-native';
 import { WebBrowser } from 'expo';
 import {
@@ -26,6 +27,7 @@ import _SplashScreen from './SplashScreen';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview';
 import CustomMultiPicker from 'react-native-multiple-select-list';
 import { CheckBox } from 'react-native-elements';
+import Modal from 'react-native-modal';
 // import Login from '../LaunchScreen/components/Login';
 // import Register from '../LaunchScreen/components/Register';
 
@@ -39,6 +41,7 @@ export default class LaunchScreen extends React.Component {
     this.state = {
       isLoading: true,
       firsLaunch: null,
+      isSelectingCryptos: false,
       id: 0,
       username: '',
       email: '',
@@ -120,7 +123,10 @@ export default class LaunchScreen extends React.Component {
         cryptoOptions[value] = label;
       });
       console.log(cryptoOptions);
-      this.setState({ cryptoOptions });
+      this.setState({
+        cryptoOptions,
+        isLoading: false
+      });
     });
   }
 
@@ -132,17 +138,21 @@ export default class LaunchScreen extends React.Component {
     let cryptoProfile = this.state.cryptoProfile;
 
     if (!username || !email || !password) {
-      Alert.alert('Please enter in the required field');
+      Alert.alert('Please enter in your information');
+      this.hideCryptoSelection();
     } else {
       return _signUp(username, email, password, cryptoProfile).then(res => {
         console.log('message sent from server if success: ', res);
         console.log('LINE 246 ' + res);
         if (res.error === 'User already exists') {
           Alert.alert('User already exists');
+          this.hideCryptoSelection();
         } else if (res.error === 'you need a password') {
           Alert.alert('You need a password');
+          this.hideCryptoSelection();
         } else if (res.error === 'password length must be greater than 5') {
           Alert.alert('Your password must be greater than 5 characters');
+          this.hideCryptoSelection();
         } else if (res.error) {
           // For unhandled errors
           console.log(res.error);
@@ -160,7 +170,7 @@ export default class LaunchScreen extends React.Component {
           //   { cancelable: false }
           // );
           Alert.alert('Please verify your email and log in');
-          this.setState({ firsLaunch: false });
+          this.setState({ isSelectingCryptos: false, firsLaunch: false });
         }
       });
     }
@@ -232,6 +242,18 @@ export default class LaunchScreen extends React.Component {
   //   );
   // };
 
+  showCryptoSelection = () => {
+    this.setState({
+      isSelectingCryptos: true
+    })
+  }
+
+  hideCryptoSelection = () => {
+    this.setState({
+      isSelectingCryptos: false
+    })
+  }
+
   handlePasswordLink = () => {
     WebBrowser.openBrowserAsync('https://www.acceptmycrypto.com/');
   };
@@ -242,8 +264,7 @@ export default class LaunchScreen extends React.Component {
 
   render() {
     const firsLaunch = this.state.firsLaunch;
-    const { ref } = this.props;
-    console.log(ref);
+    const isSelectingCryptos = this.state.isSelectingCryptos;
 
     if (firsLaunch === null) {
       // DISPLAY BEFORE REGISTRATION IS SHOWN
@@ -349,28 +370,34 @@ export default class LaunchScreen extends React.Component {
                 YOUR CRYPTOCURRENCY PORTFOLIO
               </Text>
               <View style={styles.selector}>
-                <CustomMultiPicker
-                  options={this.state.cryptoOptions}
-                  search={true} // should show search bar?
-                  multiple={true} //
-                  placeholder={'Search'}
-                  placeholderTextColor={'#58697e'}
-                  returnValue={'value'} // label or value
-                  callback={res => {
-                    this.setState({
-                      cryptoProfile: res
-                    });
-                  }} // callback, array of selected items
-                  rowBackgroundColor={'#66dac7'}
-                  rowHeight={41}
-                  rowRadius={10}
-                  iconColor={'black'}
-                  iconSize={30}
-                  selectedIconName={'md-checkmark-circle-outline'}
-                  unselectedIconName={'ios-radio-button-off-outline'}
-                  scrollViewHeight={193}
-                  selected={[]} // list of options which are selected by default
-                />
+                {this.state.isLoading ? (
+                  <View style={{ height: 240, justifyContent: 'center' }}>
+                    <ActivityIndicator />
+                  </View>
+                ) : (
+                  <CustomMultiPicker
+                    options={this.state.cryptoOptions}
+                    search={true} // should show search bar?
+                    multiple={true} //
+                    placeholder={'Search'}
+                    placeholderTextColor={'#58697e'}
+                    returnValue={'value'} // label or value
+                    callback={res => {
+                      this.setState({
+                        cryptoProfile: res
+                      });
+                    }} // callback, array of selected items
+                    rowBackgroundColor={'#66dac7'}
+                    rowHeight={41}
+                    rowRadius={10}
+                    iconColor={'black'}
+                    iconSize={30}
+                    selectedIconName={'md-checkmark-circle-outline'}
+                    unselectedIconName={'ios-radio-button-off-outline'}
+                    scrollViewHeight={193}
+                    selected={[]} // list of options which are selected by default
+                  />
+                )}
                 <Text
                   style={styles.selectorText}
                   onPress={this.handleCryptosLink}
@@ -391,10 +418,10 @@ export default class LaunchScreen extends React.Component {
               {/* <View style={styles.registerGap} /> */}
             </KeyboardAwareScrollView>
           ) : (
-            // Android Sign Up Screen
 
+            // Android Sign Up Screen
             <View
-              style={{ 
+              style={{
                 flex: 1,
                 alignItems: 'center'
               }}
@@ -467,52 +494,86 @@ export default class LaunchScreen extends React.Component {
                   secureTextEntry={true}
                   onChangeText={password => this.setState({ password })}
                 />
+                <TouchableOpacity
+                  onPress={this.showCryptoSelection}
+                  style={{   
+                    alignSelf: 'center',
+                    margin: 5,
+                    borderRadius: 25,
+                    backgroundColor: '#52c4b9',
+                    width: '70%',
+                    marginTop: 15,
+                    marginBottom: 15
+                  }}
+                >
+                  <Text style={styles.buttonText}>Select Your Cryptos</Text>
+                </TouchableOpacity>
               </KeyboardAwareScrollView>
-              <KeyboardAvoidingView 
-                style={styles.selector}
-                behavior="position"
-                onTouchStart={() => this.moveInputs}
-                // contentContainerStyle={ this.state.moveInputs }
+
+              {isSelectingCryptos ? (
+              <View>
+              <Modal
+                isVisible={true}
+                animationInTiming={1000}
+                animationOutTiming={1000}
+                backdropTransitionInTiming={1000}
+                backdropTransitionOutTiming={1000}
               >
+              <View
+                style={{
+                  backgroundColor: "#2e4158",
+                  padding: 10,
+                  justifyContent: "center",
+                  borderRadius: 4,
+                }}
+              >
+              <TouchableOpacity style={{ alignSelf: 'flex-end' }} onPress={this.hideCryptoSelection}>
+                <Text style={{ fontSize: 20 }}>X</Text>
+              </TouchableOpacity>
                 <Text
                   style={{
-                    alignSelf: 'flex-start',
+                    alignSelf: 'center',
                     color: '#fff',
-                    marginTop: 15,
-                    // marginLeft: 40
+                    marginTop: 5,
+                    marginLeft: 5
                   }}
                 >
                   YOUR CRYPTOCURRENCY PORTFOLIO
                 </Text>
-                <CustomMultiPicker
-                  options={this.state.cryptoOptions}
-                  search={true} // should show search bar?
-                  multiple={true} //
-                  placeholder={'Search'}
-                  placeholderTextColor={'#58697e'}
-                  returnValue={'value'} // label or value
-                  callback={res => {
-                    this.setState({
-                      cryptoProfile: res
-                    });
-                  }} // callback, array of selected items
-                  rowBackgroundColor={'#66dac7'}
-                  rowHeight={41}
-                  rowRadius={10}
-                  iconColor={'black'}
-                  iconSize={30}
-                  selectedIconName={'md-checkmark-circle-outline'}
-                  unselectedIconName={'ios-radio-button-off-outline'}
-                  scrollViewHeight={165}
-                  selected={[]} // list of options which are selected by default
-                />
+                {this.state.isLoading ? (
+                  <View style={{ height: 240, justifyContent: 'center' }}>
+                    <ActivityIndicator />
+                  </View>
+                ) : (
+                  <CustomMultiPicker
+                    options={this.state.cryptoOptions}
+                    search={true} // should show search bar?
+                    multiple={true} //
+                    placeholder={'Search'}
+                    placeholderTextColor={'#58697e'}
+                    returnValue={'value'} // label or value
+                    callback={res => {
+                      this.setState({
+                        cryptoProfile: res
+                      });
+                    }} // callback, array of selected items
+                    rowBackgroundColor={'#66dac7'}
+                    rowHeight={41}
+                    rowRadius={10}
+                    iconColor={'black'}
+                    iconSize={30}
+                    selectedIconName={'md-checkmark-circle-outline'}
+                    unselectedIconName={'ios-radio-button-off-outline'}
+                    scrollViewHeight={193}
+                    selected={[]} // list of options which are selected by default
+                  />
+                )}
                 <Text
                   style={styles.selectorText}
                   onPress={this.handleCryptosLink}
                 >
                   Why do I need to select cryptos?
                 </Text>
-              </KeyboardAvoidingView>
               <TouchableOpacity
                 onPress={this.handleRegister}
                 style={styles.createButton}
@@ -523,7 +584,10 @@ export default class LaunchScreen extends React.Component {
                 By creating an account you agree
               </Text>
               <Text style={styles.termsBottom}>to the Terms of Service</Text>
-              {/* <View style={styles.registerGap} /> */}
+              </View>
+              </Modal>
+              </View>
+              ) : null }
             </View>
           )}
           <Text

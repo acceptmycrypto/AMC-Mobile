@@ -15,12 +15,7 @@ const header = {
   headerTitle: <LogoTitle />,
   headerStyle: {
     backgroundColor: '#66dac7',
-    // alignSelf: 'center'
-  },
-  // headerTintColor: '#fff',
-  // headerTitleStyle: {
-  //   alignSelf: 'center'
-  // }
+  }
 };
 
 const VenuesStack = createStackNavigator(
@@ -44,7 +39,7 @@ const DealsStack = createStackNavigator(
       screen: DealsInfo
     },
     DealsCheckout: {
-      screen: DealsCheckout
+      screen: DealsCheckout,
     }
   },
   {

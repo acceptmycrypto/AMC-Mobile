@@ -11,7 +11,8 @@ import {
   FlatList,
   ScrollView,
   AsyncStorage,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+  BackHandler
 } from "react-native";
 import { Button } from "react-native-elements";
 import { _verifier } from "../../../../src/services/AuthService";
@@ -142,6 +143,10 @@ export default class PostInfo extends React.Component {
   };
 
   componentDidMount() {
+    this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+      this.props.navigation.goBack();
+      return true;
+    });
     const { navigation } = this.props;
     this.setState({
       deal_id: navigation.getParam('id', 'Data Not Available'),
@@ -166,6 +171,10 @@ export default class PostInfo extends React.Component {
     // .catch(err => {
     //   console.log(err);
     // });
+  }
+
+  componentWillUnmount() {
+    this.backHandler.remove();
   }
 
   checkOutPage = (post,theView) => {
@@ -223,24 +232,9 @@ export default class PostInfo extends React.Component {
     return(
       <View style={styles.container}>
         <ScrollView ref={scrollView => this.scrollView = scrollView}>
-          {/* <Image
+          <Image
             style={{ maxWidth: '100%', height: 200 }}
-            source={{ url: this.state.featured_deal_image }}
-          /> */}
-          <Carousel
-            ref={(c) => { this._carousel = c; }}
-            data={this.state.images}
-            renderItem={this._renderItemWithParallax}
-            hasParallaxImages={true}
-            inactiveSlideScale={0.94}
-            inactiveSlideOpacity={0.7}
-            sliderWidth={450}
-            itemWidth={200}
-            loop={true}
-            loopClonesPerSide={2}
-            autoplay={true}
-            autoplayDelay={500}
-            autoplayInterval={10000}
+            source={{ uri: this.state.featured_deal_image }}
           />
           <View style={styles.description}>
             <View style={{ 
@@ -299,6 +293,7 @@ export default class PostInfo extends React.Component {
                   <Text
                     style={{
                       textAlign: 'left', 
+                      color: 'green',
                       fontSize: 15,
                       width: 67,
                       marginLeft: 10,                
