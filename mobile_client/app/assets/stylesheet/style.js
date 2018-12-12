@@ -122,7 +122,7 @@ module.exports = StyleSheet.create({
   postStyle: {
     backgroundColor: 'white',
     borderWidth: 1,
-    borderColor: 'grey',
+    borderColor: '#dbd8ce',
     padding: 10,
     flexDirection: 'row'
   },
@@ -140,6 +140,6 @@ module.exports = StyleSheet.create({
   },
   searchBarStyle: {
     flexDirection: 'row',
-    marginTop: 5
+    marginTop: 5,
   }
 });

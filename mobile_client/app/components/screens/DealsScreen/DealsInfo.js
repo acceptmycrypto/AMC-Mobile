@@ -20,7 +20,7 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import { _loadOnePosts } from './DealsService';
 import { LinearGradient } from 'expo';
 import { Dropdown } from 'react-native-material-dropdown';
-import Carousel  from 'react-native-snap-carousel';
+// import Carousel  from 'react-native-snap-carousel';
 import SliderEntry from './SliderEntry';
 export default class PostInfo extends React.Component {
 
@@ -233,7 +233,7 @@ export default class PostInfo extends React.Component {
       <View style={styles.container}>
         <ScrollView ref={scrollView => this.scrollView = scrollView}>
           <Image
-            style={{ maxWidth: '100%', height: 200 }}
+            style={{ maxWidth: '100%', height: 250 }}
             source={{ uri: this.state.featured_deal_image }}
           />
           <View style={styles.description}>
@@ -261,10 +261,11 @@ export default class PostInfo extends React.Component {
                       marginLeft: 0,
                       opacity: 0.54,
                       width: 90,
-                      textAlign: 'right' 
+                      textAlign: 'left' 
                     }}>
                     Dollar Price:
                   </Text>
+                  
                   <Text
                     style={{
                       textAlign: 'left', 
@@ -305,9 +306,9 @@ export default class PostInfo extends React.Component {
                     style={{
                       textAlign: 'center', 
                       fontSize: 15,
-                      color: 'green',
+                      color: 'red',
                       borderWidth: 2,
-                      borderColor: 'green',
+                      borderColor: 'red',
                       borderRadius: 5,
                       marginBottom: 20,
                       width:80,
@@ -400,10 +401,9 @@ export default class PostInfo extends React.Component {
                 }}                                
               >
                 <LinearGradient
-                  colors={[  '#fff4cc','#efb404','#d1a31d']}
+                  colors={[  '#66dac7','#66dac7','#66dac7']}
                   style={{
-                    borderWidth: 1,
-                    borderRadius: 5, width:300, height: 50,padding: 15, alignItems: 'center', borderRadius: 5 }}>
+                    width:300, height: 50,padding: 15, alignItems: 'center', borderRadius: 5 }}>
                   <Text
                     style={{
                       backgroundColor: 'transparent',

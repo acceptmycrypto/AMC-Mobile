@@ -215,7 +215,8 @@ export default class Post extends React.Component {
                     onPress={() => this.viewPost(item)}
                   >
                     <Image
-                      style={{ width: 150, height: 150 }}
+                      style={{
+                        borderRadius: 5, width: 150, height: 150 }}
                       source={{ uri: item.featured_deal_image }}
                     />
                     <View style={{ marginLeft: 20, flex: 1 }}>
@@ -241,7 +242,6 @@ export default class Post extends React.Component {
                           >
                             Dollar:
                           </Text>
-
                           <Text
                             style={{
                               // alignContent: "flex-end",
