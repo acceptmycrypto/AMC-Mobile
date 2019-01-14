@@ -115,16 +115,17 @@ module.exports = StyleSheet.create({
     flexDirection: 'column'
   },
   textStyle: {
-    marginTop: 10,
+    // marginTop: 10,
     fontSize: 15,
     fontWeight: '200'
   },
   postStyle: {
     backgroundColor: 'white',
     borderWidth: 1,
+    height: 300,
     borderColor: '#dbd8ce',
     padding: 10,
-    flexDirection: 'row'
+    // flexDirection: 'row',
   },
   searchStyle: {
     flex: 1,

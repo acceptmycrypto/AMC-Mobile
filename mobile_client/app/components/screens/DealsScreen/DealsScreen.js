@@ -205,108 +205,210 @@ export default class Post extends React.Component {
             keyExtractor={this._keyExtractor}
             refreshing={this.state.isFetching}
             onRefresh={() => this.onRefresh()}
+            numColumns={2}
             renderItem={({ item, index }) => {
               console.log(`Item = ${JSON.stringify(item)}, index = ${index}`);
               return (
-                <View>
-                  <TouchableOpacity
-                    style={styles.postStyle}
-                    key={item.id}
-                    onPress={() => this.viewPost(item)}
-                  >
-                    <Image
-                      style={{
-                        borderRadius: 5, width: 150, height: 150 }}
-                      source={{ uri: item.featured_deal_image }}
-                    />
-                    <View style={{ marginLeft: 20, flex: 1 }}>
-                      <Text style={styles.textStyle}>{item.deal_name}</Text>
-
-                      <View
+                <View style={{
+                  width: "50%",
+                  height: "30%",
+                  }}>
+                    <TouchableOpacity
+                      style={styles.postStyle}                    
+                      key={item.id}
+                      onPress={() => this.viewPost(item)}
+                    >
+                      <Image
                         style={{
-                          flex: 1,
-                          flexDirection: 'column',
-                          justifyContent: 'flex-end'
+                          borderRadius: 5,
+                          width: 165, 
+                          height: 165
                         }}
-                      >
-                        <View style={{ flexDirection: 'row' }}>
-                          <Text
-                            style={{
-                              // alignContent: "flex-end",
-                              fontSize: 13,
-                              opacity: 0.54,
-                              marginTop: 20,
-                              textAlign: 'right', 
-                              width:50
-                            }}
-                          >
-                            Dollar:
-                          </Text>
-                          <Text
-                            style={{
-                              // alignContent: "flex-end",
-                              fontSize: 13,
-                              marginLeft: 0,
-                              marginTop: 20,
-                              marginLeft: 10,
-                              width: 60
-                            }}
-                          >
-                            {'$' + item.pay_in_dollar.toFixed(2)}
-                          </Text>
-                        </View>
-
-                        <View style={{ flexDirection: 'row' }}>
-                          <Text
-                            style={{
-                              // alignContent: "flex-end",
-                              fontSize: 13,
-                              opacity: 0.54,
-                              marginLeft: 0,
-                              marginTop: 20,
-                              textAlign: 'right', 
-                              width:50
-                            }}
-                          >
-                            Crypto:
-                          </Text>
-
-                          <Text
-                            style={{
-                              // alignContent: "flex-end",
-                              fontSize: 13,
-                              color: 'green',
-                              marginLeft: 0,
-                              marginTop: 20,
-                              marginLeft: 10,
-                              width: 60
-                            }}
-                          >
-                            {'$' + item.pay_in_crypto.toFixed(2)}
-                          </Text>
-
-                          <Text
-                            style={{
-                              fontSize: 13,
-                              color: 'green',
-                              marginLeft: 0,
-                              marginTop: 20,
-                              borderWidth: 2,
-                              borderColor: 'green',
-                              borderRadius: 5
-                            }}
-                          >
-                            {' ' +
-                              this.convertToPercentage(
-                                item.pay_in_dollar,
-                                item.pay_in_crypto
-                              ) +
-                              '% OFF '}
-                          </Text>
-                        </View>
+                        source={{ uri: item.featured_deal_image }}
+                      />
+                      <View style={{
+                        flex: 1,
+                        margin:5,
+                        width: 165,
+                        height: 40,
+                        // overflow: 'hidden',
+                        numberOfLines: 2,
+                        ellipsizeMode: 'tail'
+                      }}>
+                          <Text style={styles.textStyle}>{item.deal_name}</Text>
                       </View>
-                    </View>
-                  </TouchableOpacity>
+                        <View
+                          style={{
+                            flex: 1,
+                            flexDirection: 'column',
+                            // justifyContent: 'flex-end'
+                          }}
+                        >
+                          <View style={{ flexDirection: 'row', alignContent: "flex-start", }}>
+                            <Text
+                              style={{
+                                // alignContent: "flex-end",
+                                fontSize: 13,
+                                opacity: 0.54,
+                                // marginTop: 20,
+                                textAlign: 'right', 
+                                width:50
+                              }}
+                            >
+                              Dollar:
+                            </Text>
+                            <Text
+                              style={{
+                                // alignContent: "flex-end",
+                                fontSize: 13,
+                                marginLeft: 0,
+                                // marginTop: 20,
+                                marginLeft: 10,
+                                width: 60
+                              }}
+                            >
+                              {'$' + item.pay_in_dollar.toFixed(2)}
+                            </Text>
+                          </View>
+                          <View style={{ flexDirection: 'row' }}>
+                                <Text
+                                  style={{
+                                    // alignContent: "flex-end",
+                                    fontSize: 13,
+                                    opacity: 0.54,
+                                    marginLeft: 0,
+                                    marginTop: 20,
+                                    textAlign: 'right', 
+                                    width:50
+                                  }}
+                                >
+                                  Crypto:
+                                </Text>
+
+                                <Text
+                                  style={{
+                                    // alignContent: "flex-end",
+                                    fontSize: 13,
+                                    color: 'green',
+                                    marginLeft: 0,
+                                    marginTop: 20,
+                                    marginLeft: 10,
+                                    width: 60
+                                  }}
+                                >
+                                  {'$' + item.pay_in_crypto.toFixed(2)}
+                                </Text>
+
+                                <Text
+                                  style={{
+                                    fontSize: 9,
+                                    color: 'green',
+                                    marginLeft: 0,
+                                    marginTop: 20,
+                                    borderWidth: 2,
+                                    borderColor: 'green',
+                                    borderRadius: 5
+                                  }}
+                                >
+                                  {' ' +
+                                    this.convertToPercentage(
+                                      item.pay_in_dollar,
+                                      item.pay_in_crypto
+                                    ) +
+                                    '% OFF '}
+                                </Text>
+                              </View>
+                      </View>
+                      {/* </View>                         */}
+                          {/* <View style={{ marginLeft: 20, flex: 1 }}>
+
+
+                            <View
+                              style={{
+                                flex: 1,
+                                flexDirection: 'column',
+                                justifyContent: 'flex-end'
+                              }}
+                            >
+                              <View style={{ flexDirection: 'row' }}>
+                                <Text
+                                  style={{
+                                    // alignContent: "flex-end",
+                                    fontSize: 13,
+                                    opacity: 0.54,
+                                    marginTop: 20,
+                                    textAlign: 'right', 
+                                    width:50
+                                  }}
+                                >
+                                  Dollar:
+                                </Text>
+                                <Text
+                                  style={{
+                                    // alignContent: "flex-end",
+                                    fontSize: 13,
+                                    marginLeft: 0,
+                                    marginTop: 20,
+                                    marginLeft: 10,
+                                    width: 60
+                                  }}
+                                >
+                                  {'$' + item.pay_in_dollar.toFixed(2)}
+                                </Text>
+                              </View>
+
+                              <View style={{ flexDirection: 'row' }}>
+                                <Text
+                                  style={{
+                                    // alignContent: "flex-end",
+                                    fontSize: 13,
+                                    opacity: 0.54,
+                                    marginLeft: 0,
+                                    marginTop: 20,
+                                    textAlign: 'right', 
+                                    width:50
+                                  }}
+                                >
+                                  Crypto:
+                                </Text>
+
+                                <Text
+                                  style={{
+                                    // alignContent: "flex-end",
+                                    fontSize: 13,
+                                    color: 'green',
+                                    marginLeft: 0,
+                                    marginTop: 20,
+                                    marginLeft: 10,
+                                    width: 60
+                                  }}
+                                >
+                                  {'$' + item.pay_in_crypto.toFixed(2)}
+                                </Text>
+
+                                <Text
+                                  style={{
+                                    fontSize: 13,
+                                    color: 'green',
+                                    marginLeft: 0,
+                                    marginTop: 20,
+                                    borderWidth: 2,
+                                    borderColor: 'green',
+                                    borderRadius: 5
+                                  }}
+                                >
+                                  {' ' +
+                                    this.convertToPercentage(
+                                      item.pay_in_dollar,
+                                      item.pay_in_crypto
+                                    ) +
+                                    '% OFF '}
+                                </Text>
+                              </View>
+                            </View>
+                          </View> */}
+
+                    </TouchableOpacity>
                 </View>
               );
             }}
@@ -362,8 +464,3 @@ export default class Post extends React.Component {
 //     textAlign: 'center'
 //   }
 // });
-{
-  /*<FlatListItem item={item} index={index}>
-              
-              </FlatListItem>);*/
-}
