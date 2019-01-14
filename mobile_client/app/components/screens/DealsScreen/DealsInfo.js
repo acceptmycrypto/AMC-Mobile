@@ -12,7 +12,8 @@ import {
   ScrollView,
   AsyncStorage,
   KeyboardAvoidingView,
-  BackHandler
+  BackHandler,
+  Share
 } from "react-native";
 import { Button } from "react-native-elements";
 import { _verifier } from "../../../../src/services/AuthService";
@@ -26,7 +27,10 @@ export default class PostInfo extends React.Component {
 
   constructor(props) {
     super(props);
+    // this._shareMessage = this._shareMessage.bind(this);
+    // this._showResult = this._showResult.bind(this);
     this.state = {
+      result: "",
       isLoading: false,
       data: {},
       id: "",
@@ -42,38 +46,38 @@ export default class PostInfo extends React.Component {
       checkedbox2: null,
       sizeOption: [{value: 'Small',}, {value: 'Medium',}, {value: 'Large',}],
       colorOption: [{value: 'Red',}, {value: 'Blue',}, {value: 'Green',}],
-      images: [
-        {
-            title: 'Beautiful and dramatic Antelope Canyon',
-            subtitle: 'Lorem ipsum dolor sit amet et nuncat mergitur',
-            illustration: 'https://i.imgur.com/UYiroysl.jpg'
-        },
-        {
-            title: 'Earlier this morning, NYC',
-            subtitle: 'Lorem ipsum dolor sit amet',
-            illustration: 'https://i.imgur.com/UPrs1EWl.jpg'
-        },
-        {
-            title: 'White Pocket Sunset',
-            subtitle: 'Lorem ipsum dolor sit amet et nuncat ',
-            illustration: 'https://i.imgur.com/MABUbpDl.jpg'
-        },
-        {
-            title: 'Acrocorinth, Greece',
-            subtitle: 'Lorem ipsum dolor sit amet et nuncat mergitur',
-            illustration: 'https://i.imgur.com/KZsmUi2l.jpg'
-        },
-        {
-            title: 'The lone tree, majestic landscape of New Zealand',
-            subtitle: 'Lorem ipsum dolor sit amet',
-            illustration: 'https://i.imgur.com/2nCt3Sbl.jpg'
-        },
-        {
-            title: 'Middle Earth, Germany',
-            subtitle: 'Lorem ipsum dolor sit amet',
-            illustration: 'https://ak1.ostkcdn.com/images/products/9542248/Safavieh-Malone-White-Chrome-Coffee-Table-a94e199e-40dd-42c9-9a08-510c6ab89575.jpg'
-        }
-    ]
+    //   images: [
+    //     {
+    //         title: 'Beautiful and dramatic Antelope Canyon',
+    //         subtitle: 'Lorem ipsum dolor sit amet et nuncat mergitur',
+    //         illustration: 'https://i.imgur.com/UYiroysl.jpg'
+    //     },
+    //     {
+    //         title: 'Earlier this morning, NYC',
+    //         subtitle: 'Lorem ipsum dolor sit amet',
+    //         illustration: 'https://i.imgur.com/UPrs1EWl.jpg'
+    //     },
+    //     {
+    //         title: 'White Pocket Sunset',
+    //         subtitle: 'Lorem ipsum dolor sit amet et nuncat ',
+    //         illustration: 'https://i.imgur.com/MABUbpDl.jpg'
+    //     },
+    //     {
+    //         title: 'Acrocorinth, Greece',
+    //         subtitle: 'Lorem ipsum dolor sit amet et nuncat mergitur',
+    //         illustration: 'https://i.imgur.com/KZsmUi2l.jpg'
+    //     },
+    //     {
+    //         title: 'The lone tree, majestic landscape of New Zealand',
+    //         subtitle: 'Lorem ipsum dolor sit amet',
+    //         illustration: 'https://i.imgur.com/2nCt3Sbl.jpg'
+    //     },
+    //     {
+    //         title: 'Middle Earth, Germany',
+    //         subtitle: 'Lorem ipsum dolor sit amet',
+    //         illustration: 'https://ak1.ostkcdn.com/images/products/9542248/Safavieh-Malone-White-Chrome-Coffee-Table-a94e199e-40dd-42c9-9a08-510c6ab89575.jpg'
+    //     }
+    // ]
     }
   };
   
@@ -91,6 +95,8 @@ export default class PostInfo extends React.Component {
   //       color: post.color
   //     });
   // };
+
+  
 
   checkToken = async () => {
     
@@ -224,6 +230,12 @@ export default class PostInfo extends React.Component {
     );
 }
 
+  _shareMessage() {
+    Share.share({
+      message: 'This is a simple shared message'
+    }).then(this._showResult);
+  }
+
   render() {
 
     console.log(this.state);
@@ -343,6 +355,14 @@ export default class PostInfo extends React.Component {
                     marginLeft: 0,
                   }}>
                   Item Description
+                </Text>
+                <TouchableOpacity onPress={this._shareMessage}>
+                  <Text>
+                    Share
+                  </Text>
+                </TouchableOpacity>
+                <Text>
+                    {JSON.stringify(this.state.result)}
                 </Text>
               </View>
           </View>

@@ -54,6 +54,17 @@ const styles = require('../../../assets/stylesheet/style');
 //   }
 // }
 
+// const formatData = (data, numColumns) => {
+//   const numberOfFullRows = Math.floor(data.length / numColumns);
+
+//   let numberOfElementsLastRow = data.length - (numberOfFullRows * numColumns);
+//   while (numberOfElementsLastRow !== numColumns && numberOfElementsLastRow !== 0) {
+//     // data.push({ key: `blank-${numberOfElementsLastRow}`, empty: true });
+//     numberOfElementsLastRow++;
+//   }
+//   return data;
+// };
+
 export default class Post extends React.Component {
   constructor(props) {
     super(props);
@@ -207,6 +218,10 @@ export default class Post extends React.Component {
             onRefresh={() => this.onRefresh()}
             numColumns={2}
             renderItem={({ item, index }) => {
+              if (item.empty === true) {
+                return <View style={{width: "50%",
+                height: "30%", backgroundColor: 'transparent'}} />;
+              }
               console.log(`Item = ${JSON.stringify(item)}, index = ${index}`);
               return (
                 <View style={{
@@ -232,10 +247,9 @@ export default class Post extends React.Component {
                         width: 165,
                         height: 40,
                         // overflow: 'hidden',
-                        numberOfLines: 2,
-                        ellipsizeMode: 'tail'
                       }}>
-                          <Text style={styles.textStyle}>{item.deal_name}</Text>
+                          <Text style={styles.textStyle} numberOfLines={2}
+                      ellipsizeMode='tail'>{item.deal_name}</Text>
                       </View>
                         <View
                           style={{
