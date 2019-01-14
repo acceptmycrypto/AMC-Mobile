@@ -351,8 +351,6 @@ export default class DealsCheckout extends React.Component {
             style={[
               styles.postStyle,
               {
-                borderBottomColor: "#000000",
-                borderBottomWidth: 2,
                 marginBottom: 10
               }
             ]}
@@ -479,14 +477,14 @@ export default class DealsCheckout extends React.Component {
                         <View
                           style={{
                             backgroundColor: "white",
-                            padding: 22,
+                            padding: 20,
                             justifyContent: "center",
                             alignItems: "center",
                             borderRadius: 4,
                             borderColor: "rgba(0, 0, 0, 0.1)"
                           }}
                         >
-                          <View>
+{/*                          <View>
                             <Text>
                               Please send{" "}
                               <Text style={{ fontWeight: "bold" }}>
@@ -514,12 +512,15 @@ export default class DealsCheckout extends React.Component {
                               </Text>
                             </Text>
                           </View>
+*/}
                           <View
                             style={{
                               justifyContent: "center",
                               alignItems: "center",
-                              margin: 10,
-                              borderWidth: 2
+                              margin: 5,
+                              padding: 15,
+                              borderWidth: 2,
+                              borderRadius: 5
                             }}
                           >
                             <View>
@@ -603,7 +604,7 @@ export default class DealsCheckout extends React.Component {
                             {/*Touchable to change form of payment or cancel*/}
                             <View
                               style={{
-                                width: "100%",
+                                width: 300,
                                 height: 40,
                                 backgroundColor: "#66dac7",
                                 borderRadius: 5,
@@ -616,7 +617,7 @@ export default class DealsCheckout extends React.Component {
                                 <Text
                                   style={{
                                     textAlign: "center",
-                                    color: "green",
+                                    color: "#ffffff",
                                     fontSize: 20,
                                     fontWeight: "bold"
                                   }}
@@ -661,7 +662,6 @@ export default class DealsCheckout extends React.Component {
                     width: 300,
                     justifyContent: "center",
                     alignItems: "center",
-                    borderRadius: 5
                   }}
                 >
                   <Text
