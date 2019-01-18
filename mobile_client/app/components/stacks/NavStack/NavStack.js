@@ -40,13 +40,31 @@ const DealsStack = createStackNavigator(
     },
     DealsCheckout: {
       screen: DealsCheckout,
-    }
+      navigationOptions: {
+        headerTitle: 'Checkout',
+        headerStyle: {
+          backgroundColor: '#66dac7',
+          color: '#000000',
+        },
+      },
+    },
   },
   {
     navigationOptions: header,
     headerLayoutPreset: 'center'
   }
 );
+
+/*Hides tab bottom navigation*/
+DealsStack.navigationOptions = ({navigation}) => {
+  let tabBarVisible = true;
+  if (navigation.state.index > 1) {
+    tabBarVisible = false;
+  }
+  return {
+    tabBarVisible,
+  };
+};
 
 const ProfileStack = createStackNavigator(
   {

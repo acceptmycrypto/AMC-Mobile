@@ -25,6 +25,7 @@ import { LinearGradient } from "expo";
 import { Dropdown } from "react-native-material-dropdown";
 import { _fetchTransactionInfo } from "../../../../src/services/DealServices";
 import TimerCountdown from "react-native-timer-countdown";
+import { states } from "./CheckoutServices";
 
 export default class DealsCheckout extends React.Component {
   constructor(props) {
@@ -36,58 +37,6 @@ export default class DealsCheckout extends React.Component {
       city: "",
       zipCode: "",
       state: "",
-      states: [
-        { label: "AL", value: "Alabama" },
-        { label: "AK", value: "Alaska" },
-        { label: "AZ", value: "Arizona" },
-        { label: "AR", value: "Arkansas" },
-        { label: "CA", value: "California" },
-        { label: "CO", value: "Colorado" },
-        { label: "CT", value: "Connecticut" },
-        { label: "DE", value: "Delaware" },
-        { label: "FL", value: "Florida" },
-        { label: "GA", value: "Georgia" },
-        { label: "HI", value: "Hawaii" },
-        { label: "ID", value: "Idaho" },
-        { label: "IL", value: "Illinois" },
-        { label: "IN", value: "Indiana" },
-        { label: "IA", value: "Iowa" },
-        { label: "KS", value: "Kansas" },
-        { label: "KY", value: "Kentucky" },
-        { label: "LA", value: "Louisiana" },
-        { label: "ME", value: "Maine" },
-        { label: "MD", value: "Maryland" },
-        { label: "MA", value: "Massachusetts" },
-        { label: "MI", value: "Michigan" },
-        { label: "MN", value: "Minnesota" },
-        { label: "MS", value: "Mississippi" },
-        { label: "MO", value: "Missouri" },
-        { label: "MT", value: "Montana" },
-        { label: "NE", value: "Nebraska" },
-        { label: "NV", value: "Nevada" },
-        { label: "NH", value: "New Hampshire" },
-        { label: "NJ", value: "New Jersey" },
-        { label: "NM", value: "New Mexico" },
-        { label: "NY", value: "New York" },
-        { label: "NC", value: "North Carolina" },
-        { label: "ND", value: "North Dakota" },
-        { label: "OH", value: "Ohio" },
-        { label: "OK", value: "Oklahoma" },
-        { label: "OR", value: "Oregon" },
-        { label: "PA", value: "Pennsylvania" },
-        { label: "RI", value: "Rhode Island" },
-        { label: "SC", value: "South Carolina" },
-        { label: "SD", value: "South Dakota" },
-        { label: "TN", value: "Tennessee" },
-        { label: "TX", value: "Texas" },
-        { label: "UT", value: "Utah" },
-        { label: "VT", value: "Vermont" },
-        { label: "VA", value: "Virginia" },
-        { label: "WA", value: "Washington" },
-        { label: "WV", value: "West Virginia" },
-        { label: "WI", value: "Wisconsin" },
-        { label: "WY", value: "Wyoming" }
-      ],
       amount: "",
       viewPaymentMethod: false,
       cryptoOptions: [],
@@ -484,35 +433,6 @@ export default class DealsCheckout extends React.Component {
                             borderColor: "rgba(0, 0, 0, 0.1)"
                           }}
                         >
-{/*                          <View>
-                            <Text>
-                              Please send{" "}
-                              <Text style={{ fontWeight: "bold" }}>
-                                {this.state.transactionData.amount +
-                                  " " +
-                                  this.state.crypto_symbol}
-                              </Text>{" "}
-                              to the below address:{" "}
-                            </Text>
-                            <Text>
-                              AcceptMyCrypto Payment Address:{" "}
-                              <Text
-                                style={{ fontWeight: "bold" }}
-                                selectable={true}
-                                onPress={() => {
-                                  Clipboard.setString(
-                                    this.state.transactionData.txn_id
-                                  );
-                                  Alert.alert(
-                                    "Payment Address has been copied, please proceed to your Crypto Wallet to Pay"
-                                  );
-                                }}
-                              >
-                                {this.state.transactionData.txn_id}
-                              </Text>
-                            </Text>
-                          </View>
-*/}
                           <View
                             style={{
                               justifyContent: "center",
