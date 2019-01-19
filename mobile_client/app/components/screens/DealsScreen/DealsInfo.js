@@ -22,13 +22,14 @@ import { _loadOnePosts } from './DealsService';
 import { LinearGradient } from 'expo';
 import { Dropdown } from 'react-native-material-dropdown';
 // import Carousel  from 'react-native-snap-carousel';
-import SliderEntry from './SliderEntry';
+// import SliderEntry from './SliderEntry';
 export default class PostInfo extends React.Component {
 
   constructor(props) {
     super(props);
-    // this._shareMessage = this._shareMessage.bind(this);
+    this._shareMessage = this._shareMessage.bind(this);
     // this._showResult = this._showResult.bind(this);
+    
     this.state = {
       result: "",
       isLoading: false,
@@ -149,6 +150,7 @@ export default class PostInfo extends React.Component {
   };
 
   componentDidMount() {
+    
     this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
       this.props.navigation.goBack();
       return true;
@@ -209,16 +211,16 @@ export default class PostInfo extends React.Component {
       });
     }
   };
-  _renderItemWithParallax ({item, index}, parallaxProps) {
-    return (
-        <SliderEntry
-          data={item}
-          even={(index + 1) % 2 === 0}
-          parallax={true}
-          parallaxProps={parallaxProps}
-        />
-    );
-}
+//   _renderItemWithParallax ({item, index}, parallaxProps) {
+//     return (
+//         <SliderEntry
+//           data={item}
+//           even={(index + 1) % 2 === 0}
+//           parallax={true}
+//           parallaxProps={parallaxProps}
+//         />
+//     );
+// }
   _renderItem ({item, index}) {
     console.log("CHECKING IMAGES!!!!!!");
     console.log(item);
@@ -231,14 +233,24 @@ export default class PostInfo extends React.Component {
 }
 
   _shareMessage() {
+    // Save this commented link for when they update webpage and add deals id
+    // let link = 'https://acceptmycrypto.herokuapp.com/feed/deals/'+this.state.deal_id+'/'+this.state.deal_name;
+    let link = 'https://acceptmycrypto.herokuapp.com/feed/deals/'+this.state.deal_name;    
+    link = link.split(' ').join('%20');
+    let check = 'https://acceptmycrypto.herokuapp.com/feed/deals/Tech4Kids%20-%20Paw%20Patrol%20Soft%20Lite%20Figure'
+      
+    console.log("==========CHECKER==========", check==link)
+    // console.log("-----Line 239-----", this.state);
+    console.log(link);
     Share.share({
-      message: 'This is a simple shared message'
+      message: 'This is a simple shared message',
+      url: link
     }).then(this._showResult);
   }
 
   render() {
 
-    console.log(this.state);
+    console.log("-----Line 248-----", this.state);
     let colors = this.state.colorOption;
     let size = this.state.sizeOption;
     return(
