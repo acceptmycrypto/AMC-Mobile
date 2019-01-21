@@ -238,12 +238,12 @@ export default class PostInfo extends React.Component {
     let link = 'https://acceptmycrypto.herokuapp.com/feed/deals/'+this.state.deal_name;    
     link = link.split(' ').join('%20');
     let check = 'https://acceptmycrypto.herokuapp.com/feed/deals/Tech4Kids%20-%20Paw%20Patrol%20Soft%20Lite%20Figure'
-      
+ 
     console.log("==========CHECKER==========", check==link)
     // console.log("-----Line 239-----", this.state);
     console.log(link);
     Share.share({
-      message: 'This is a simple shared message',
+      message: '<Enter Message>',
       url: link
     }).then(this._showResult);
   }
@@ -273,6 +273,7 @@ export default class PostInfo extends React.Component {
               >      
                 {this.state.deal_name}
               </Text>
+              
             </View>
             <View style={{ 
               flex: 3,
@@ -359,6 +360,7 @@ export default class PostInfo extends React.Component {
             flex: 3,
             flexDirection: 'row',
             padding: 10,
+            justifyContent: 'space-between',
             }}>                
               <View style={{ flexDirection: 'row', padding: 10 }}>
                 <Text style={{
@@ -368,14 +370,17 @@ export default class PostInfo extends React.Component {
                   }}>
                   Item Description
                 </Text>
+ 
+                {/* <Text>
+                    {JSON.stringify(this.state.result)}
+                </Text> */}
+              </View>
+              <View style={{ flexDirection: 'row', padding: 10, justifyContent: 'flex-end', backgroundColor: '#66dac7',borderRadius: 5 }}>
                 <TouchableOpacity onPress={this._shareMessage}>
-                  <Text>
-                    Share
+                  <Text style={{ fontSize: 20}}>
+                    Share Item
                   </Text>
                 </TouchableOpacity>
-                <Text>
-                    {JSON.stringify(this.state.result)}
-                </Text>
               </View>
           </View>
           <View style={{ 
