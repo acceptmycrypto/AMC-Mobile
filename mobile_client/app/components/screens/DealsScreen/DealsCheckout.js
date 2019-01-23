@@ -25,7 +25,7 @@ import { LinearGradient } from "expo";
 import { Dropdown } from "react-native-material-dropdown";
 import { _fetchTransactionInfo } from "../../../../src/services/DealServices";
 import TimerCountdown from "react-native-timer-countdown";
-import { states } from "./CheckoutServices";
+import { states, DealItem } from "./CheckoutServices";
 
 export default class DealsCheckout extends React.Component {
   constructor(props) {
@@ -38,13 +38,10 @@ export default class DealsCheckout extends React.Component {
       zipCode: "",
       state: "",
       amount: "",
-      viewPaymentMethod: false,
       cryptoOptions: [],
       crypto_name: "",
       crypto_symbol: "",
-      paymentSelected: false,
       transactionData: "",
-      paymentReceived: false,
       deal_id: "",
       deal_name: "",
       featured_deal_image: "",
@@ -52,7 +49,10 @@ export default class DealsCheckout extends React.Component {
       pay_in_crypto: "",
       size: "",
       color: "",
-      timeout: null
+      timeout: null,
+      viewPaymentMethod: false,
+      paymentSelected: false,
+      paymentReceived: false,
     };
   }
   cancelPurchase = () => {
@@ -246,47 +246,14 @@ export default class DealsCheckout extends React.Component {
     return (
       <View style={styles.container}>
         {/*Will include a sticky section at the top from previous page with the deals info but in a smaller form*/}
-        <View
-          style={{
-            borderBottomColor: "#dbd8ce",
-            borderBottomWidth: 1,
-            flexDirection: "row",
-            padding: 10
-          }}
-        >
-          <Image
-            style={{ alignItems: "center", width: 58, height: 58 }}
-            source={{ uri: this.state.featured_deal_image }}
-          />
-          <View style={{ flex: 1, flexDirection: "column", marginLeft: 10 }}>
-            <Text style={{ fontWeight: "bold" }}>{this.state.deal_name} </Text>
-            <View style={{ flexDirection: "row", marginBottom: 2 }}>
-              <View style={{ flexDirection: "row", width: "40%" }}>
-                <Text style={{ fontWeight: "bold" }}>Size: </Text>
-                <Text>{this.state.size} </Text>
-              </View>
-              <View style={{ flexDirection: "row", marginBottom: 2 }}>
-                <Text style={{ fontWeight: "bold" }}>Color:</Text>
-                <Text> {this.state.color} </Text>
-              </View>
-            </View>
-            <View style={{ flexDirection: "row" }}>
-              <View style={{ flexDirection: "row", width: "40%" }}>
-                <Text style={{ fontWeight: "bold" }}>Price: </Text>
-                <Text>${this.state.pay_in_dollar}</Text>
-              </View>
-              <View style={{ flexDirection: "row" }}>
-                <Text style={{ fontWeight: "bold", color: "green" }}>
-                  Cryptocurrency:
-                </Text>
-                <Text style={{ color: "green" }}>
-                  {" "}
-                  ${this.state.pay_in_crypto}
-                </Text>
-              </View>
-            </View>
-          </View>
-        </View>
+        <DealItem
+          dealImage = {this.state.featured_deal_image}
+          dealName = {this.state.deal_name}
+          size = {this.state.size}
+          color = {this.state.color}
+          dollar = {this.state.pay_in_dollar}
+          crypto = {this.state.pay_in_crypto}
+        />
 
         <ScrollView
           alwaysBounceVertical={true}
@@ -560,7 +527,7 @@ export default class DealsCheckout extends React.Component {
               </Animated.View>
             ) : null}
             {/*Checkout Button*/}
-            <View style={{ flex: 1, flexDirection: "column" }}>
+            {/*<View style={{ flex: 1, flexDirection: "column" }}>
               <TouchableOpacity
                 style={{
                   flex: 1,
@@ -600,7 +567,7 @@ export default class DealsCheckout extends React.Component {
                   </Text>
                 </LinearGradient>
               </TouchableOpacity>
-            </View>
+            </View>*/}
           </View>
         </ScrollView>
       </View>

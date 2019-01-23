@@ -226,7 +226,7 @@ export default class PostInfo extends React.Component {
 
   render() {
 
-    console.log(this.state);
+    {/*console.log(this.state);*/}
     let colors = this.state.colorOption;
     let size = this.state.sizeOption;
     return(

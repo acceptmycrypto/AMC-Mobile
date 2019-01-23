@@ -1,3 +1,21 @@
+import * as React from "react";
+import {
+  StyleSheet,
+  Alert,
+  Text,
+  TextInput,
+  View,
+  Image,
+  TouchableOpacity,
+  ActivityIndicator,
+  ScrollView,
+  Animated,
+  AsyncStorage,
+  BackHandler,
+  Clipboard,
+  Linking
+} from "react-native";
+
 export const states = [
   { label: "AL", value: "Alabama" },
   { label: "AK", value: "Alaska" },
@@ -51,3 +69,79 @@ export const states = [
   { label: "WY", value: "Wyoming" }
 ];
 
+class DealItem extends React.Component {
+  /*
+    props: dealImage, dealName, size, color, dollar, crypto
+  */
+  render(){
+    return(
+      <View
+        style={{
+          borderBottomColor: "#dbd8ce",
+          borderBottomWidth: 1,
+          flexDirection: "row",
+          padding: 10
+        }}
+      >
+        <Image
+          style={{ alignItems: "center", width: 58, height: 58 }}
+          source={{ uri: this.props.dealImage }}
+        />
+        <View
+          style={{
+            flex: 1,
+            flexDirection: "column",
+            marginLeft: 10
+          }}
+        >
+          <Text style={{ fontWeight: "bold" }}>{this.props.dealName}</Text>
+          <View style={{ flexDirection: "row", marginBottom: 2 }}>
+            <View style={{ flexDirection: "row", width: "40%" }}>
+              <Text style={{ fontWeight: "bold" }}>Size: </Text>
+              <Text>{this.props.size} </Text>
+            </View>
+
+            <View style={{ flexDirection: "row", marginBottom: 2 }}>
+              <Text style={{ fontWeight: "bold" }}>Color:</Text>
+              <Text> {this.props.color} </Text>
+            </View>
+          </View>
+
+          <View style={{ flexDirection: "row" }}>
+            <View style={{ flexDirection: "row", width: "40%" }}>
+              <Text style={{ fontWeight: "bold" }}>Price: </Text>
+              <Text>${this.props.dollar}</Text>
+            </View>
+
+            <View style={{ flexDirection: "row" }}>
+              <Text style={{ fontWeight: "bold", color: "green" }}>
+                Cryptocurrency:
+              </Text>
+              <Text style={{ color: "green" }}>
+                {" "}
+                ${this.props.crypto}
+              </Text>
+            </View>
+          </View>
+        </View>
+      </View>
+    );
+  }
+}
+
+class Shipping extends React.Component {
+  render(){
+    return(
+      <View>
+        <Text>this.props.fullName</Text>
+        {this.props.email ? (<Text>this.props.email</Text>):null}
+        <Text>this.props.address</Text>
+        <Text>this.props.city</Text>
+        <Text>this.props.state</Text>
+        <Text>this.props.zipCode</Text>
+      </View>
+    );
+  }
+}
+
+export {DealItem, Shipping};
