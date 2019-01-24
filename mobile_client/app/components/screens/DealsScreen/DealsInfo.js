@@ -12,7 +12,8 @@ import {
   ScrollView,
   AsyncStorage,
   KeyboardAvoidingView,
-  BackHandler
+  BackHandler,
+  Share
 } from "react-native";
 import { Button } from "react-native-elements";
 import { _verifier } from "../../../../src/services/AuthService";
@@ -20,12 +21,17 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import { _loadOnePosts } from './DealsService';
 import { LinearGradient } from 'expo';
 import { Dropdown } from 'react-native-material-dropdown';
-
+// import Carousel  from 'react-native-snap-carousel';
+// import SliderEntry from './SliderEntry';
 export default class PostInfo extends React.Component {
 
   constructor(props) {
     super(props);
+    this._shareMessage = this._shareMessage.bind(this);
+    // this._showResult = this._showResult.bind(this);
+    
     this.state = {
+      result: "",
       isLoading: false,
       data: {},
       id: "",
@@ -40,7 +46,39 @@ export default class PostInfo extends React.Component {
       checkedbox1: null,
       checkedbox2: null,
       sizeOption: [{value: 'Small',}, {value: 'Medium',}, {value: 'Large',}],
-      colorOption: [{value: 'Red',}, {value: 'Blue',}, {value: 'Green',}]
+      colorOption: [{value: 'Red',}, {value: 'Blue',}, {value: 'Green',}],
+    //   images: [
+    //     {
+    //         title: 'Beautiful and dramatic Antelope Canyon',
+    //         subtitle: 'Lorem ipsum dolor sit amet et nuncat mergitur',
+    //         illustration: 'https://i.imgur.com/UYiroysl.jpg'
+    //     },
+    //     {
+    //         title: 'Earlier this morning, NYC',
+    //         subtitle: 'Lorem ipsum dolor sit amet',
+    //         illustration: 'https://i.imgur.com/UPrs1EWl.jpg'
+    //     },
+    //     {
+    //         title: 'White Pocket Sunset',
+    //         subtitle: 'Lorem ipsum dolor sit amet et nuncat ',
+    //         illustration: 'https://i.imgur.com/MABUbpDl.jpg'
+    //     },
+    //     {
+    //         title: 'Acrocorinth, Greece',
+    //         subtitle: 'Lorem ipsum dolor sit amet et nuncat mergitur',
+    //         illustration: 'https://i.imgur.com/KZsmUi2l.jpg'
+    //     },
+    //     {
+    //         title: 'The lone tree, majestic landscape of New Zealand',
+    //         subtitle: 'Lorem ipsum dolor sit amet',
+    //         illustration: 'https://i.imgur.com/2nCt3Sbl.jpg'
+    //     },
+    //     {
+    //         title: 'Middle Earth, Germany',
+    //         subtitle: 'Lorem ipsum dolor sit amet',
+    //         illustration: 'https://ak1.ostkcdn.com/images/products/9542248/Safavieh-Malone-White-Chrome-Coffee-Table-a94e199e-40dd-42c9-9a08-510c6ab89575.jpg'
+    //     }
+    // ]
     }
   };
   
@@ -58,6 +96,8 @@ export default class PostInfo extends React.Component {
   //       color: post.color
   //     });
   // };
+
+  
 
   checkToken = async () => {
     
@@ -110,6 +150,7 @@ export default class PostInfo extends React.Component {
   };
 
   componentDidMount() {
+    
     this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
       this.props.navigation.goBack();
       return true;
@@ -170,17 +211,53 @@ export default class PostInfo extends React.Component {
       });
     }
   };
+//   _renderItemWithParallax ({item, index}, parallaxProps) {
+//     return (
+//         <SliderEntry
+//           data={item}
+//           even={(index + 1) % 2 === 0}
+//           parallax={true}
+//           parallaxProps={parallaxProps}
+//         />
+//     );
+// }
+  _renderItem ({item, index}) {
+    console.log("CHECKING IMAGES!!!!!!");
+    console.log(item);
+    console.log("CHECKING IMAGES!!!!!!");
+    return (
+        <View >
+            <Text>{ item.title } </Text>
+        </View>
+    );
+}
+
+  _shareMessage() {
+    // Save this commented link for when they update webpage and add deals id
+    // let link = 'https://acceptmycrypto.herokuapp.com/feed/deals/'+this.state.deal_id+'/'+this.state.deal_name;
+    let link = 'https://acceptmycrypto.herokuapp.com/feed/deals/'+this.state.deal_name;    
+    link = link.split(' ').join('%20');
+    let check = 'https://acceptmycrypto.herokuapp.com/feed/deals/Tech4Kids%20-%20Paw%20Patrol%20Soft%20Lite%20Figure'
+ 
+    console.log("==========CHECKER==========", check==link)
+    // console.log("-----Line 239-----", this.state);
+    console.log(link);
+    Share.share({
+      message: '<Enter Message>',
+      url: link
+    }).then(this._showResult);
+  }
 
   render() {
 
-    console.log(this.state);
+    console.log("-----Line 248-----", this.state);
     let colors = this.state.colorOption;
     let size = this.state.sizeOption;
     return(
       <View style={styles.container}>
         <ScrollView ref={scrollView => this.scrollView = scrollView}>
           <Image
-            style={{ maxWidth: '100%', height: 200 }}
+            style={{ maxWidth: '100%', height: 250 }}
             source={{ uri: this.state.featured_deal_image }}
           />
           <View style={styles.description}>
@@ -196,6 +273,7 @@ export default class PostInfo extends React.Component {
               >      
                 {this.state.deal_name}
               </Text>
+              
             </View>
             <View style={{ 
               flex: 3,
@@ -208,10 +286,11 @@ export default class PostInfo extends React.Component {
                       marginLeft: 0,
                       opacity: 0.54,
                       width: 90,
-                      textAlign: 'right' 
+                      textAlign: 'left' 
                     }}>
                     Dollar Price:
                   </Text>
+                  
                   <Text
                     style={{
                       textAlign: 'left', 
@@ -252,9 +331,9 @@ export default class PostInfo extends React.Component {
                     style={{
                       textAlign: 'center', 
                       fontSize: 15,
-                      color: 'green',
+                      color: 'red',
                       borderWidth: 2,
-                      borderColor: 'green',
+                      borderColor: 'red',
                       borderRadius: 5,
                       marginBottom: 20,
                       width:80,
@@ -266,14 +345,14 @@ export default class PostInfo extends React.Component {
                     ) +
                     '% OFF '}
                   </Text>
-                  <Text style={{
+                  {/* <Text style={{
                       width: 110,
                       textAlign: 'center', 
                       fontSize: 14,
                       color: 'blue',
                     }}>
                     FREE shipping
-                  </Text>
+                  </Text> */}
                 </View>
             </View>
           </View>
@@ -281,6 +360,7 @@ export default class PostInfo extends React.Component {
             flex: 3,
             flexDirection: 'row',
             padding: 10,
+            justifyContent: 'space-between',
             }}>                
               <View style={{ flexDirection: 'row', padding: 10 }}>
                 <Text style={{
@@ -290,7 +370,34 @@ export default class PostInfo extends React.Component {
                   }}>
                   Item Description
                 </Text>
+ 
+                {/* <Text>
+                    {JSON.stringify(this.state.result)}
+                </Text> */}
               </View>
+              <View style={{ flexDirection: 'row', padding: 10, justifyContent: 'flex-end', backgroundColor: '#66dac7',borderRadius: 5 }}>
+                <TouchableOpacity onPress={this._shareMessage}>
+                  <Text style={{ fontSize: 20}}>
+                    Share Item
+                  </Text>
+                </TouchableOpacity>
+              </View>
+          </View>
+          <View style={{ 
+            flex: 3,
+            flexDirection: 'row',
+            padding: 10,
+            // borderBottomColor: '#dbd8ce',
+            // borderBottomWidth: 1,
+          }}>
+            <Text style={{
+              width: 110,
+              textAlign: 'center', 
+              fontSize: 14,
+              color: 'blue',
+            }}>
+                    FREE shipping
+            </Text>
           </View>
           <View style={{ 
             flex: 3,
@@ -347,10 +454,9 @@ export default class PostInfo extends React.Component {
                 }}                                
               >
                 <LinearGradient
-                  colors={[  '#fff4cc','#efb404','#d1a31d']}
+                  colors={[  '#66dac7','#66dac7','#66dac7']}
                   style={{
-                    borderWidth: 1,
-                    borderRadius: 5, width:300, height: 50,padding: 15, alignItems: 'center', borderRadius: 5 }}>
+                    width:300, height: 50,padding: 15, alignItems: 'center', borderRadius: 5 }}>
                   <Text
                     style={{
                       backgroundColor: 'transparent',

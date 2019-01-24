@@ -110,7 +110,7 @@ module.exports = StyleSheet.create({
   // DEALS SCREEN
   dealsContainer: {
     flex: 1,
-    backgroundColor: '#2e4158',
+    backgroundColor: '#eeeeee',
     alignSelf: 'stretch',
     flexDirection: 'column'
   },
@@ -119,27 +119,55 @@ module.exports = StyleSheet.create({
     fontSize: 15,
     fontWeight: '200'
   },
+  homePostStyle: {
+    padding: 5
+  },
+  searchPostStyle: {
+    alignItems: 'center',
+    backgroundColor: 'white',
+    borderWidth: 1,
+    height: 300,
+    borderColor: '#dbd8ce',
+    padding: 10,
+    flexDirection: 'row'
+  },
   postStyle: {
+    alignItems: 'center',
+    backgroundColor: 'white',
+    borderWidth: 1,
+    height: 300,
+    borderColor: '#dbd8ce',
+    padding: 10,
+    // flexDirection: 'row',
+  },
+  searchPostStyle: {
     backgroundColor: 'white',
     borderWidth: 1,
     borderColor: 'grey',
-    padding: 10,
+    padding: 5,
     flexDirection: 'row'
   },
   searchStyle: {
     flex: 1,
-    borderBottomWidth: 1,
-    borderColor: '#445366',
-    padding: 5,
-    marginTop: 2,
-    marginBottom: 5,
+    flexDirection: 'row',
+    // borderWidth: 1,
+    // borderColor: '#445366',
+    backgroundColor: 'white',
+    // borderRadius: 20,
+    padding: 7,
+    marginTop: 4,
+    marginBottom: 7,
     marginLeft: 10,
     marginRight: 10,
     fontSize: 15,
-    color: '#fff'
+    color: 'black'
   },
   searchBarStyle: {
+    backgroundColor: 'white',
     flexDirection: 'row',
-    marginTop: 5
+    // marginTop: 5,
+    // marginBottom: 7,
+    // marginLeft: 10,
+    // marginRight: 10,
   }
 });

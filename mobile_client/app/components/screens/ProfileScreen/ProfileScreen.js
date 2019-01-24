@@ -186,7 +186,9 @@ export default class ProfileScreen extends React.Component {
       // this.setState({
       //   isLoggedIn: false
       // });
-      this.props.navigation.navigate('Launch');
+      this.props.navigation.navigate('Launch',{
+        isLoggedIn: false
+      });
     } catch (error) {
       // Error saving data
     }

@@ -4,12 +4,17 @@ import {
   createBottomTabNavigator
 } from 'react-navigation';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import Home from '../../screens/HomeScreen/HomeScreen'
+import Search from '../../screens/SearchScreen/SearchScreen'
 import Venues from '../../screens/VenuesScreen/VenuesScreen'
-import Deals from '../../screens/DealsScreen/DealsScreen';
+import DealsScreen from '../../screens/DealsScreen/DealsScreen';
 import DealsInfo from '../../screens/DealsScreen/DealsInfo';
 import DealsCheckout from '../../screens/DealsScreen/DealsCheckout';
 import ProfileScreen from '../../screens/ProfileScreen/ProfileScreen';
 import LogoTitle from './LogoTitle';
+import SearchTitle from './SearchTitle';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import Feather from '@expo/vector-icons/Feather';
 
 const header = {
   headerTitle: <LogoTitle />,
@@ -17,6 +22,46 @@ const header = {
     backgroundColor: '#66dac7',
   }
 };
+
+const HomeHeader = {
+  headerTitle: <SearchTitle />,
+  headerStyle: {
+    backgroundColor: '#66dac7',
+  }
+};
+
+const HomeStack = createStackNavigator(
+  {
+    Home: {
+      screen: Home
+    },
+    DealsScreen: {
+      screen: DealsScreen
+    },
+    DealsInfo: {
+      screen: DealsInfo
+    },
+    DealsCheckout: {
+      screen: DealsCheckout,
+    }
+  },
+  {
+    navigationOptions: HomeHeader,
+    headerLayoutPreset: 'center',
+  }
+);
+
+const SearchStack = createStackNavigator(
+  {
+    Search: {
+      screen: Search
+    }
+  },
+  {
+    navigationOptions: header,
+    headerLayoutPreset: 'center',
+  }
+);
 
 const VenuesStack = createStackNavigator(
   {
@@ -30,23 +75,23 @@ const VenuesStack = createStackNavigator(
   }
 );
 
-const DealsStack = createStackNavigator(
-  {
-    Deals: {
-      screen: Deals
-    },
-    DealsInfo: {
-      screen: DealsInfo
-    },
-    DealsCheckout: {
-      screen: DealsCheckout,
-    }
-  },
-  {
-    navigationOptions: header,
-    headerLayoutPreset: 'center'
-  }
-);
+// const DealsStack = createStackNavigator(
+//   {
+//     Deals: {
+//       screen: Deals
+//     },
+//     DealsInfo: {
+//       screen: DealsInfo
+//     },
+//     DealsCheckout: {
+//       screen: DealsCheckout,
+//     }
+//   },
+//   {
+//     navigationOptions: header,
+//     headerLayoutPreset: 'center'
+//   }
+// );
 
 const ProfileStack = createStackNavigator(
   {
@@ -62,8 +107,10 @@ const ProfileStack = createStackNavigator(
 
 export default createBottomTabNavigator(
   {
+    Home: HomeStack,
+    Search: SearchStack,
     Venues: VenuesStack,
-    Deals: DealsStack,
+    // Deals: DealsStack,
     Profile: ProfileStack,
   },
   {
@@ -71,12 +118,21 @@ export default createBottomTabNavigator(
       tabBarIcon: ({ focused, horizontal, tintColor }) => {
         const { routeName } = navigation.state;
         let iconName;
-        if (routeName === 'Venues') {
-          iconName = `home${focused ? '' : '-outline'}`;
-        } else if (routeName === 'Deals') {
-          iconName = `${focused ? 'tag-multiple' : 'tag-outline'}`;
-        } else if (routeName === 'Profile') {
-          iconName = `account-box${focused ? '' : '-outline'}`;
+        if (routeName === 'Home') {
+          iconName = `home`;
+        }else if (routeName === 'Search') {
+          return (
+            <Feather
+              name={'search'}
+              size={horizontal ? 20 : 25}
+              color={tintColor}
+              style={{ backgroundColor: '#2e4158' }}
+            />
+          );
+        }else if (routeName === 'Venues') {
+          iconName = 'chart-arc';
+        }else if (routeName === 'Profile') {
+          iconName = `account-box`;
         }
         return (
           <MaterialCommunityIcons
