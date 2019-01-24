@@ -84,7 +84,7 @@ export default class Post extends React.Component {
     const category = this.props.navigation.state.params;
     const department = JSON.stringify(category.department);
     this.setState({ department: category.department });
-    console.log('FUCK' + JSON.stringify(category.department));
+    console.log('DEPARTMENT' + JSON.stringify(category.department));
     console.log('SEARCH' + this.state.search);
   };
 
