@@ -129,16 +129,41 @@ class DealItem extends React.Component {
   }
 }
 
+//props
+/*
+  fullName, email, city, state, zipCode: string
+*/
 class Shipping extends React.Component {
   render(){
     return(
-      <View>
-        <Text>this.props.fullName</Text>
-        {this.props.email ? (<Text>this.props.email</Text>):null}
-        <Text>this.props.address</Text>
-        <Text>this.props.city</Text>
-        <Text>this.props.state</Text>
-        <Text>this.props.zipCode</Text>
+      <View
+        style={{
+          borderBottomColor: "#dbd8ce",
+          borderBottomWidth: 1,
+          flexDirection: "column",
+          padding: 15
+        }}
+      >
+        <View style={{flexDirection: "row"}}>
+          <Text style={{fontWeight: "bold"}}>Name: </Text>
+          <Text>{this.props.fullName}</Text>
+        </View>
+
+        { this.props.email ? (
+        <View style={{flexDirection: "row"}}>
+          <Text style={{fontWeight: "bold"}}>Email: </Text>
+          <Text>this.props.email</Text>
+        </View>): null }
+
+        <View style={{flexDirection: "row"}}>
+          <Text style={{fontWeight: "bold"}}>Address: </Text>
+          <View style={{flexDirection: "column"}}>
+            <Text>{this.props.address}</Text>
+            <View style={{flexDirection: "row"}}>
+              <Text>{this.props.city + ", " + this.props.state + ", " + this.props.zipCode}</Text>
+            </View>
+          </View>
+        </View>
       </View>
     );
   }
