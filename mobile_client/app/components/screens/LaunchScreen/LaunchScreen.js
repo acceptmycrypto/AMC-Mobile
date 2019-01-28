@@ -10,10 +10,12 @@ import {
   TextInput,
   Image,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   Alert,
   Linking,
   Button,
-  ActivityIndicator
+  ActivityIndicator,
+  Keyboard
 } from 'react-native';
 import { WebBrowser } from 'expo';
 import {
@@ -40,12 +42,13 @@ export default class LaunchScreen extends React.Component {
     // this._bootstrapAsync();
     this.state = {
       isLoading: true,
+      isLoggingIn: false,
       firsLaunch: null,
       isSelectingCryptos: false,
       id: 0,
       username: '',
-      email: '',
-      password: '',
+      email: 'audiopunk252@yahoo.com',
+      password: 'taylora',
       cryptoOptions: {},
       cryptoProfile: []
     };
@@ -91,7 +94,7 @@ export default class LaunchScreen extends React.Component {
               user_location: userData.user_location,
               birthday: userData.birthday
             });
-            this.props.navigation.navigate('Deals', {
+            this.props.navigation.navigate('Home', {
               _id: this.state._id,
               user_name: this.state.user_name,
               first_name: this.state.first_name,
@@ -188,11 +191,12 @@ export default class LaunchScreen extends React.Component {
     } else if (!password) {
       Alert.alert('Please enter your password');
     } else {
+      this.setState({ isLoggingIn: true })
       return _login(email, password).then(res => {
         if (res.token) {
           AsyncStorage.setItem('token', res.token);
           console.log(res.token);
-          this.props.navigation.navigate('Deals', {
+          this.props.navigation.navigate('Home', {
             _id: this.state.id,
             username: this.state.username,
             email: this.state.email,
@@ -200,6 +204,7 @@ export default class LaunchScreen extends React.Component {
             lastname: this.state.lastname,
             create_date: this.state.create_date
           });
+          this.setState({ isLoggingIn: false })
         } else {
           console.log('Login error: ', res);
           if (res.error === 'user not found') {
@@ -255,11 +260,11 @@ export default class LaunchScreen extends React.Component {
   }
 
   handlePasswordLink = () => {
-    WebBrowser.openBrowserAsync('https://www.acceptmycrypto.com/');
+    WebBrowser.openBrowserAsync('https://acceptmycrypto.herokuapp.com/ResetPasswordEmail');
   };
 
   handleCryptosLink = () => {
-    WebBrowser.openBrowserAsync('https://www.acceptmycrypto.com/');
+    WebBrowser.openBrowserAsync('https://acceptmycrypto.herokuapp.com/SignUp');
   };
 
   render() {
@@ -601,7 +606,84 @@ export default class LaunchScreen extends React.Component {
     } else {
       // LOGIN PAGE
       return (
-        <View style={styles.container}>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        {this.state.isLoggingIn ? (
+          <View style={styles.container}>
+          <Text
+            style={{
+              alignSelf: 'flex-start',
+              color: '#fff',
+              marginTop: 15,
+              marginLeft: 40
+            }}
+          >
+            E-MAIL ADDRESS
+          </Text>
+          <TextInput
+            style={styles.textInput}
+            underlineColorAndroid="transparent"
+            placeholder="Enter your email"
+            placeholderTextColor="#58697e"
+            value={this.state.email}
+            autoCapitalize="none"
+            secureTextEntry={false}
+            onChangeText={email => this.setState({ email })}
+          />
+          <Text
+            style={{
+              alignSelf: 'flex-start',
+              color: '#fff',
+              marginTop: 15,
+              marginLeft: 40
+            }}
+          >
+            PASSWORD
+          </Text>
+          <TextInput
+            style={styles.textInput}
+            underlineColorAndroid="transparent"
+            placeholder="Enter your password"
+            placeholderTextColor="#58697e"
+            value={this.state.password}
+            secureTextEntry={true}
+            onChangeText={password => this.setState({ password })}
+          />
+
+          {/* <CheckBox
+            center={false}
+            containerStyle={{ justifyContent: 'flex-start', backgroundColor: '#2e4158' }}
+            title='Remember Me'
+            checked={this.state.rememberMe}
+          /> */}
+
+          <TouchableOpacity
+            onPress={this.handleLogin}
+            style={styles.signinButton}
+          >
+            <Text style={styles.buttonText}>Sign In</Text>
+          </TouchableOpacity>
+
+          {/* <Button
+            onPress={() => Linking.openURL('mailto:support@example.com')}
+            title="support@example.com"
+          /> */}
+
+          <Text style={styles.font12} onPress={this.handlePasswordLink}>
+            Forgot Password?
+          </Text>
+          <View style={{ height: 240, justifyContent: 'center' }}>
+            <ActivityIndicator />
+          </View>
+          <View style={styles.loginGap} />
+          <Text
+            style={styles.font25}
+            onPress={() => this.setState({ firsLaunch: true })}
+          >
+            Don't have an account?
+          </Text>
+        </View>
+        ) : (
+          <View style={styles.container}>
           <Text
             style={{
               alignSelf: 'flex-start',
@@ -672,6 +754,8 @@ export default class LaunchScreen extends React.Component {
             Don't have an account?
           </Text>
         </View>
+        )}
+        </TouchableWithoutFeedback>
       );
     }
   }
