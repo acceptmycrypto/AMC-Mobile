@@ -193,7 +193,7 @@ export default class Post extends React.Component {
           </View>
           {/* <ScrollView>
             {this.state.dealsData.map(dealsDataInfo => {
-              return (        
+              return (
                 <TouchableOpacity style={styles.postStyle} key={dealsDataInfo.id} onPress={() => this.viewPost(dealsDataInfo.id)}>
                   <Image
                     style={{ width: 150, height: 150 }}
@@ -380,7 +380,7 @@ export default class Post extends React.Component {
                                 fontSize: 13,
                                 opacity: 0.54,
                                 marginTop: 20,
-                                textAlign: 'right', 
+                                textAlign: 'right',
                                 width:50
                               }}
                             >
@@ -408,7 +408,7 @@ export default class Post extends React.Component {
                                 opacity: 0.54,
                                 marginLeft: 0,
                                 marginTop: 20,
-                                textAlign: 'right', 
+                                textAlign: 'right',
                                 width:50
                               }}
                             >

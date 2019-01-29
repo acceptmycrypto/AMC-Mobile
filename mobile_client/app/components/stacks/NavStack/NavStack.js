@@ -43,6 +43,13 @@ const HomeStack = createStackNavigator(
     },
     DealsCheckout: {
       screen: DealsCheckout,
+      navigationOptions: {
+        headerTitle: 'Checkout',
+        headerStyle: {
+          backgroundColor: '#66dac7',
+          color: '#000000',
+        },
+      },
     }
   },
   {
