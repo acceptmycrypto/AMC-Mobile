@@ -36,13 +36,19 @@ const HomeStack = createStackNavigator(
       screen: Home
     },
     DealsScreen: {
-      screen: DealsScreen
+      screen: DealsScreen,
+      navigationOptions: header,
+      headerLayoutPreset: 'center',
     },
     DealsInfo: {
-      screen: DealsInfo
+      screen: DealsInfo,
+      navigationOptions: header,
+      headerLayoutPreset: 'center',
     },
     DealsCheckout: {
       screen: DealsCheckout,
+      navigationOptions: header,
+      headerLayoutPreset: 'center',
     }
   },
   {
