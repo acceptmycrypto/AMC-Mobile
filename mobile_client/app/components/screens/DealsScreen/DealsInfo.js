@@ -156,10 +156,20 @@ export default class PostInfo extends React.Component {
       return true;
     });
     const { navigation } = this.props;
+    console.log("CHECK HERE!!!!!!", navigation.getParam("description", "N/A"))
+    
+    let x;
+    let a;
+
+    if(navigation.getParam("description", "N/A") != "") {
+      x = JSON.stringify(navigation.getParam("description", "N/A"))
+      a = x.split('"')
+    }
+
     this.setState({
       deal_id: navigation.getParam('id', 'Data Not Available'),
       deal_name: navigation.getParam("deal_name", "N/A"),
-      description: navigation.getParam("description", "N/A"),
+      description: a[10],
       featured_deal_image: navigation.getParam("featured_deal_image", "N/A"),
       pay_in_dollar: navigation.getParam("pay_in_dollar", "N/A"),
       pay_in_crypto: navigation.getParam("pay_in_crypto", "N/A")  
@@ -250,7 +260,40 @@ export default class PostInfo extends React.Component {
 
   render() {
 
-    console.log("-----Line 248-----", this.state);
+    // {"blocks":[{"key":"3ktu8","text":"Pippi Longstocking book is for sale.","type":"unstyled","depth":0,"inlineStyleRanges":[{"offset":0,"length":36,"style":"ITALIC"}],"entityRanges":[],"data":{}}],"entityMap":{}}
+
+    let y = "{\"blocks\":[{\"key\":\"fti2m\",\"text\":\"Grab this bitcoin quick.\",\"type\":\"unstyled\",\"depth\":0,\"inlineStyleRanges\":[{\"offset\":0,\"length\":24,\"style\":\"BOLD\"}],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"
+
+    let t = JSON.parse(y);
+    console.log(typeof(t.blocks))
+    console.log(t.blocks[0].text)
+    console.log(typeof t)
+
+    // console.log(JSON.stringify(t.blocks))
+    // console.log("-----Line 248-----", this.state);
+    console.log("=====LALALLALLALALA=======");
+    console.log(typeof this.state.description)
+    let x = JSON.stringify(this.state.description)
+    let a = x.split('"')
+    console.log("WORK", a);
+    console.log("WORK", a.length);
+    console.log("WORRKKKKKK", typeof a[10])
+    // console.log("WORK", a[10].slice(0,a[10].length -1 ));
+    // let r = a[10].split()
+    // console.log("WORK!!!!!!", r.slice(0,r.length-2));
+    console.log(x)
+    let u = JSON.parse(x)
+    console.log("LINE 268", u)
+    console.log("=====LALALLALLALALA=======");
+    console.log(typeof(x))
+    // console.log(typeof(t.blocks))
+    // console.log(t.blocks[0].text)
+    // console.log(JSON.parse(this.state.description));
+    console.log("=====LALALLALLALALA=======");
+    // console.log(JSON.stringify(this.state.description));
+    // console.log(JSON.stringify(this.state.description));
+    
+    console.log("=====LALALLALLALALA=======");
     let colors = this.state.colorOption;
     let size = this.state.sizeOption;
     return(
@@ -383,7 +426,7 @@ export default class PostInfo extends React.Component {
                 </TouchableOpacity>
               </View>
           </View>
-          <View style={{ 
+          {/* <View style={{ 
             flex: 3,
             flexDirection: 'row',
             padding: 10,
@@ -398,7 +441,7 @@ export default class PostInfo extends React.Component {
             }}>
                     FREE shipping
             </Text>
-          </View>
+          </View> */}
           <View style={{ 
             flex: 3,
             flexDirection: 'row',
@@ -419,7 +462,7 @@ export default class PostInfo extends React.Component {
             </View>
           </View>
 
-          <View style={{marginTop: 20, flexDirection: 'row', justifyContent: 'space-between', borderBottomColor: '#dbd8ce',
+          {/* <View style={{marginTop: 20, flexDirection: 'row', justifyContent: 'space-between', borderBottomColor: '#dbd8ce',
               borderBottomWidth: 1, }}>     
             <View style={{marginLeft: 20, width: 150}}>
             {this.state.checkedbox1 == false && <Text style={{color: 'red'}}>Please Select A Size</Text>}
@@ -440,7 +483,7 @@ export default class PostInfo extends React.Component {
                 style={{width: 50}}
               />
             </View>
-          </View>        
+          </View>         */}
           <KeyboardAvoidingView behavior="padding">
             <View style={{ flex: 1, marginTop: 10, alignItems: 'center', justifyContent: 'center' }}>
               <TouchableOpacity
