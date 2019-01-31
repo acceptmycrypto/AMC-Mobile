@@ -156,8 +156,8 @@ export default class PostInfo extends React.Component {
       return true;
     });
     const { navigation } = this.props;
-    console.log("CHECK HERE!!!!!!", navigation.getParam("description", "N/A"))
-    
+  
+    // Variables to manipulate strings  
     let x;
     let a;
     let z;
