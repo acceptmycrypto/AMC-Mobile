@@ -345,14 +345,14 @@ export default class PostInfo extends React.Component {
                     ) +
                     '% OFF '}
                   </Text>
-                  <Text style={{
+                  {/* <Text style={{
                       width: 110,
                       textAlign: 'center', 
                       fontSize: 14,
                       color: 'blue',
                     }}>
                     FREE shipping
-                  </Text>
+                  </Text> */}
                 </View>
             </View>
           </View>
@@ -382,6 +382,22 @@ export default class PostInfo extends React.Component {
                   </Text>
                 </TouchableOpacity>
               </View>
+          </View>
+          <View style={{ 
+            flex: 3,
+            flexDirection: 'row',
+            padding: 10,
+            // borderBottomColor: '#dbd8ce',
+            // borderBottomWidth: 1,
+          }}>
+            <Text style={{
+              width: 110,
+              textAlign: 'center', 
+              fontSize: 14,
+              color: 'blue',
+            }}>
+                    FREE shipping
+            </Text>
           </View>
           <View style={{ 
             flex: 3,

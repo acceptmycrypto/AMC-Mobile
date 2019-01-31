@@ -10,10 +10,12 @@ import {
   TextInput,
   Image,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   Alert,
   Linking,
   Button,
-  ActivityIndicator
+  ActivityIndicator,
+  Keyboard
 } from 'react-native';
 import { WebBrowser } from 'expo';
 import {
@@ -40,12 +42,13 @@ export default class LaunchScreen extends React.Component {
     // this._bootstrapAsync();
     this.state = {
       isLoading: true,
+      isLoggingIn: false,
       firsLaunch: null,
       isSelectingCryptos: false,
       id: 0,
       username: '',
-      email: '',
-      password: '',
+      email: 'audiopunk252@yahoo.com',
+      password: 'taylora',
       cryptoOptions: {},
       cryptoProfile: []
     };
@@ -80,7 +83,7 @@ export default class LaunchScreen extends React.Component {
             Alert.alert('Session has expired');
           } else if (userData !== 'undefined') {
             this.setState({
-              // isLoggedIn: true,
+              // isLoggingIn: true,
               _id: userData.id,
               user_name: userData.username,
               first_name: userData.first_name,
@@ -91,7 +94,7 @@ export default class LaunchScreen extends React.Component {
               user_location: userData.user_location,
               birthday: userData.birthday
             });
-            this.props.navigation.navigate('Deals', {
+            this.props.navigation.navigate('Home', {
               _id: this.state._id,
               user_name: this.state.user_name,
               first_name: this.state.first_name,
@@ -188,11 +191,12 @@ export default class LaunchScreen extends React.Component {
     } else if (!password) {
       Alert.alert('Please enter your password');
     } else {
+      this.setState({ isLoggingIn: true });
       return _login(email, password).then(res => {
         if (res.token) {
           AsyncStorage.setItem('token', res.token);
           console.log(res.token);
-          this.props.navigation.navigate('Deals', {
+          this.props.navigation.navigate('Home', {
             _id: this.state.id,
             username: this.state.username,
             email: this.state.email,
@@ -200,11 +204,14 @@ export default class LaunchScreen extends React.Component {
             lastname: this.state.lastname,
             create_date: this.state.create_date
           });
+          this.setState({ isLoggingIn: false });
         } else {
           console.log('Login error: ', res);
           if (res.error === 'user not found') {
+            this.setState({ isLoggingIn: false });
             Alert.alert('That user does not exist');
           } else if (res.error === 'incorrect password ') {
+            this.setState({ isLoggingIn: false });
             Alert.alert('Incorrect password');
           }
         }
@@ -245,21 +252,23 @@ export default class LaunchScreen extends React.Component {
   showCryptoSelection = () => {
     this.setState({
       isSelectingCryptos: true
-    })
-  }
+    });
+  };
 
   hideCryptoSelection = () => {
     this.setState({
       isSelectingCryptos: false
-    })
-  }
+    });
+  };
 
   handlePasswordLink = () => {
-    WebBrowser.openBrowserAsync('https://www.acceptmycrypto.com/');
+    WebBrowser.openBrowserAsync(
+      'https://acceptmycrypto.herokuapp.com/ResetPasswordEmail'
+    );
   };
 
   handleCryptosLink = () => {
-    WebBrowser.openBrowserAsync('https://www.acceptmycrypto.com/');
+    WebBrowser.openBrowserAsync('https://acceptmycrypto.herokuapp.com/SignUp');
   };
 
   render() {
@@ -418,7 +427,6 @@ export default class LaunchScreen extends React.Component {
               {/* <View style={styles.registerGap} /> */}
             </KeyboardAwareScrollView>
           ) : (
-
             // Android Sign Up Screen
             <View
               style={{
@@ -496,7 +504,7 @@ export default class LaunchScreen extends React.Component {
                 />
                 <TouchableOpacity
                   onPress={this.showCryptoSelection}
-                  style={{   
+                  style={{
                     alignSelf: 'center',
                     margin: 5,
                     borderRadius: 25,
@@ -511,83 +519,88 @@ export default class LaunchScreen extends React.Component {
               </KeyboardAwareScrollView>
 
               {isSelectingCryptos ? (
-              <View>
-              <Modal
-                isVisible={true}
-                animationInTiming={1000}
-                animationOutTiming={1000}
-                backdropTransitionInTiming={1000}
-                backdropTransitionOutTiming={1000}
-              >
-              <View
-                style={{
-                  backgroundColor: "#2e4158",
-                  padding: 10,
-                  justifyContent: "center",
-                  borderRadius: 4,
-                }}
-              >
-              <TouchableOpacity style={{ alignSelf: 'flex-end' }} onPress={this.hideCryptoSelection}>
-                <Text style={{ fontSize: 20 }}>X</Text>
-              </TouchableOpacity>
-                <Text
-                  style={{
-                    alignSelf: 'center',
-                    color: '#fff',
-                    marginTop: 5,
-                    marginLeft: 5
-                  }}
-                >
-                  YOUR CRYPTOCURRENCY PORTFOLIO
-                </Text>
-                {this.state.isLoading ? (
-                  <View style={{ height: 240, justifyContent: 'center' }}>
-                    <ActivityIndicator />
-                  </View>
-                ) : (
-                  <CustomMultiPicker
-                    options={this.state.cryptoOptions}
-                    search={true} // should show search bar?
-                    multiple={true} //
-                    placeholder={'Search'}
-                    placeholderTextColor={'#58697e'}
-                    returnValue={'value'} // label or value
-                    callback={res => {
-                      this.setState({
-                        cryptoProfile: res
-                      });
-                    }} // callback, array of selected items
-                    rowBackgroundColor={'#66dac7'}
-                    rowHeight={41}
-                    rowRadius={10}
-                    iconColor={'black'}
-                    iconSize={30}
-                    selectedIconName={'md-checkmark-circle-outline'}
-                    unselectedIconName={'ios-radio-button-off-outline'}
-                    scrollViewHeight={193}
-                    selected={[]} // list of options which are selected by default
-                  />
-                )}
-                <Text
-                  style={styles.selectorText}
-                  onPress={this.handleCryptosLink}
-                >
-                  Why do I need to select cryptos?
-                </Text>
-              <TouchableOpacity
-                onPress={this.handleRegister}
-                style={styles.createButton}
-              >
-                <Text style={styles.buttonText}>Create Account</Text>
-              </TouchableOpacity>
-              <Text style={styles.termsTop}>
-                By creating an account you agree
-              </Text>
-              <Text style={styles.termsBottom}>to the Terms of Service</Text>
-              </View>
-              </Modal>
-              </View>
-              ) : null }
+                <View>
+                  <Modal
+                    isVisible={true}
+                    animationInTiming={1000}
+                    animationOutTiming={1000}
+                    backdropTransitionInTiming={1000}
+                    backdropTransitionOutTiming={1000}
+                  >
+                    <View
+                      style={{
+                        backgroundColor: '#2e4158',
+                        padding: 10,
+                        justifyContent: 'center',
+                        borderRadius: 4
+                      }}
+                    >
+                      <TouchableOpacity
+                        style={{ alignSelf: 'flex-end' }}
+                        onPress={this.hideCryptoSelection}
+                      >
+                        <Text style={{ fontSize: 20 }}>X</Text>
+                      </TouchableOpacity>
+                      <Text
+                        style={{
+                          alignSelf: 'center',
+                          color: '#fff',
+                          marginTop: 5,
+                          marginLeft: 5
+                        }}
+                      >
+                        YOUR CRYPTOCURRENCY PORTFOLIO
+                      </Text>
+                      {this.state.isLoading ? (
+                        <View style={{ height: 240, justifyContent: 'center' }}>
+                          <ActivityIndicator />
+                        </View>
+                      ) : (
+                        <CustomMultiPicker
+                          options={this.state.cryptoOptions}
+                          search={true} // should show search bar?
+                          multiple={true} //
+                          placeholder={'Search'}
+                          placeholderTextColor={'#58697e'}
+                          returnValue={'value'} // label or value
+                          callback={res => {
+                            this.setState({
+                              cryptoProfile: res
+                            });
+                          }} // callback, array of selected items
+                          rowBackgroundColor={'#66dac7'}
+                          rowHeight={41}
+                          rowRadius={10}
+                          iconColor={'black'}
+                          iconSize={30}
+                          selectedIconName={'md-checkmark-circle-outline'}
+                          unselectedIconName={'ios-radio-button-off-outline'}
+                          scrollViewHeight={193}
+                          selected={[]} // list of options which are selected by default
+                        />
+                      )}
+                      <Text
+                        style={styles.selectorText}
+                        onPress={this.handleCryptosLink}
+                      >
+                        Why do I need to select cryptos?
+                      </Text>
+                      <TouchableOpacity
+                        onPress={this.handleRegister}
+                        style={styles.createButton}
+                      >
+                        <Text style={styles.buttonText}>Create Account</Text>
+                      </TouchableOpacity>
+                      <Text style={styles.termsTop}>
+                        By creating an account you agree
+                      </Text>
+                      <Text style={styles.termsBottom}>
+                        to the Terms of Service
+                      </Text>
+                    </View>
+                  </Modal>
+                </View>
+              ) : null}
             </View>
           )}
           <Text
@@ -601,77 +614,165 @@ export default class LaunchScreen extends React.Component {
     } else {
       // LOGIN PAGE
       return (
-        <View style={styles.container}>
-          <Text
-            style={{
-              alignSelf: 'flex-start',
-              color: '#fff',
-              marginTop: 15,
-              marginLeft: 40
-            }}
-          >
-            E-MAIL ADDRESS
-          </Text>
-          <TextInput
-            style={styles.textInput}
-            underlineColorAndroid="transparent"
-            placeholder="Enter your email"
-            placeholderTextColor="#58697e"
-            value={this.state.email}
-            autoCapitalize="none"
-            secureTextEntry={false}
-            onChangeText={email => this.setState({ email })}
-          />
-          <Text
-            style={{
-              alignSelf: 'flex-start',
-              color: '#fff',
-              marginTop: 15,
-              marginLeft: 40
-            }}
-          >
-            PASSWORD
-          </Text>
-          <TextInput
-            style={styles.textInput}
-            underlineColorAndroid="transparent"
-            placeholder="Enter your password"
-            placeholderTextColor="#58697e"
-            value={this.state.password}
-            secureTextEntry={true}
-            onChangeText={password => this.setState({ password })}
-          />
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          {this.state.isLoggingIn ? (
+            <View style={styles.container}>
+              <Text
+                style={{
+                  alignSelf: 'flex-start',
+                  color: '#fff',
+                  marginTop: 15,
+                  marginLeft: 40
+                }}
+              >
+                E-MAIL ADDRESS
+              </Text>
+              <TextInput
+                style={styles.textInput}
+                underlineColorAndroid="transparent"
+                placeholder="Enter your email"
+                placeholderTextColor="#58697e"
+                value={this.state.email}
+                autoCapitalize="none"
+                secureTextEntry={false}
+                onChangeText={email => this.setState({ email })}
+              />
+              <Text
+                style={{
+                  alignSelf: 'flex-start',
+                  color: '#fff',
+                  marginTop: 15,
+                  marginLeft: 40
+                }}
+              >
+                PASSWORD
+              </Text>
+              <TextInput
+                style={styles.textInput}
+                underlineColorAndroid="transparent"
+                placeholder="Enter your password"
+                placeholderTextColor="#58697e"
+                value={this.state.password}
+                secureTextEntry={true}
+                onChangeText={password => this.setState({ password })}
+              />
 
-          {/* <CheckBox
+              {/* <CheckBox
             center={false}
             containerStyle={{ justifyContent: 'flex-start', backgroundColor: '#2e4158' }}
             title='Remember Me'
             checked={this.state.rememberMe}
           /> */}
 
-          <TouchableOpacity
-            onPress={this.handleLogin}
-            style={styles.signinButton}
-          >
-            <Text style={styles.buttonText}>Sign In</Text>
-          </TouchableOpacity>
+              <TouchableOpacity
+                onPress={this.handleLogin}
+                style={styles.signinButton}
+              >
+                <Text style={styles.buttonText}>Sign In</Text>
+              </TouchableOpacity>
 
-          {/* <Button
+              {/* <Button
             onPress={() => Linking.openURL('mailto:support@example.com')}
             title="support@example.com"
           /> */}
 
-          <Text style={styles.font12} onPress={this.handlePasswordLink}>
-            Forgot Password?
-          </Text>
-          <View style={styles.loginGap} />
-          <Text
-            style={styles.font25}
-            onPress={() => this.setState({ firsLaunch: true })}
-          >
-            Don't have an account?
-          </Text>
-        </View>
+              <Text style={styles.font12} onPress={this.handlePasswordLink}>
+                Forgot Password?
+              </Text>
+              <View style={styles.loginGap} />
+              <Text
+                style={styles.font25}
+                onPress={() => this.setState({ firsLaunch: true })}
+              >
+                Don't have an account?
+              </Text>
+              <ActivityIndicator
+                  style={{
+                    backgroundColor: 'rgba(52, 52, 52, 0.8)',
+                    position: 'absolute',
+                    left: 0,
+                    right: 0,
+                    top: 0,
+                    bottom: 0,
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}
+                />
+            </View>
+          ) : (
+            <View style={styles.container}>
+              <Text
+                style={{
+                  alignSelf: 'flex-start',
+                  color: '#fff',
+                  marginTop: 15,
+                  marginLeft: 40
+                }}
+              >
+                E-MAIL ADDRESS
+              </Text>
+              <TextInput
+                style={styles.textInput}
+                underlineColorAndroid="transparent"
+                placeholder="Enter your email"
+                placeholderTextColor="#58697e"
+                value={this.state.email}
+                autoCapitalize="none"
+                secureTextEntry={false}
+                onChangeText={email => this.setState({ email })}
+              />
+              <Text
+                style={{
+                  alignSelf: 'flex-start',
+                  color: '#fff',
+                  marginTop: 15,
+                  marginLeft: 40
+                }}
+              >
+                PASSWORD
+              </Text>
+              <TextInput
+                style={styles.textInput}
+                underlineColorAndroid="transparent"
+                placeholder="Enter your password"
+                placeholderTextColor="#58697e"
+                value={this.state.password}
+                secureTextEntry={true}
+                onChangeText={password => this.setState({ password })}
+              />
+
+              {/* <CheckBox
+            center={false}
+            containerStyle={{ justifyContent: 'flex-start', backgroundColor: '#2e4158' }}
+            title='Remember Me'
+            checked={this.state.rememberMe}
+          /> */}
+
+              <TouchableOpacity
+                onPress={this.handleLogin}
+                style={styles.signinButton}
+              >
+                <Text style={styles.buttonText}>Sign In</Text>
+              </TouchableOpacity>
+
+              {/* <Button
+            onPress={() => Linking.openURL('mailto:support@example.com')}
+            title="support@example.com"
+          /> */}
+
+              <Text style={styles.font12} onPress={this.handlePasswordLink}>
+                Forgot Password?
+              </Text>
+              <View style={styles.loginGap} />
+              <Text
+                style={styles.font25}
+                onPress={() => this.setState({ firsLaunch: true })}
+              >
+                Don't have an account?
+              </Text>
+            </View>
+          )}
+        </TouchableWithoutFeedback>
       );
     }
   }
