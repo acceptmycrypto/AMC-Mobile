@@ -160,16 +160,18 @@ export default class PostInfo extends React.Component {
     
     let x;
     let a;
+    let z;
 
     if(navigation.getParam("description", "N/A") != "") {
       x = JSON.stringify(navigation.getParam("description", "N/A"))
       a = x.split('"')
+      z = a[10].substring(0, a[10].length - 1);
     }
 
     this.setState({
       deal_id: navigation.getParam('id', 'Data Not Available'),
       deal_name: navigation.getParam("deal_name", "N/A"),
-      description: a[10],
+      description: z,
       featured_deal_image: navigation.getParam("featured_deal_image", "N/A"),
       pay_in_dollar: navigation.getParam("pay_in_dollar", "N/A"),
       pay_in_crypto: navigation.getParam("pay_in_crypto", "N/A")  
@@ -278,6 +280,7 @@ export default class PostInfo extends React.Component {
     console.log("WORK", a);
     console.log("WORK", a.length);
     console.log("WORRKKKKKK", typeof a[10])
+    console.log(a.slice(0,-1))
     // console.log("WORK", a[10].slice(0,a[10].length -1 ));
     // let r = a[10].split()
     // console.log("WORK!!!!!!", r.slice(0,r.length-2));
