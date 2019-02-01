@@ -137,7 +137,7 @@ module.exports = StyleSheet.create({
     borderWidth: 1,
     height: 300,
     borderColor: '#dbd8ce',
-    padding: 10,
+    padding: 10
     // flexDirection: 'row',
   },
   searchPostStyle: {
@@ -155,16 +155,16 @@ module.exports = StyleSheet.create({
     backgroundColor: 'white',
     // borderRadius: 20,
     padding: 7,
-    marginTop: 4,
-    marginBottom: 7,
-    marginLeft: 10,
-    marginRight: 10,
-    fontSize: 15,
-    color: 'black'
+    marginTop: 8,
+    marginBottom: 7
+    // marginLeft: 10,
+    // marginRight: 10,
+    // fontSize: 15,
+    // color: 'black'
   },
   searchBarStyle: {
     backgroundColor: 'white',
-    flexDirection: 'row',
+    flexDirection: 'row'
     // marginTop: 5,
     // marginBottom: 7,
     // marginLeft: 10,

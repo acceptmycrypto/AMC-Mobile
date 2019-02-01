@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import * as React from 'react';
 import {
   StyleSheet,
   Text,
@@ -15,9 +15,8 @@ import {
   SectionList
 } from 'react-native';
 import { Button } from 'react-native-elements';
-// import "./CryptosRanking.css";
 
-class CryptosRankings extends Component {
+export default class CryptosRankings extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -183,7 +182,7 @@ class CryptosRankings extends Component {
             </View>
 
             <View style={styles.searchBarStyle}>
-              <View
+              {/* <View
                 style={{
                   // flex: 1,
                   // width: '95%',
@@ -198,20 +197,22 @@ class CryptosRankings extends Component {
                   // fontSize: 15,
                   // color: 'black'
                 }}
-              >
-                <Image
-                  source={require('../../../assets/images/search-icon.png')}
-                  style={{
-                    height: 20,
-                    width: 50,
-                    resizeMode: 'contain',
-                    backgroundColor: 'white',
-                    marginTop: 8
-                    // marginLeft: 10,
-                    // marginRight: -20
-                  }}
-                />
-              </View>
+              > */}
+              <Image
+                source={require('../../../assets/images/search-icon.png')}
+                style={{
+                  height: 20,
+                  width: 50,
+                  resizeMode: 'contain',
+                  alignSelf: 'center',
+                  justifyContent: 'center',
+                  // backgroundColor: 'white',
+                  // marginTop: 10,
+                  // marginLeft: 10,
+                  marginRight: -10
+                }}
+              />
+              {/* </View> */}
               <TextInput
                 style={styles.searchStyle}
                 underlineColorAndroid="transparent"
@@ -379,7 +380,7 @@ class CryptosRankings extends Component {
             </View>
 
             <View style={styles.searchBarStyle}>
-              <View
+              {/* <View
                 style={{
                   // flex: 1,
                   // width: '95%',
@@ -394,20 +395,22 @@ class CryptosRankings extends Component {
                   // fontSize: 15,
                   // color: 'black'
                 }}
-              >
-                <Image
-                  source={require('../../../assets/images/search-icon.png')}
-                  style={{
-                    height: 20,
-                    width: 50,
-                    resizeMode: 'contain',
-                    backgroundColor: 'white',
-                    marginTop: 8
-                    // marginLeft: 10,
-                    // marginRight: -20
-                  }}
-                />
-              </View>
+              > */}
+              <Image
+                source={require('../../../assets/images/search-icon.png')}
+                style={{
+                  height: 20,
+                  width: 50,
+                  resizeMode: 'contain',
+                  alignSelf: 'center',
+                  justifyContent: 'center',
+                  // backgroundColor: 'white',
+                  // marginTop: 10,
+                  // marginLeft: 10,
+                  marginRight: -10
+                }}
+              />
+              {/* </View> */}
               <TextInput
                 style={styles.searchStyle}
                 underlineColorAndroid="transparent"
@@ -514,156 +517,9 @@ class CryptosRankings extends Component {
                 );
               }}
             />
-
-            {/* <ScrollView>
-            {this.state.cryptosRanking.map(cryptosRankingInfo => {
-              console.log(cryptosRankingInfo);
-              return (
-                <TouchableOpacity
-                  style={styles.postStyle}
-                  key={cryptosRankingInfo.id}
-                  onPress={() => this.viewPost(cryptosRankingInfo.id)}
-                >
-                  <Image
-                    style={{ width: 150, height: 150 }}
-                    source={{ url: cryptosRankingInfo.crypto_logo }}
-                  />
-                  <View style={{ marginLeft: 20, flex: 1 }}>
-                    <Text style={styles.textStyle}>
-                      {cryptosRankingInfo.title}
-                    </Text>
-                    <Text>{cryptosRankingInfo.information}</Text>
-                    <TouchableOpacity
-                      style={{
-                        alignContent: 'flex-end',
-                        marginLeft: 120,
-                        marginTop: 10
-                      }}
-                      onPress={this.buyPost}
-                    >
-                      <Text style={styles.buyButtonStyle}>
-                        {'$' + cryptosRankingInfo.pay_in_crypto}
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-                </TouchableOpacity>
-              );
-            })}
-          </ScrollView> */}
           </View>
         );
       }
-    }
-
-    {
-      /* <Text style={{ flex: 1, flexDirection: 'row' }}>
-          # Cryptocurrency Venues Price $
-        </Text>
-        <FlatList
-          data={this.state.cryptosRanking}
-          keyExtractor={this._keyExtractor}
-          renderItem={({ crypto, i }) => {
-            console.log(`Item = ${JSON.stringify(crypto)}, index = ${i}`);
-            // console.log(crypto, i);
-            return (
-              <View style={{ flexDirection: 'row' }}>
-                <TouchableOpacity
-                style={styles.postStyle}
-                key={crypto + i}
-                // onPress={() => this.viewPost(item)}
-              >
-              <Text>{i + 1}</Text>
-                <Image
-                  style={{ width: 150, height: 150 }}
-                  source={{ uri: crypto.crypto_logo }}
-                />
-                <View style={{ marginLeft: 20, flex: 1 }}>
-                <Text style={styles.textStyle}>{crypto.crypto_symbol}</Text>
-
-                <View
-                    style={{
-                      flex: 1,
-                      flexDirection: 'column',
-                      justifyContent: 'flex-end'
-                    }}
-                  >
-                    <View style={{ flexDirection: 'row' }}>
-                      <Text
-                        style={{
-                          // alignContent: "flex-end",
-                          opacity: 0.54,
-                          marginLeft: 0,
-                          marginTop: 20
-                        }}
-                      >
-                        Dollar:
-                      </Text>
-
-                      <Text
-                        style={{
-                          // alignContent: "flex-end",
-                          marginLeft: 0,
-                          marginTop: 20,
-                          marginLeft: 10
-                        }}
-                      >
-                        {'$' + item.pay_in_dollar}
-                      </Text>
-                    </View>
-
-                    <View style={{ flexDirection: 'row' }}>
-                      <Text
-                        style={{
-                          // alignContent: "flex-end",
-                          opacity: 0.54,
-                          marginLeft: 0,
-                          marginTop: 20
-                        }}
-                      >
-                        Crypto:
-                      </Text>
-
-                      <Text
-                        style={{
-                          // alignContent: "flex-end",
-                          color: 'green',
-                          marginLeft: 0,
-                          marginTop: 20,
-                          marginLeft: 10
-                        }}
-                      >
-                        {'$' + item.pay_in_crypto}
-                      </Text>
-
-                      <Text
-                        style={{
-                          // alignContent: "flex-end",
-                          fontSize: 11,
-                          color: 'green',
-                          marginLeft: 0,
-                          marginTop: 20,
-                          marginLeft: 10,
-                          borderWidth: 2,
-                          borderColor: 'green',
-                          borderRadius: 5
-                        }}
-                      >
-                        {' ' +
-                          this.convertToPercentage(
-                            item.pay_in_dollar,
-                            item.pay_in_crypto
-                          ) +
-                          '% OFF '}
-                      </Text>
-                    </View>
-                  </View>
-                </View>
-                </TouchableOpacity>
-              </View>
-            );
-          }}
-        />
-        } */
     }
   }
 }
@@ -699,31 +555,24 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   },
   searchBarStyle: {
+    backgroundColor: 'white',
     flexDirection: 'row',
-    marginTop: 5
+    marginLeft: 10,
+    marginRight: 10
   },
   searchStyle: {
-    // backgroundColor: "#2e4158",
-    // padding: 8,
-    // marginBottom: 5,
-    // marginLeft: 5,
-    // width: '100%',
-    // height: 45,
-
-    // height: 35,
     flex: 1,
-    // width: '95%',
+    flexDirection: 'row',
+    // borderWidth: 1,
+    // borderColor: '#445366',
     backgroundColor: 'white',
-    borderBottomWidth: 1,
-    borderColor: '#445366',
-    padding: 10,
-    marginTop: 2,
-    // marginBottom: 5,
-    marginLeft: 10,
-    marginRight: 10,
-    fontSize: 15,
-    color: 'black'
+    // borderRadius: 20,
+    padding: 5,
+    marginTop: 6,
+    marginBottom: 5
+    // marginLeft: 10,
+    // marginRight: 10,
+    // fontSize: 15,
+    // color: 'black'
   }
 });
-
-export default CryptosRankings;

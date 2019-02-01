@@ -79,7 +79,7 @@ export default class DealsCheckout extends React.Component {
       paymentReceived: false,
       paymentSelected: false
     });
-    this.props.navigation.navigate('Deals', {});
+    this.props.navigation.navigate('Home', {});
   }
 
   changePayment = () => {

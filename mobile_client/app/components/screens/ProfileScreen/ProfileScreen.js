@@ -18,7 +18,8 @@ import {
   TextInput,
   KeyboardAvoidingView,
   ActivityIndicator,
-  Switch
+  Switch,
+  BackHandler
 } from 'react-native';
 import { Ionicons, FontAwesome } from '@expo/vector-icons';
 import { LinearGradient } from 'expo';
