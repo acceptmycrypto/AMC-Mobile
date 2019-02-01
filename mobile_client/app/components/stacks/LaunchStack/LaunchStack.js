@@ -1,10 +1,8 @@
 import * as React from "react";
-// import { Button, Alert } from "react-native";
 import { createStackNavigator } from 'react-navigation';
 import LaunchScreen from '../../screens/LaunchScreen/LaunchScreen';
 import NavStack from '../NavStack/NavStack';
 import LaunchTitle from './LaunchTitle';
-import LogoTitle from '../NavStack/LogoTitle';
 
 const launchHeader = {
   headerTitle: <LaunchTitle />,

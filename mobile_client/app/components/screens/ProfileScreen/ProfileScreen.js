@@ -18,7 +18,8 @@ import {
   TextInput,
   KeyboardAvoidingView,
   ActivityIndicator,
-  Switch
+  Switch,
+  BackHandler
 } from 'react-native';
 import { Ionicons, FontAwesome } from '@expo/vector-icons';
 import { LinearGradient } from 'expo';
@@ -179,6 +180,25 @@ export default class ProfileScreen extends React.Component {
       console.log('NO TOKEN!!!' + error);
     }
   };
+
+  componentDidMount() {
+    console.log('STATE'+JSON.stringify(this.props.navigation.state));
+    BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
+  };
+
+  handleBackPress = () => {
+    if(this.props.navigation.state.routeName !== 'Home'){
+      this.props.navigation.navigate('Home');
+      return true;
+    }else {
+      BackHandler.exitApp();
+      return true;  
+    }
+  }
+
+  componentWillUnmount() {
+    BackHandler.removeEventListener('hardwareBackPress', this.handleBackPress);
+  }
 
   handleLogout = async () => {
     try {

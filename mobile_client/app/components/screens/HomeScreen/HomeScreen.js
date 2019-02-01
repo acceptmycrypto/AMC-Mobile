@@ -18,41 +18,9 @@ import {
   _loadDealItem
 } from '../../../../src/services/DealServices';
 import { Button } from 'react-native-elements';
-// import { _verifier } from "../../../../src/AuthentificationService";
-// import Icon from 'react-native-vector-icons/FontAwesome';
-// import { _loadPosts } from "./PostService";
-// import { Component } from 'react';
-// import { SearchBar } from 'react-native-elements';
 
 // EXTERNAL STYLESHEET
 const styles = require('../../../assets/stylesheet/style');
-
-// class FlatListItem extends Component {
-//   render() {
-//     return(
-//       <View>
-//         <TohomePchableOpacity style={styles.postStyle} key={this.props.item.id}>
-//             <Image
-//               style={{ width: 150, height: 150 }}
-//               source={{ url: this.props.item.featured_deal_image }}
-//             />
-//             <View style={{ marginLeft: 20, flex: 1 }}>
-//               <Text style={styles.textStyle}>{this.props.item.deal_name}</Text>
-//               <Text>{this.props.item.information}</Text>
-
-//                 <Text style={{
-//                   alignContent: "flex-end",
-//                   marginLeft: 120,
-//                   marginTop: 10
-//                 }}>
-//                   {"$" + this.props.item.pay_in_crypto}
-//                 </Text>
-//             </View>
-//         </TouchableOpacity>
-//       </View>
-//     );
-//   }
-// }
 
 export default class Post extends React.Component {
   constructor(props) {
@@ -64,49 +32,29 @@ export default class Post extends React.Component {
       data: {},
       search: '',
       post: '',
-      dealsData: [],
-      categories: [
-        {
-          name: 'Furniture',
-          image:
-            'https://images.pexels.com/photos/667838/pexels-photo-667838.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260'
-        },
-        {
-          name: 'Grocery',
-          image:
-            'https://images.pexels.com/photos/1327211/pexels-photo-1327211.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940'
-        },
-        {
-          name: 'Gift Card',
-          image:
-            'https://images.pexels.com/photos/1471686/pexels-photo-1471686.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940'
-        },
-        {
-          name: 'Pet',
-          image:
-            'https://images.pexels.com/photos/545063/pexels-photo-545063.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940'
-        },
-        {
-          name: 'Charity',
-          image:
-            'https://images.pexels.com/photos/1409716/pexels-photo-1409716.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940'
-        },
-        {
-          name: 'Toy',
-          image:
-            'https://images.pexels.com/photos/591652/play-fun-blocks-block-591652.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940'
-        }
-      ]
+      dealsData: []
     };
   }
 
-  componentDidMount = () => {
+  componentDidMount() {
     this.getDealsData();
-    this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
-      BackHandler.exitApp();
-      return true;
-    });
+    console.log('STATE'+JSON.stringify(this.props.navigation.state));
+    BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
   };
+
+  handleBackPress = () => {
+    if(this.props.navigation.state.routeName !== 'Home'){
+      this.props.navigation.navigate('Home');
+      return true;
+    }else {
+      BackHandler.exitApp();
+      return true;  
+    }
+  }
+
+  componentWillUnmount() {
+    BackHandler.removeEventListener('hardwareBackPress', this.handleBackPress);
+  }
 
   getDealsData = async () => {
     try {
@@ -126,32 +74,8 @@ export default class Post extends React.Component {
     }
   };
 
-  componentWillUnmount() {
-    this.backHandler.remove();
-  }
-
   convertToPercentage = (priceInDollar, priceInCrypto) => {
     return parseInt(((priceInDollar - priceInCrypto) / priceInDollar) * 100);
-  };
-
-  searchPost = async () => {
-    try {
-      const value = await AsyncStorage.getItem('token');
-      if (value !== null) {
-        _loadDeals(value)
-          .then(resJSON => {
-            console.log(resJSON);
-            let searchData = resJSON.deals.filter(postData => {
-              console.log('POST ' + postData);
-              return postData.deal_name.includes(this.state.search);
-            });
-            this.setState({ dealsData: searchData });
-          })
-          .catch(err => console.log(err));
-      }
-    } catch (error) {
-      console.log('TOKEN ERROR' + error);
-    }
   };
 
   viewCategory = category => {
@@ -210,26 +134,6 @@ export default class Post extends React.Component {
             />
           </TouchableOpacity>
           <ScrollView horizontal={true}>
-            {/* <FlatList
-            data={this.state.categories}
-            keyExtractor={this._keyExtractor}
-            horizontal={true}
-            renderItem={({ item, index }) => {
-              let pic = `../../../assets/images/categories/${item}.jpeg`;
-              console.log('PIX' + JSON.stringify(item));
-              <View>
-                <TouchableOpacity
-                  style={styles.homePostStyle}
-                  onPress={() => this.viewCategory(item.name)}
-                >
-                  <Image
-                    style={{ width: 150, height: 150, borderRadius: 20 }}
-                    source={{ uri: item.image }}
-                  />
-                </TouchableOpacity>
-              </View>;
-            }}
-          /> */}
             <View>
               <TouchableOpacity
                 style={styles.homePostStyle}
@@ -239,17 +143,6 @@ export default class Post extends React.Component {
                   style={{ width: 100, height: 100, borderRadius: 50 }}
                   source={require('../../../assets/images/categories/furniture.jpeg')}
                 />
-                {/* <View
-                  style={{
-                    width: 80,
-                    backgroundColor: 'white',
-                    marginLeft: 10,
-                    marginTop: -25,
-                    // borderWidth: 2,
-                    // borderColor: 'black',
-                    borderRadius: 5
-                  }}
-                > */}
                 <Text
                   style={{
                     alignSelf: 'center',
@@ -412,7 +305,7 @@ export default class Post extends React.Component {
                         style={{
                           width: 80,
                           backgroundColor: 'white',
-                          marginLeft: 10,
+                          marginLeft: 5,
                           marginTop: -25,
                           borderWidth: 2,
                           borderColor: 'red',
@@ -483,7 +376,7 @@ export default class Post extends React.Component {
                         style={{
                           width: 80,
                           backgroundColor: 'white',
-                          marginLeft: 10,
+                          marginLeft: 5,
                           marginTop: -25,
                           borderWidth: 2,
                           borderColor: 'red',
@@ -554,7 +447,7 @@ export default class Post extends React.Component {
                         style={{
                           width: 80,
                           backgroundColor: 'white',
-                          marginLeft: 10,
+                          marginLeft: 5,
                           marginTop: -25,
                           borderWidth: 2,
                           borderColor: 'red',
@@ -625,7 +518,7 @@ export default class Post extends React.Component {
                         style={{
                           width: 80,
                           backgroundColor: 'white',
-                          marginLeft: 10,
+                          marginLeft: 5,
                           marginTop: -25,
                           borderWidth: 2,
                           borderColor: 'red',
@@ -696,7 +589,7 @@ export default class Post extends React.Component {
                         style={{
                           width: 80,
                           backgroundColor: 'white',
-                          marginLeft: 10,
+                          marginLeft: 5,
                           marginTop: -25,
                           borderWidth: 2,
                           borderColor: 'red',
@@ -767,7 +660,7 @@ export default class Post extends React.Component {
                         style={{
                           width: 80,
                           backgroundColor: 'white',
-                          marginLeft: 10,
+                          marginLeft: 5,
                           marginTop: -25,
                           borderWidth: 2,
                           borderColor: 'red',
@@ -795,60 +688,8 @@ export default class Post extends React.Component {
               }
             }}
           />
-
-          {/*}
-          <TouchableOpacity
-            style={{
-            borderWidth:1,
-            borderColor: '#2e4158',
-            alignItems:'center',
-            justifyContent:'center',
-            width:70,
-            height:70,
-            position: 'absolute',
-            bottom: 0,
-            marginLeft: 10,
-            marginBottom: 10,
-            backgroundColor:'#2e4158',
-            borderRadius:100,
-            }}
-            onPress={() => this.props.navigation.navigate("AddPost")}
-           >
-            <Icon name="plus"  size={30} color="#fff" />
-          </TouchableOpacity> */}
         </ScrollView>
       );
     }
   }
-}
-
-// const styles = StyleSheet.create({
-// container: {
-//   flex: 1,
-//   backgroundColor: '#2e4158',
-//   alignSelf: 'stretch',
-//   flexDirection: 'column'
-// },
-//   searchButtonStyle: {
-//     backgroundColor: 'orange',
-//     width: 50,
-//     height: 45,
-//     alignContent: 'center',
-//     borderRadius: 5
-//   },
-//   buyButtonStyle: {
-//     color: '#fff',
-//     fontSize: 20,
-//     fontWeight: 'bold',
-//     borderRadius: 10,
-//     backgroundColor: '#2e4158',
-//     padding: 10,
-//     flex: 1,
-//     textAlign: 'center'
-//   }
-// });
-{
-  /*<FlatListItem item={item} index={index}>
-              
-              </FlatListItem>);*/
 }
