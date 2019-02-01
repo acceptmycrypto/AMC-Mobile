@@ -227,13 +227,8 @@ export default class DealsCheckout extends React.Component {
 
       cryptos.map(crypto => {
         let optionObj = {};
-        optionObj.value = {
-          crypto_symbol: crypto.crypto_symbol,
-          crypto_name: crypto.crypto_metadata_name
-        };
-        optionObj.label =
-          crypto.crypto_metadata_name + " (" + crypto.crypto_symbol + ")";
-
+        optionObj.value = { crypto_symbol: crypto.crypto_symbol, crypto_name: crypto.crypto_metadata_name };
+        optionObj.label = crypto.crypto_metadata_name + " (" + crypto.crypto_symbol + ")";
         cryptoOptions.push(optionObj);
       });
       this.setState({ cryptoOptions });

@@ -24,14 +24,10 @@ import {
   _verifier,
   _loadCryptocurrencies
 } from '../../../../src/services/AuthService';
-import NavStack from '../../stacks/NavStack/NavStack';
-import _SplashScreen from './SplashScreen';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview';
 import CustomMultiPicker from 'react-native-multiple-select-list';
-import { CheckBox } from 'react-native-elements';
+// import { CheckBox } from 'react-native-elements';
 import Modal from 'react-native-modal';
-// import Login from '../LaunchScreen/components/Login';
-// import Register from '../LaunchScreen/components/Register';
 
 // EXTERNAL STYLESHEET
 const styles = require('../../../assets/stylesheet/style');
@@ -687,17 +683,17 @@ export default class LaunchScreen extends React.Component {
                 Don't have an account?
               </Text>
               <ActivityIndicator
-                  style={{
-                    backgroundColor: 'rgba(52, 52, 52, 0.8)',
-                    position: 'absolute',
-                    left: 0,
-                    right: 0,
-                    top: 0,
-                    bottom: 0,
-                    alignItems: 'center',
-                    justifyContent: 'center'
-                  }}
-                />
+                style={{
+                  backgroundColor: 'rgba(52, 52, 52, 0.8)',
+                  position: 'absolute',
+                  left: 0,
+                  right: 0,
+                  top: 0,
+                  bottom: 0,
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}
+              />
             </View>
           ) : (
             <View style={styles.container}>

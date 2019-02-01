@@ -1,32 +1,37 @@
 import * as React from 'react';
+import { Platform } from 'react-native';
 import {
   createStackNavigator,
   createBottomTabNavigator
 } from 'react-navigation';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import Home from '../../screens/HomeScreen/HomeScreen'
-import Search from '../../screens/SearchScreen/SearchScreen'
-import Venues from '../../screens/VenuesScreen/VenuesScreen'
+import Home from '../../screens/HomeScreen/HomeScreen';
+import Search from '../../screens/SearchScreen/SearchScreen';
+import Venues from '../../screens/VenuesScreen/VenuesScreen';
 import DealsScreen from '../../screens/DealsScreen/DealsScreen';
 import DealsInfo from '../../screens/DealsScreen/DealsInfo';
 import DealsCheckout from '../../screens/DealsScreen/DealsCheckout';
 import ProfileScreen from '../../screens/ProfileScreen/ProfileScreen';
 import LogoTitle from './LogoTitle';
 import SearchTitle from './SearchTitle';
-import Ionicons from '@expo/vector-icons/Ionicons';
 import Feather from '@expo/vector-icons/Feather';
 
 const header = {
   headerTitle: <LogoTitle />,
   headerStyle: {
-    backgroundColor: '#66dac7',
+    backgroundColor: '#66dac7'
   }
 };
+
+var color = '#66dac7';
+if (Platform.OS === 'android') {
+  var color = 'white';
+}
 
 const HomeHeader = {
   headerTitle: <SearchTitle />,
   headerStyle: {
-    backgroundColor: '#66dac7',
+    backgroundColor: color
   }
 };
 
@@ -38,12 +43,12 @@ const HomeStack = createStackNavigator(
     DealsScreen: {
       screen: DealsScreen,
       navigationOptions: header,
-      headerLayoutPreset: 'center',
+      headerLayoutPreset: 'center'
     },
     DealsInfo: {
       screen: DealsInfo,
       navigationOptions: header,
-      headerLayoutPreset: 'center',
+      headerLayoutPreset: 'center'
     },
     DealsCheckout: {
       screen: DealsCheckout,
@@ -58,7 +63,7 @@ const HomeStack = createStackNavigator(
   },
   {
     navigationOptions: HomeHeader,
-    headerLayoutPreset: 'center',
+    headerLayoutPreset: 'center'
   }
 );
 
@@ -70,7 +75,7 @@ const SearchStack = createStackNavigator(
   },
   {
     navigationOptions: header,
-    headerLayoutPreset: 'center',
+    headerLayoutPreset: 'center'
   }
 );
 
@@ -82,7 +87,7 @@ const VenuesStack = createStackNavigator(
   },
   {
     navigationOptions: header,
-    headerLayoutPreset: 'center',
+    headerLayoutPreset: 'center'
   }
 );
 
@@ -123,7 +128,7 @@ export default createBottomTabNavigator(
         let iconName;
         if (routeName === 'Home') {
           iconName = `home`;
-        }else if (routeName === 'Search') {
+        } else if (routeName === 'Search') {
           return (
             <Feather
               name={'search'}
@@ -132,9 +137,9 @@ export default createBottomTabNavigator(
               style={{ backgroundColor: '#2e4158' }}
             />
           );
-        }else if (routeName === 'Venues') {
+        } else if (routeName === 'Venues') {
           iconName = 'chart-arc';
-        }else if (routeName === 'Profile') {
+        } else if (routeName === 'Profile') {
           iconName = `account-box`;
         }
         return (
