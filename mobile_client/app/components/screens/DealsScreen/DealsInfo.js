@@ -205,30 +205,40 @@ export default class PostInfo extends React.Component {
   }
 
   checkOutPage = (post,theView) => {
-    console.log("HELLOOOOOOO LINE 141 "+ JSON.stringify(theView))
-    this.scrollView.scrollToEnd();
-    if (this.state.color == "" && this.state.size == "") {
-      this.setState({checkedbox1: false, checkedbox2: false});
-    }
-    else if(this.state.size == "") {
-      this.setState({checkedbox1: false, checkedbox2: true});
-    }
-    else if (this.state.color == "") {
-      this.setState({checkedbox2: false, checkedbox1: true});
-    } 
-    else if(this.state.size != "" && this.state.color != "") {
-      this.setState({checkedbox1: true, checkedbox2: true});
-      this.props.navigation.navigate('DealsCheckout', {
-        deal_id: this.state.deal_id,
-        deal_name: this.state.deal_name,
-        description: this.state.deal_description,
-        featured_deal_image: this.state.featured_deal_image,
-        pay_in_dollar: this.state.pay_in_dollar,
-        pay_in_crypto: this.state.pay_in_crypto,
-        size: this.state.size,
-        color: this.state.color,
-      });
-    }
+    // console.log("HELLOOOOOOO LINE 141 "+ JSON.stringify(theView))
+    // this.scrollView.scrollToEnd();
+    // if (this.state.color == "" && this.state.size == "") {
+    //   this.setState({checkedbox1: false, checkedbox2: false});
+    // }
+    // else if(this.state.size == "") {
+    //   this.setState({checkedbox1: false, checkedbox2: true});
+    // }
+    // else if (this.state.color == "") {
+    //   this.setState({checkedbox2: false, checkedbox1: true});
+    // } 
+    // else if(this.state.size != "" && this.state.color != "") {
+    //   this.setState({checkedbox1: true, checkedbox2: true});
+    //   this.props.navigation.navigate('DealsCheckout', {
+    //     deal_id: this.state.deal_id,
+    //     deal_name: this.state.deal_name,
+    //     description: this.state.deal_description,
+    //     featured_deal_image: this.state.featured_deal_image,
+    //     pay_in_dollar: this.state.pay_in_dollar,
+    //     pay_in_crypto: this.state.pay_in_crypto,
+    //     size: this.state.size,
+    //     color: this.state.color,
+    //   });
+    // }
+    this.props.navigation.navigate('DealsCheckout', {
+      deal_id: this.state.deal_id,
+      deal_name: this.state.deal_name,
+      description: this.state.deal_description,
+      featured_deal_image: this.state.featured_deal_image,
+      pay_in_dollar: this.state.pay_in_dollar,
+      pay_in_crypto: this.state.pay_in_crypto,
+      size: this.state.size,
+      color: this.state.color,
+    });
   };
 //   _renderItemWithParallax ({item, index}, parallaxProps) {
 //     return (
