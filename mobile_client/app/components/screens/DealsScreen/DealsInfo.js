@@ -163,9 +163,26 @@ export default class PostInfo extends React.Component {
     let z;
 
     if(navigation.getParam("description", "N/A") != "") {
-      x = JSON.stringify(navigation.getParam("description", "N/A"))
-      a = x.split('"')
-      z = a[10].substring(0, a[10].length - 1);
+      // console.log("DAHSFKJADJSLKFJDSLK;FJLDSKA;JFLK;DSAJFKL;",typeof navigation.getParam("description", "N/A") == 'string')
+      // let y = navigation.getParam("description", "N/A")
+
+      // if(JSON.parse(navigation.getParam("description", "N/A")) == 'object'){
+      try {
+        console.log("ALMOST THERE????", typeof JSON.parse(navigation.getParam("description", "N/A")))
+        x = JSON.stringify(navigation.getParam("description", "N/A"))
+        a = x.split('"')
+        z = a[10].substring(0, a[10].length - 1);
+        JSON.parse(x)!= undefined? a = x.split('"') : z = navigation.getParam("description", "N/A");
+        z = a[10].substring(0, a[10].length - 1); 
+      } catch(err){
+        z = navigation.getParam("description", "N/A")
+      }
+
+      // x = JSON.stringify(navigation.getParam("description", "N/A"))
+      // a = x.split('"')
+      // z = a[10].substring(0, a[10].length - 1);
+      // JSON.parse(x)!= undefined? a = x.split('"') : z = navigation.getParam("description", "N/A");
+      // z = a[10].substring(0, a[10].length - 1);
     }
 
     this.setState({
