@@ -115,7 +115,7 @@ module.exports = StyleSheet.create({
     flexDirection: 'column'
   },
   textStyle: {
-    marginTop: 10,
+    // marginTop: 10,
     fontSize: 15,
     fontWeight: '200'
   },

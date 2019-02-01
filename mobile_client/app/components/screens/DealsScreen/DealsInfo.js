@@ -151,13 +151,32 @@ export default class PostInfo extends React.Component {
       return true;
     });
     const { navigation } = this.props;
+  
+    // Variables to manipulate strings  
+    let x;
+    let a;
+    let z;
+
+    if(navigation.getParam("description", "N/A") != "") {
+      try {
+        console.log("ALMOST THERE????", typeof JSON.parse(navigation.getParam("description", "N/A")))
+        x = JSON.stringify(navigation.getParam("description", "N/A"))
+        a = x.split('"')
+        z = a[10].substring(0, a[10].length - 1);
+        JSON.parse(x)!= undefined? a = x.split('"') : z = navigation.getParam("description", "N/A");
+        z = a[10].substring(0, a[10].length - 1); 
+      } catch(err){
+        z = navigation.getParam("description", "N/A")
+      }
+    }
+
     this.setState({
       deal_id: navigation.getParam('id', 'Data Not Available'),
-      deal_name: navigation.getParam('deal_name', 'N/A'),
-      description: navigation.getParam('description', 'N/A'),
-      featured_deal_image: navigation.getParam('featured_deal_image', 'N/A'),
-      pay_in_dollar: navigation.getParam('pay_in_dollar', 'N/A'),
-      pay_in_crypto: navigation.getParam('pay_in_crypto', 'N/A')
+      deal_name: navigation.getParam("deal_name", "N/A"),
+      description: z,
+      featured_deal_image: navigation.getParam("featured_deal_image", "N/A"),
+      pay_in_dollar: navigation.getParam("pay_in_dollar", "N/A"),
+      pay_in_crypto: navigation.getParam("pay_in_crypto", "N/A")  
     });
 
     // return _loadOnePosts(id).then(resJSON => {
@@ -180,28 +199,41 @@ export default class PostInfo extends React.Component {
     this.backHandler.remove();
   }
 
-  checkOutPage = (post, theView) => {
-    console.log('HELLOOOOOOO LINE 141 ' + JSON.stringify(theView));
-    this.scrollView.scrollToEnd();
-    if (this.state.color == '' && this.state.size == '') {
-      this.setState({ checkedbox1: false, checkedbox2: false });
-    } else if (this.state.size == '') {
-      this.setState({ checkedbox1: false, checkedbox2: true });
-    } else if (this.state.color == '') {
-      this.setState({ checkedbox2: false, checkedbox1: true });
-    } else if (this.state.size != '' && this.state.color != '') {
-      this.setState({ checkedbox1: true, checkedbox2: true });
-      this.props.navigation.navigate('DealsCheckout', {
-        deal_id: this.state.deal_id,
-        deal_name: this.state.deal_name,
-        description: this.state.deal_description,
-        featured_deal_image: this.state.featured_deal_image,
-        pay_in_dollar: this.state.pay_in_dollar,
-        pay_in_crypto: this.state.pay_in_crypto,
-        size: this.state.size,
-        color: this.state.color
-      });
-    }
+  checkOutPage = (post,theView) => {
+    // console.log("HELLOOOOOOO LINE 141 "+ JSON.stringify(theView))
+    // this.scrollView.scrollToEnd();
+    // if (this.state.color == "" && this.state.size == "") {
+    //   this.setState({checkedbox1: false, checkedbox2: false});
+    // }
+    // else if(this.state.size == "") {
+    //   this.setState({checkedbox1: false, checkedbox2: true});
+    // }
+    // else if (this.state.color == "") {
+    //   this.setState({checkedbox2: false, checkedbox1: true});
+    // } 
+    // else if(this.state.size != "" && this.state.color != "") {
+    //   this.setState({checkedbox1: true, checkedbox2: true});
+    //   this.props.navigation.navigate('DealsCheckout', {
+    //     deal_id: this.state.deal_id,
+    //     deal_name: this.state.deal_name,
+    //     description: this.state.deal_description,
+    //     featured_deal_image: this.state.featured_deal_image,
+    //     pay_in_dollar: this.state.pay_in_dollar,
+    //     pay_in_crypto: this.state.pay_in_crypto,
+    //     size: this.state.size,
+    //     color: this.state.color,
+    //   });
+    // }
+    this.props.navigation.navigate('DealsCheckout', {
+      deal_id: this.state.deal_id,
+      deal_name: this.state.deal_name,
+      description: this.state.deal_description,
+      featured_deal_image: this.state.featured_deal_image,
+      pay_in_dollar: this.state.pay_in_dollar,
+      pay_in_crypto: this.state.pay_in_crypto,
+      size: this.state.size,
+      color: this.state.color,
+    });
   };
   //   _renderItemWithParallax ({item, index}, parallaxProps) {
   //     return (
@@ -243,7 +275,6 @@ export default class PostInfo extends React.Component {
   }
 
   render() {
-    console.log('-----Line 248-----', this.state);
     let colors = this.state.colorOption;
     let size = this.state.sizeOption;
     return (
@@ -396,35 +427,29 @@ export default class PostInfo extends React.Component {
               </TouchableOpacity>
             </View>
           </View>
-          <View
-            style={{
-              flex: 3,
-              flexDirection: 'row',
-              padding: 10
-              // borderBottomColor: '#dbd8ce',
-              // borderBottomWidth: 1,
-            }}
-          >
-            <Text
-              style={{
-                width: 110,
-                textAlign: 'center',
-                fontSize: 14,
-                color: 'blue'
-              }}
-            >
-              FREE shipping
+          {/* <View style={{ 
+            flex: 3,
+            flexDirection: 'row',
+            padding: 10,
+            // borderBottomColor: '#dbd8ce',
+            // borderBottomWidth: 1,
+          }}>
+            <Text style={{
+              width: 110,
+              textAlign: 'center', 
+              fontSize: 14,
+              color: 'blue',
+            }}>
+                    FREE shipping
             </Text>
-          </View>
-          <View
-            style={{
-              flex: 3,
-              flexDirection: 'row',
-              padding: 10,
-              borderBottomColor: '#dbd8ce',
-              borderBottomWidth: 1
-            }}
-          >
+          </View> */}
+          <View style={{ 
+            flex: 3,
+            flexDirection: 'row',
+            padding: 10,
+            borderBottomColor: '#dbd8ce',
+            borderBottomWidth: 1,
+          }}>
             <View style={{ flexDirection: 'row', padding: 10, flex: 3 }}>
               <Text
                 style={{
@@ -439,20 +464,10 @@ export default class PostInfo extends React.Component {
               </Text>
             </View>
           </View>
-
-          <View
-            style={{
-              marginTop: 20,
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              borderBottomColor: '#dbd8ce',
-              borderBottomWidth: 1
-            }}
-          >
-            <View style={{ marginLeft: 20, width: 150 }}>
-              {this.state.checkedbox1 == false && (
-                <Text style={{ color: 'red' }}>Please Select A Size</Text>
-              )}
+          {/* <View style={{marginTop: 20, flexDirection: 'row', justifyContent: 'space-between', borderBottomColor: '#dbd8ce',
+              borderBottomWidth: 1, }}>     
+            <View style={{marginLeft: 20, width: 150}}>
+            {this.state.checkedbox1 == false && <Text style={{color: 'red'}}>Please Select A Size</Text>}
               <Dropdown
                 label="Select a size..."
                 data={size}
@@ -476,7 +491,7 @@ export default class PostInfo extends React.Component {
                 style={{ width: 50 }}
               />
             </View>
-          </View>
+          </View>         */}
           <KeyboardAvoidingView behavior="padding">
             <View
               style={{

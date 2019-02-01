@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from "react";
 import {
   StyleSheet,
   Text,
@@ -105,7 +105,7 @@ export default class DealsCheckout extends React.Component {
   }
 
   getQRCode = async () => {
-    const value = await AsyncStorage.getItem('token');
+    const value = await AsyncStorage.getItem("token");
     let token = JSON.parse(JSON.stringify(value));
     console.log("what are you token? : " + token);
 
@@ -122,7 +122,7 @@ export default class DealsCheckout extends React.Component {
     let selectedColor = this.state.color;
 
     try {
-      if(token !== null){
+      if (token !== null) {
         return _fetchTransactionInfo(
           crypto_name,
           crypto_symbol,
@@ -136,9 +136,9 @@ export default class DealsCheckout extends React.Component {
           fullName,
           selectedSize,
           selectedColor
-          )
-          .then(transactionData => {
-            this.setState({transactionData});
+        ).then(
+          transactionData => {
+            this.setState({ transactionData });
             console.log(this.state.transactionData);
             console.log(this.state.transactionData.timeout);
             this.setState({timeout: this.state.transactionData.timeout});
@@ -147,21 +147,21 @@ export default class DealsCheckout extends React.Component {
     }catch (error) {
       console.log(error);
     }
-  }
+  };
 
   checkToken = async () => {
     try {
-      const value = await AsyncStorage.getItem('token');
+      const value = await AsyncStorage.getItem("token");
       if (value !== null) {
         // let token = JSON.stringify(value);
-        console.log('TOKEN!!' + value);
+        console.log("TOKEN!!" + value);
         return _verifier(value).then(res => {
           let tokenStr = JSON.stringify(res.verifiedToken);
           let userData = JSON.parse(tokenStr);
-          console.log('STRING RETURN!!' + tokenStr);
-          console.log('PARSED RETURN!!' + userData);
-          if (userData.name === 'TokenExpiredError') {
-            Alert.alert('Session has expired');
+          console.log("STRING RETURN!!" + tokenStr);
+          console.log("PARSED RETURN!!" + userData);
+          if (userData.name === "TokenExpiredError") {
+            Alert.alert("Session has expired");
           } else {
             this.setState({
               isLoggedIn: userData.isLoggedIn,
@@ -176,12 +176,12 @@ export default class DealsCheckout extends React.Component {
         });
       }
     } catch (error) {
-      console.log('NO TOKEN!!!' + error);
+      console.log("NO TOKEN!!!" + error);
     }
   };
 
   componentDidMount() {
-    this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+    this.backHandler = BackHandler.addEventListener("hardwareBackPress", () => {
       this.props.navigation.goBack();
       return true;
     });
@@ -353,12 +353,15 @@ export default class DealsCheckout extends React.Component {
                               <Text
                                 style={{fontWeight: 'bold'}}
                                 selectable={true}
-                                onPress={() => {Clipboard.setString(
-                                  this.state.transactionData.txn_id);
-                                  Alert.alert('Payment Address has been copied, please proceed to your Crypto Wallet to Pay')
-                                  }
-                                }
-                               >
+                                onPress={() => {
+                                  Clipboard.setString(
+                                    this.state.transactionData.txn_id
+                                  );
+                                  Alert.alert(
+                                    "Payment Address has been copied, please proceed to your Crypto Wallet to Pay"
+                                  );
+                                }}
+                              >
                                 {this.state.transactionData.txn_id}
                               </Text>
                             </Text>
@@ -465,8 +468,8 @@ const styles = StyleSheet.create({
   },
   inputStyle: {
     borderWidth: 1,
-    borderColor: '#2e4158',
-    backgroundColor: 'white',
+    borderColor: "#2e4158",
+    backgroundColor: "white",
     marginBottom: 5,
     height: 40,
     paddingHorizontal: 5,
