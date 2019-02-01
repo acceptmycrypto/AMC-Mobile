@@ -1,27 +1,78 @@
 import * as React from 'react';
+import { Platform } from 'react-native';
 import {
   createStackNavigator,
   createBottomTabNavigator
 } from 'react-navigation';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import Venues from '../../screens/VenuesScreen/VenuesScreen'
-import Deals from '../../screens/DealsScreen/DealsScreen';
+import Home from '../../screens/HomeScreen/HomeScreen';
+import Search from '../../screens/SearchScreen/SearchScreen';
+import Venues from '../../screens/VenuesScreen/VenuesScreen';
+import DealsScreen from '../../screens/DealsScreen/DealsScreen';
 import DealsInfo from '../../screens/DealsScreen/DealsInfo';
-import AddPost from '../../screens/DealsScreen/AddPost';
+import DealsCheckout from '../../screens/DealsScreen/DealsCheckout';
 import ProfileScreen from '../../screens/ProfileScreen/ProfileScreen';
 import LogoTitle from './LogoTitle';
+import SearchTitle from './SearchTitle';
+import Feather from '@expo/vector-icons/Feather';
 
 const header = {
   headerTitle: <LogoTitle />,
   headerStyle: {
-    backgroundColor: '#66dac7',
-    // alignSelf: 'center'
-  },
-  // headerTintColor: '#fff',
-  // headerTitleStyle: {
-  //   alignSelf: 'center'
-  // }
+    backgroundColor: '#66dac7'
+  }
 };
+
+var color = '#66dac7';
+if (Platform.OS === 'android') {
+  var color = 'white';
+}
+
+const HomeHeader = {
+  headerTitle: <SearchTitle />,
+  headerStyle: {
+    backgroundColor: color
+  }
+};
+
+const HomeStack = createStackNavigator(
+  {
+    Home: {
+      screen: Home
+    },
+    DealsScreen: {
+      screen: DealsScreen,
+      navigationOptions: header,
+      headerLayoutPreset: 'center'
+    },
+    DealsInfo: {
+      screen: DealsInfo,
+      navigationOptions: header,
+      headerLayoutPreset: 'center'
+    },
+    DealsCheckout: {
+      screen: DealsCheckout,
+      navigationOptions: header,
+      headerLayoutPreset: 'center'
+    }
+  },
+  {
+    navigationOptions: HomeHeader,
+    headerLayoutPreset: 'center'
+  }
+);
+
+const SearchStack = createStackNavigator(
+  {
+    Search: {
+      screen: Search
+    }
+  },
+  {
+    navigationOptions: header,
+    headerLayoutPreset: 'center'
+  }
+);
 
 const VenuesStack = createStackNavigator(
   {
@@ -35,23 +86,23 @@ const VenuesStack = createStackNavigator(
   }
 );
 
-const DealsStack = createStackNavigator(
-  {
-    Deals: {
-      screen: Deals
-    },
-    DealsInfo: {
-      screen: DealsInfo
-    },
-    AddPost: {
-      screen: AddPost
-    }
-  },
-  {
-    navigationOptions: header,
-    headerLayoutPreset: 'center'
-  }
-);
+// const DealsStack = createStackNavigator(
+//   {
+//     Deals: {
+//       screen: Deals
+//     },
+//     DealsInfo: {
+//       screen: DealsInfo
+//     },
+//     DealsCheckout: {
+//       screen: DealsCheckout,
+//     }
+//   },
+//   {
+//     navigationOptions: header,
+//     headerLayoutPreset: 'center'
+//   }
+// );
 
 const ProfileStack = createStackNavigator(
   {
@@ -67,21 +118,32 @@ const ProfileStack = createStackNavigator(
 
 export default createBottomTabNavigator(
   {
+    Home: HomeStack,
+    Search: SearchStack,
     Venues: VenuesStack,
-    Deals: DealsStack,
-    Profile: ProfileStack,
+    // Deals: DealsStack,
+    Profile: ProfileStack
   },
   {
     navigationOptions: ({ navigation }) => ({
       tabBarIcon: ({ focused, horizontal, tintColor }) => {
         const { routeName } = navigation.state;
         let iconName;
-        if (routeName === 'Venues') {
-          iconName = `home${focused ? '' : '-outline'}`;
-        } else if (routeName === 'Deals') {
-          iconName = `${focused ? 'tag-multiple' : 'tag-outline'}`;
+        if (routeName === 'Home') {
+          iconName = `home`;
+        } else if (routeName === 'Search') {
+          return (
+            <Feather
+              name={'search'}
+              size={horizontal ? 20 : 25}
+              color={tintColor}
+              style={{ backgroundColor: '#2e4158' }}
+            />
+          );
+        } else if (routeName === 'Venues') {
+          iconName = 'chart-arc';
         } else if (routeName === 'Profile') {
-          iconName = `account-box${focused ? '' : '-outline'}`;
+          iconName = `account-box`;
         }
         return (
           <MaterialCommunityIcons

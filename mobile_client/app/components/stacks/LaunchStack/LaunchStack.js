@@ -1,23 +1,33 @@
-// import * as React from "react";
-// import { Button, Alert } from "react-native";
+import * as React from "react";
 import { createStackNavigator } from 'react-navigation';
 import LaunchScreen from '../../screens/LaunchScreen/LaunchScreen';
 import NavStack from '../NavStack/NavStack';
+import LaunchTitle from './LaunchTitle';
+
+const launchHeader = {
+  headerTitle: <LaunchTitle />,
+  headerStyle: {
+    backgroundColor: '#66dac7',
+    height: 130
+  }
+};
 
 export default (LaunchStack = createStackNavigator(
   {
     Launch: {
-      screen: LaunchScreen
+      screen: LaunchScreen,
+      navigationOptions: launchHeader,
 	},
     Main: {
-      screen: NavStack
+      screen: NavStack,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: false
+      }
     }
   },
   {
     mode: 'modal',
-    headerMode: 'none',
-    navigationOptions: {
-      gesturesEnabled: false
-    }
+    headerLayoutPreset: 'center'
   }
 ));

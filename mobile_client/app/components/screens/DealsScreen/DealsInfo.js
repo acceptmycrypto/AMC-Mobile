@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   StyleSheet,
   Text,
@@ -11,32 +11,92 @@ import {
   FlatList,
   ScrollView,
   AsyncStorage,
-  Picker
-} from "react-native";
-import { Button } from "react-native-elements";
-import { _verifier } from "../../../../src/AuthentificationService";
-import Icon from "react-native-vector-icons/FontAwesome";
+  KeyboardAvoidingView,
+  BackHandler,
+  Share
+} from 'react-native';
+import { Button } from 'react-native-elements';
+import { _verifier } from '../../../../src/services/AuthService';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import { _loadOnePosts } from './DealsService';
 import { LinearGradient } from 'expo';
-
+import { Dropdown } from 'react-native-material-dropdown';
+// import Carousel  from 'react-native-snap-carousel';
+// import SliderEntry from './SliderEntry';
 export default class PostInfo extends React.Component {
-
   constructor(props) {
     super(props);
+    this._shareMessage = this._shareMessage.bind(this);
+    // this._showResult = this._showResult.bind(this);
+
     this.state = {
+      result: '',
       isLoading: false,
       data: {},
-      id: "",
-      deal_name:"",
-      description:"",
-      featured_deal_image:"",
-      pay_in_dollar:"",
-      pay_in_crypto:""
-    }
-  };
-  
+      id: '',
+      deal_id: '',
+      deal_name: '',
+      description: '',
+      featured_deal_image: '',
+      pay_in_dollar: '',
+      pay_in_crypto: '',
+      size: '',
+      color: '',
+      checkedbox1: null,
+      checkedbox2: null,
+      sizeOption: [{ value: 'Small' }, { value: 'Medium' }, { value: 'Large' }],
+      colorOption: [{ value: 'Red' }, { value: 'Blue' }, { value: 'Green' }]
+      //   images: [
+      //     {
+      //         title: 'Beautiful and dramatic Antelope Canyon',
+      //         subtitle: 'Lorem ipsum dolor sit amet et nuncat mergitur',
+      //         illustration: 'https://i.imgur.com/UYiroysl.jpg'
+      //     },
+      //     {
+      //         title: 'Earlier this morning, NYC',
+      //         subtitle: 'Lorem ipsum dolor sit amet',
+      //         illustration: 'https://i.imgur.com/UPrs1EWl.jpg'
+      //     },
+      //     {
+      //         title: 'White Pocket Sunset',
+      //         subtitle: 'Lorem ipsum dolor sit amet et nuncat ',
+      //         illustration: 'https://i.imgur.com/MABUbpDl.jpg'
+      //     },
+      //     {
+      //         title: 'Acrocorinth, Greece',
+      //         subtitle: 'Lorem ipsum dolor sit amet et nuncat mergitur',
+      //         illustration: 'https://i.imgur.com/KZsmUi2l.jpg'
+      //     },
+      //     {
+      //         title: 'The lone tree, majestic landscape of New Zealand',
+      //         subtitle: 'Lorem ipsum dolor sit amet',
+      //         illustration: 'https://i.imgur.com/2nCt3Sbl.jpg'
+      //     },
+      //     {
+      //         title: 'Middle Earth, Germany',
+      //         subtitle: 'Lorem ipsum dolor sit amet',
+      //         illustration: 'https://ak1.ostkcdn.com/images/products/9542248/Safavieh-Malone-White-Chrome-Coffee-Table-a94e199e-40dd-42c9-9a08-510c6ab89575.jpg'
+      //     }
+      // ]
+    };
+  }
+
+  // checkOutpage = (post,theView) => {
+  //   console.log("LINE 115 IN POST.JS FILE: " + JSON.stringify(post));
+  //   theView.scrollToEnd();
+  //     this.props.navigation.navigate('DealsInfo', {
+  //       id: post.id,
+  //       deal_name: post.deal_name,
+  //       description: post.deal_description,
+  //       featured_deal_image: post.featured_deal_image,
+  //       pay_in_dollar: post.pay_in_dollar,
+  //       pay_in_crypto: post.pay_in_crypto,
+  //       size: post.size,
+  //       color: post.color
+  //     });
+  // };
+
   checkToken = async () => {
-    
     try {
       const value = await AsyncStorage.getItem('token');
       if (value !== null) {
@@ -76,24 +136,44 @@ export default class PostInfo extends React.Component {
   //     isLoading: false,
   //   })
   // }
-  
+
   convertToPercentage = (priceInDollar, priceInCrypto) => {
     return parseInt(((priceInDollar - priceInCrypto) / priceInDollar) * 100);
   };
 
   getSavings = (priceInDollar, priceInCrypto) => {
-    console.log("Line 83 price: " + priceInDollar);
-    console.log("Line 83 price: " + priceInCrypto);
-    console.log(priceInDollar-priceInCrypto)
-    return Math.round((priceInDollar - priceInCrypto) *  100)/ 100;
+    return Math.round((priceInDollar - priceInCrypto) * 100) / 100;
   };
 
   componentDidMount() {
+    this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+      this.props.navigation.goBack();
+      return true;
+    });
     const { navigation } = this.props;
+  
+    // Variables to manipulate strings  
+    let x;
+    let a;
+    let z;
+
+    if(navigation.getParam("description", "N/A") != "") {
+      try {
+        console.log("ALMOST THERE????", typeof JSON.parse(navigation.getParam("description", "N/A")))
+        x = JSON.stringify(navigation.getParam("description", "N/A"))
+        a = x.split('"')
+        z = a[10].substring(0, a[10].length - 1);
+        JSON.parse(x)!= undefined? a = x.split('"') : z = navigation.getParam("description", "N/A");
+        z = a[10].substring(0, a[10].length - 1); 
+      } catch(err){
+        z = navigation.getParam("description", "N/A")
+      }
+    }
+
     this.setState({
-      id: navigation.getParam('id', 'Data Not Available'),
+      deal_id: navigation.getParam('id', 'Data Not Available'),
       deal_name: navigation.getParam("deal_name", "N/A"),
-      description: navigation.getParam("description", "N/A"),
+      description: z,
       featured_deal_image: navigation.getParam("featured_deal_image", "N/A"),
       pay_in_dollar: navigation.getParam("pay_in_dollar", "N/A"),
       pay_in_crypto: navigation.getParam("pay_in_crypto", "N/A")  
@@ -115,184 +195,345 @@ export default class PostInfo extends React.Component {
     // });
   }
 
-  checkOutPage = post => {
-    console.log("LINE 115 IN POST.JS FILE: " + JSON.stringify(post));
-    this.props.navigation.navigate('AddPost', { 
-      id: post.id,
-      deal_name: post.deal_name,
-      description: post.deal_description,
-      featured_deal_image: post.featured_deal_image,
-      pay_in_dollar: post.pay_in_dollar,
-      pay_in_crypto: post.pay_in_crypto
-     });
+  componentWillUnmount() {
+    this.backHandler.remove();
+  }
+
+  checkOutPage = (post,theView) => {
+    // console.log("HELLOOOOOOO LINE 141 "+ JSON.stringify(theView))
+    // this.scrollView.scrollToEnd();
+    // if (this.state.color == "" && this.state.size == "") {
+    //   this.setState({checkedbox1: false, checkedbox2: false});
+    // }
+    // else if(this.state.size == "") {
+    //   this.setState({checkedbox1: false, checkedbox2: true});
+    // }
+    // else if (this.state.color == "") {
+    //   this.setState({checkedbox2: false, checkedbox1: true});
+    // } 
+    // else if(this.state.size != "" && this.state.color != "") {
+    //   this.setState({checkedbox1: true, checkedbox2: true});
+    //   this.props.navigation.navigate('DealsCheckout', {
+    //     deal_id: this.state.deal_id,
+    //     deal_name: this.state.deal_name,
+    //     description: this.state.deal_description,
+    //     featured_deal_image: this.state.featured_deal_image,
+    //     pay_in_dollar: this.state.pay_in_dollar,
+    //     pay_in_crypto: this.state.pay_in_crypto,
+    //     size: this.state.size,
+    //     color: this.state.color,
+    //   });
+    // }
+    this.props.navigation.navigate('DealsCheckout', {
+      deal_id: this.state.deal_id,
+      deal_name: this.state.deal_name,
+      description: this.state.deal_description,
+      featured_deal_image: this.state.featured_deal_image,
+      pay_in_dollar: this.state.pay_in_dollar,
+      pay_in_crypto: this.state.pay_in_crypto,
+      size: this.state.size,
+      color: this.state.color,
+    });
   };
+  //   _renderItemWithParallax ({item, index}, parallaxProps) {
+  //     return (
+  //         <SliderEntry
+  //           data={item}
+  //           even={(index + 1) % 2 === 0}
+  //           parallax={true}
+  //           parallaxProps={parallaxProps}
+  //         />
+  //     );
+  // }
+  _renderItem({ item, index }) {
+    console.log('CHECKING IMAGES!!!!!!');
+    console.log(item);
+    console.log('CHECKING IMAGES!!!!!!');
+    return (
+      <View>
+        <Text>{item.title} </Text>
+      </View>
+    );
+  }
+
+  _shareMessage() {
+    // Save this commented link for when they update webpage and add deals id
+    // let link = 'https://acceptmycrypto.herokuapp.com/feed/deals/'+this.state.deal_id+'/'+this.state.deal_name;
+    let link =
+      'https://acceptmycrypto.herokuapp.com/feed/deals/' + this.state.deal_name;
+    link = link.split(' ').join('%20');
+    let check =
+      'https://acceptmycrypto.herokuapp.com/feed/deals/Tech4Kids%20-%20Paw%20Patrol%20Soft%20Lite%20Figure';
+
+    console.log('==========CHECKER==========', check == link);
+    // console.log("-----Line 239-----", this.state);
+    console.log(link);
+    Share.share({
+      message: '<Enter Message>',
+      url: link
+    }).then(this._showResult);
+  }
 
   render() {
-
-    // if(this.state.isLoading){
-    //   return (
-    //     <View>
-    //       <ActivityIndicator />
-    //     </View>
-    //   );
-    // }
-    console.log(this.state);
-    return(
+    let colors = this.state.colorOption;
+    let size = this.state.sizeOption;
+    return (
       <View style={styles.container}>
-        <ScrollView>
+        <ScrollView ref={scrollView => (this.scrollView = scrollView)}>
           <Image
             style={{ maxWidth: '100%', height: 250 }}
-            source={{ url: this.state.featured_deal_image }}
+            source={{ uri: this.state.featured_deal_image }}
           />
           <View style={styles.description}>
-            <View style={{ 
-              flexDirection: 'row' ,
-            }}>
+            <View
+              style={{
+                flexDirection: 'row'
+              }}
+            >
               <Text
                 style={{
                   maxWidth: '100%',
                   fontSize: 20,
-                  padding: 10,                  
+                  padding: 10
                 }}
-              >      
+              >
                 {this.state.deal_name}
               </Text>
             </View>
-            <View style={{ 
-              flex: 3,
-              flexDirection: 'row',
-              padding: 10,
-              }}>                
-                <View style={{ flexDirection: 'row', padding: 10 }}>
-                  <Text style={{
-                      textAlign: 'right', 
-                      fontSize: 13,
-                      marginLeft: 0,
-                      opacity: 0.54,
-                    }}>
-                    Dollar Price:
-                  </Text>
-                  <Text
-                    style={{
-                      marginLeft: 10,
-                      textAlign: 'left', 
-                      fontSize: 13,
-                    }}
-                  >      
-                    {"$"+this.state.pay_in_dollar}
-                  </Text>
-                </View>
+            <View
+              style={{
+                flex: 3,
+                flexDirection: 'row',
+                padding: 10
+              }}
+            >
+              <View style={{ flexDirection: 'row', padding: 10 }}>
+                <Text
+                  style={{
+                    fontSize: 15,
+                    marginLeft: 0,
+                    opacity: 0.54,
+                    width: 90,
+                    textAlign: 'left'
+                  }}
+                >
+                  Dollar Price:
+                </Text>
+
+                <Text
+                  style={{
+                    textAlign: 'left',
+                    fontSize: 15,
+                    marginLeft: 10
+                  }}
+                >
+                  {'$' + this.state.pay_in_dollar}
+                </Text>
+              </View>
             </View>
-            <View style={{ 
-              borderBottomColor: '#dbd8ce',
-              borderBottomWidth: 1,
-              flex: 3,              
-              flexDirection: 'row',
-              padding: 10,
-              }}>                
-                <View style={{ flexDirection: 'row', padding: 10 }}>
-                  <Text style={{
-                      textAlign: 'right', 
-                      fontSize: 15,
-                      marginRight: 0,
-                      opacity: 0.54,
-                    }}>
-                    Crypto Price:
-                  </Text>
-                  <Text
-                    style={{
-                      marginLeft: 10,
-                      textAlign: 'left', 
-                      fontSize: 15,
-                    }}
-                  >      
-                    {"$"+this.state.pay_in_crypto}
-                  </Text>
-                  <Text
-                    style={{
-                      marginLeft: 5,
-                      textAlign: 'left', 
-                      fontSize: 15,
-                      color: 'green',
-                      borderWidth: 2,
-                      borderColor: 'green',
-                      borderRadius: 5
-                    }}
-                  >      
-                    {' ' + this.convertToPercentage(
+            <View
+              style={{
+                flex: 3,
+                flexDirection: 'row',
+                padding: 10
+              }}
+            >
+              <View
+                style={{ flexDirection: 'row', padding: 10, width: '100%' }}
+              >
+                <Text
+                  style={{
+                    fontSize: 15,
+                    opacity: 0.54,
+                    width: 90,
+                    textAlign: 'right'
+                  }}
+                >
+                  Crypto Price:
+                </Text>
+                <Text
+                  style={{
+                    textAlign: 'left',
+                    color: 'green',
+                    fontSize: 15,
+                    width: 67,
+                    marginLeft: 10
+                  }}
+                >
+                  {'$' + this.state.pay_in_crypto}
+                </Text>
+                <Text
+                  style={{
+                    textAlign: 'center',
+                    fontSize: 15,
+                    color: 'red',
+                    borderWidth: 2,
+                    borderColor: 'red',
+                    borderRadius: 5,
+                    marginBottom: 20,
+                    width: 80
+                  }}
+                >
+                  {+this.convertToPercentage(
                     this.state.pay_in_dollar,
                     this.state.pay_in_crypto
-                    ) +
-                    '% OFF '}
-                  </Text>
-                  <Text style={{
-                      marginLeft: 5,
-                      textAlign: 'left', 
+                  ) + '% OFF '}
+                </Text>
+                {/* <Text style={{
+                      width: 110,
+                      textAlign: 'center', 
                       fontSize: 14,
                       color: 'blue',
                     }}>
                     FREE shipping
-                  </Text>
-                </View>
+                  </Text> */}
+              </View>
             </View>
           </View>
-          <View style={{ 
-            flex: 3,
-            flexDirection: 'row',
-            padding: 10,
-            }}>                
-              <View style={{ flexDirection: 'row', padding: 10 }}>
-                <Text style={{
-                    textAlign: 'left', 
-                    fontSize: 20,
-                    marginLeft: 0,
-                  }}>
-                  Item Description
-                </Text>
-              </View>
+          <View
+            style={{
+              flex: 3,
+              flexDirection: 'row',
+              padding: 10,
+              justifyContent: 'space-between'
+            }}
+          >
+            <View style={{ flexDirection: 'row', padding: 10 }}>
+              <Text
+                style={{
+                  textAlign: 'left',
+                  fontSize: 20,
+                  marginLeft: 0
+                }}
+              >
+                Item Description
+              </Text>
+
+              {/* <Text>
+                    {JSON.stringify(this.state.result)}
+                </Text> */}
+            </View>
+            <View
+              style={{
+                flexDirection: 'row',
+                padding: 10,
+                justifyContent: 'flex-end',
+                backgroundColor: '#66dac7',
+                borderRadius: 5
+              }}
+            >
+              <TouchableOpacity onPress={this._shareMessage}>
+                <Text style={{ fontSize: 20 }}>Share Item</Text>
+              </TouchableOpacity>
+            </View>
           </View>
+          {/* <View style={{ 
+            flex: 3,
+            flexDirection: 'row',
+            padding: 10,
+            // borderBottomColor: '#dbd8ce',
+            // borderBottomWidth: 1,
+          }}>
+            <Text style={{
+              width: 110,
+              textAlign: 'center', 
+              fontSize: 14,
+              color: 'blue',
+            }}>
+                    FREE shipping
+            </Text>
+          </View> */}
           <View style={{ 
             flex: 3,
             flexDirection: 'row',
             padding: 10,
-            }}>                
+            borderBottomColor: '#dbd8ce',
+            borderBottomWidth: 1,
+          }}>
             <View style={{ flexDirection: 'row', padding: 10, flex: 3 }}>
-              <Text style={{
-                  textAlign: 'left', 
+              <Text
+                style={{
+                  textAlign: 'left',
                   fontSize: 13,
                   marginLeft: 0,
                   flex: 1,
                   flexWrap: 'wrap'
-                }}>
+                }}
+              >
                 {this.state.description}
               </Text>
             </View>
           </View>
-          <View style={{ backgroundColor: '#edece8', flex: 1, marginTop: 10, alignItems: 'center', justifyContent: 'center' }}>
-            <TouchableOpacity
-              style={{                      
-                paddingTop:20,
-                paddingBottom:20,
+          {/* <View style={{marginTop: 20, flexDirection: 'row', justifyContent: 'space-between', borderBottomColor: '#dbd8ce',
+              borderBottomWidth: 1, }}>     
+            <View style={{marginLeft: 20, width: 150}}>
+            {this.state.checkedbox1 == false && <Text style={{color: 'red'}}>Please Select A Size</Text>}
+              <Dropdown
+                label="Select a size..."
+                data={size}
+                onChangeText={(value, index) =>
+                  this.setState({ size: value, checkedbox1: true })
+                }
+                style={{ width: 100 }}
+              />
+            </View>
+
+            <View style={{ marginRight: 20, width: 150 }}>
+              {this.state.checkedbox2 == false && (
+                <Text style={{ color: 'red' }}>Please select a color</Text>
+              )}
+              <Dropdown
+                label="Select a color..."
+                data={colors}
+                onChangeText={(value, index) =>
+                  this.setState({ color: value, checkedbox2: true })
+                }
+                style={{ width: 50 }}
+              />
+            </View>
+          </View>         */}
+          <KeyboardAvoidingView behavior="padding">
+            <View
+              style={{
+                flex: 1,
+                marginTop: 10,
+                alignItems: 'center',
+                justifyContent: 'center'
               }}
-              key={this.state.id}
-              onPress={() => this.checkOutPage(this.state)}
             >
-              <LinearGradient
-                colors={[  '#fff4cc','#efb404','#d1a31d']}
+              <TouchableOpacity
                 style={{
-                  borderWidth: 1,
-                  borderRadius: 5, width:300, padding: 15, alignItems: 'center', borderRadius: 5 }}>
-                <Text
+                  paddingTop: 20,
+                  paddingBottom: 20
+                }}
+                key={this.state.id}
+                onPress={() => {
+                  this.checkOutPage();
+                }}
+              >
+                <LinearGradient
+                  colors={['#66dac7', '#66dac7', '#66dac7']}
                   style={{
-                    backgroundColor: 'transparent',
-                    fontSize: 15,
-                    color: 'black',
-                  }}>
-                  Checkout
-                </Text>
-              </LinearGradient>
-            </TouchableOpacity>
-          </View>
+                    width: 300,
+                    height: 50,
+                    padding: 15,
+                    alignItems: 'center',
+                    borderRadius: 5
+                  }}
+                >
+                  <Text
+                    style={{
+                      backgroundColor: 'transparent',
+                      fontSize: 15,
+                      color: 'black'
+                    }}
+                  >
+                    Checkout
+                  </Text>
+                </LinearGradient>
+              </TouchableOpacity>
+            </View>
+          </KeyboardAvoidingView>
         </ScrollView>
       </View>
     );
@@ -303,24 +544,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
-    alignSelf: 'stretch',
-    // flexDirection: 'column',
+    alignSelf: 'stretch'
   },
   description: {
+    borderBottomColor: '#dbd8ce',
+    borderBottomWidth: 1,
     flex: 3,
     backgroundColor: 'white',
     borderWidth: 0,
-    borderColor: 'grey',
+    borderColor: 'grey'
   },
-  // checkoutButton: {
-  //   textAlign: 'center', 
-  //   margin: 5,
-  //   borderRadius: 25,
-  //   backgroundColor: '#52c4b9',
-  //   width: '70%',
-  //   marginTop: 10,
-  //   marginBottom: 15
-  // },
   buttonText: {
     height: 30,
     backgroundColor: '#52c4b9',
