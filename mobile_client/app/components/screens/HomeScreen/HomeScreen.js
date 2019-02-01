@@ -38,22 +38,14 @@ export default class Post extends React.Component {
 
   componentDidMount() {
     this.getDealsData();
-    console.log('STATE'+JSON.stringify(this.props.navigation.state));
-    BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
-  };
-
-  handleBackPress = () => {
-    if(this.props.navigation.state.routeName !== 'Home'){
-      this.props.navigation.navigate('Home');
-      return true;
-    }else {
+    this.backhandler = BackHandler.addEventListener('hardwareBackPress', () => {
       BackHandler.exitApp();
-      return true;  
-    }
+      return true;
+    });
   }
 
   componentWillUnmount() {
-    BackHandler.removeEventListener('hardwareBackPress', this.handleBackPress);
+    this.backhandler.remove();
   }
 
   getDealsData = async () => {

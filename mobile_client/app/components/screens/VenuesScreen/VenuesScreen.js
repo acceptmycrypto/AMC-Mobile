@@ -35,25 +35,6 @@ export default class CryptosRankings extends React.Component {
     this.getCryptoData();
   };
 
-  componentDidMount() {
-    console.log('STATE'+JSON.stringify(this.props.navigation.state));
-    BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
-  };
-
-  handleBackPress = () => {
-    if(this.props.navigation.state.routeName !== 'Home'){
-      this.props.navigation.navigate('Home');
-      return true;
-    }else {
-      BackHandler.exitApp();
-      return true;  
-    } 
-  }
-
-  componentWillUnmount() {
-    BackHandler.removeEventListener('hardwareBackPress', this.handleBackPress);
-  }
-
   getCryptoData = async () => {
     let url = 'https://acceptmycrypto.herokuapp.com' || 'http://localhost:3001';
     const cryptosList = await fetch(url + '/api/cryptosranking_venues');
