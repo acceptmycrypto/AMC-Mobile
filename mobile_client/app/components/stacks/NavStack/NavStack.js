@@ -54,7 +54,6 @@ const HomeStack = createStackNavigator(
           color: '#000000',
         },
       },
-      headerLayoutPreset: 'center',
     }
   },
   {

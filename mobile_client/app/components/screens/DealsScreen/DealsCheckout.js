@@ -14,7 +14,8 @@ import {
   BackHandler,
   Clipboard,
   Linking,
-  Picker
+  Picker,
+  KeyboardAvoidingView
 } from "react-native";
 import Modal from "react-native-modal";
 import { Button } from "react-native-elements";
@@ -33,7 +34,8 @@ export default class DealsCheckout extends React.Component {
     super(props);
     this.state = {
       fadeValue: new Animated.Value(0),
-      fullName: "",
+      firstName: "",
+      lastName: "",
       address: "",
       city: "",
       zipCode: "",
@@ -59,7 +61,8 @@ export default class DealsCheckout extends React.Component {
   cancelPurchase = () => {
     this.setState({
       transactionData: "",
-      fullName: "",
+      firstName: "",
+      lastName: "",
       address: "",
       city: "",
       zipCode: "",
@@ -71,7 +74,7 @@ export default class DealsCheckout extends React.Component {
       paymentReceived: false,
       paymentSelected: false
     });
-    this.props.navigation.navigate("Deals", {});
+    this.props.navigation.navigate("Home", {});
   };
 
   changePayment = () => {
@@ -83,18 +86,14 @@ export default class DealsCheckout extends React.Component {
 
   checkAddress = () => {
     if (
-      this.state.fullName &&
+      this.state.firstName &&
+      this.state.lastName &&
       this.state.address &&
       this.state.city &&
       this.state.zipCode &&
       this.state.state
     ) {
       this.setState({ viewPaymentMethod: true });
-    } else {
-      this.setState({
-        viewPaymentMethod: false,
-        fadeValue: new Animated.Value(0)
-      });
     }
   };
 
@@ -118,7 +117,8 @@ export default class DealsCheckout extends React.Component {
     let shippingCity = this.state.city;
     let zipcode = this.state.zipCode;
     let shippingState = this.state.state;
-    let fullName = this.state.fullName;
+    let firstName = this.state.firstName;
+    let lastName = this.state.lastName;
     let selectedSize = this.state.size;
     let selectedColor = this.state.color;
 
@@ -134,7 +134,8 @@ export default class DealsCheckout extends React.Component {
           shippingCity,
           zipcode,
           shippingState,
-          fullName,
+          firstName,
+          lastName,
           selectedSize,
           selectedColor
         ).then(
@@ -264,9 +265,9 @@ export default class DealsCheckout extends React.Component {
         >
           {/*Address View*/}
           <View style={styles.postStyle}>
-           { !this.state.viewPaymentMethod ? (
-           <View>
-             <Text
+          { !this.state.viewPaymentMethod ? (
+            <View>
+              <Text
                 style={{
                   fontSize: 25,
                   marginVertical: 5,
@@ -275,85 +276,103 @@ export default class DealsCheckout extends React.Component {
                   fontWeight: "bold"
                 }}
               >
-                Shipping:
+                Shipping Address:
               </Text>
-              <Text style={{ fontSize: 16 }}>Full Name</Text>
+              <Text style={{ fontSize: 16, fontWeight: "bold" }}>First Name</Text>
               <TextInput
-                ref="fullName"
-                style={styles.inputStyle}
+                ref={firstName => (this.firstName = firstName)}
+                style={!this.state.firstName && this.checkAddress() ? styles.textInvalid : styles.textValid }
                 placeholder="ex: John Smith"
-                onChangeText={fullName =>
-                  this.setState({ fullName }, this.checkAddress)
+                onChangeText={firstName =>
+                  this.setState({ firstName })
+                }
+                returnKeyType={"next"}
+                onSubmitEditing={() => this.lastName.focus()}
+              />
+              <Text style={{ fontSize: 16, fontWeight: "bold" }}>Last Name</Text>
+              <TextInput
+                ref={lastName => (this.lastName = lastName)}
+                style={!this.state.lastName && this.checkAddress() ? styles.textInvalid : styles.textValid }
+                placeholder="ex: John Smith"
+                onChangeText={lastName =>
+                  this.setState({ lastName })
                 }
                 returnKeyType={"next"}
                 onSubmitEditing={() => this.address.focus()}
               />
-              <Text style={{ fontSize: 16 }}>Address</Text>
+              <Text style={{ fontSize: 16, fontWeight: "bold" }}>Address</Text>
               <TextInput
                 ref={address => (this.address = address)}
-                style={styles.inputStyle}
+                style={!this.state.address && this.checkAddress() ? styles.textInvalid : styles.textValid }
                 placeholder="Ex: 123 Main Street"
                 onChangeText={address =>
-                  this.setState({ address }, this.checkAddress)
+                  this.setState({ address })
                 }
                 returnKeyType={"next"}
                 onSubmitEditing={() => this.city.focus()}
               />
-              <Text style={{ fontSize: 16 }}>City</Text>
+              <Text style={{ fontSize: 16, fontWeight: "bold" }}>City</Text>
               <TextInput
                 ref={city => (this.city = city)}
-                style={styles.inputStyle}
+                style={!this.state.city && this.checkAddress() ? styles.textInvalid : styles.textValid }
                 placeholder="Ex: San Francisco"
-                onChangeText={city => this.setState({ city }, this.checkAddress)}
+                onChangeText={city => this.setState({ city })}
                 returnKeyType={"next"}
               />
               <View style={{ flex: 1, flexDirection: "row" }}>
-                  {/*<Dropdown
-                    baseColor="#000000"
-                    textColor="#000000"
-                    label="State"
-                    data={states}
-                    onChangeText={(value, index) =>
-                      this.setState({ state: value[index] }, this.checkAddress)
-                    }
-                  />*/}
-                  <Picker
-                    style={{width: "50%", borderWidth: 1, marginTop: 5}}
-                    selectedValue={this.state.state}
-                    onValueChange={(value, index) => this.setState({state: value})}
+                <View style={{flex: 1, flexDirection: "column"}}>
+                 <Text style={{ fontSize: 16, textAlign: "left", fontWeight: "bold" }}>
+                   State
+                 </Text>
+                  <View
+                    style={
+                      [{
+                       flex: 1,
+                       flexDirection: "column",
+                       height: 20,
+                       borderWidth: 1,
+                       borderColor: "#000000",
+                       borderRadius: 5,
+                       },
+                       !this.state.state && this.checkAddress() ? styles.textInvalid : styles.textValid
+                     ]}
                   >
-                    <Picker.Item label="Select State" value=""/>
-                    {states.map(state => {
-                      return(
-                        <Picker.Item
-                          label={state.label + "  -  " + state.value} value={state.value}
-                        />) })
-                    }
-                  </Picker>
-                <View style={{ flex: 1, marginLeft: 5 }}>
-                  <Text style={{ fontSize: 16, textAlign: "left" }}>
+                    <Picker
+                      selectedValue={this.state.state}
+                      onValueChange={(value, index) => this.setState({state: value})}
+                    >
+                      <Picker.Item label="Select State" value=""/>
+                      {states.map(state => {
+                        return(
+                          <Picker.Item
+                            label={state.label + "  -  " + state.value} value={state.value}
+                          />) })
+                      }
+                    </Picker>
+                 </View>
+                </View>
+                <View style={{ flex: 1, flexDirection: "column",marginLeft: 5 }}>
+                  <Text style={{ fontSize: 16, textAlign: "left", fontWeight: "bold" }}>
                     Zip Code
                   </Text>
                   <TextInput
                     ref={zipCode => (this.zipCode = zipCode)}
                     keyboardType="numeric"
-                    style={[styles.inputStyle, { width: "50%" }]}
+                    style={[{ width: "100%" }, !this.state.zipCode && this.checkAddress() ? styles.textInvalid : styles.textValid ]}
                     maxLength={5}
                     placeholder=""
                     onChangeText={zipCode => {
                       this.setState({ zipCode });
                     }}
                     returnKeyType={"done"}
-                    onSubmitEditing={() => {
-                      this.checkAddress();
-                    }}
                   />
                 </View>
               </View>
             </View>
             ) : (
               <Shipping
-                fullName={this.state.fullName}
+                firstName={this.state.firstName}
+                lastName={this.state.lastName}
                 address={this.state.address}
                 city={this.state.city}
                 state={this.state.state}
@@ -430,11 +449,9 @@ export default class DealsCheckout extends React.Component {
                               <Text>
                                 Please send{" "}
                                 <Text style={{ fontWeight: "bold" }}>
-                                  {this.state.transactionData.amount +
-                                    " " +
-                                    this.state.crypto_symbol}
-                                </Text>{" "}
-                                to the below address:{" "}
+                                  { this.state.transactionData.amount + " " + this.state.crypto_symbol}
+                                </Text>
+                                {" to the below address: " }
                               </Text>
                               <Text>AcceptMyCrypto Payment Address: </Text>
                               <View
@@ -451,9 +468,7 @@ export default class DealsCheckout extends React.Component {
                                   }}
                                   selectable={true}
                                   onPress={() => {
-                                    Clipboard.setString(
-                                      this.state.transactionData.txn_id
-                                    );
+                                    Clipboard.setString(this.state.transactionData.txn_id);
                                     Alert.alert(
                                       "Payment Address has been copied, please proceed to your Crypto Wallet to Pay"
                                     );
@@ -537,49 +552,37 @@ export default class DealsCheckout extends React.Component {
                 </View>
               </Animated.View>
             ) : null}
-            {/*Checkout Button*/}
-            {/*<View style={{ flex: 1, flexDirection: "column" }}>
+          </View>
+
+          {/*-----Checkout Button------*/}
+          <KeyboardAvoidingView behavior="padding">
+            <View style={{ flex: 1, marginTop: 10, alignItems: "center", justifyContent: "center", borderTopWidth: 2, borderTopColor: "#dbd8ce" }}>
               <TouchableOpacity
                 style={{
-                  flex: 1,
+                  marginTop: 10,
+                  backgroundColor: "#66dac7",
+                  width: 300,
+                  height: 50,
+                  borderRadius: 5,
                   justifyContent: "center",
                   alignItems: "center"
                 }}
+                key={this.state.id}
+                onPress={() => {
+                  !this.state.viewPaymentMethod ? this.checkAddress() : null;
+                }}
               >
-                <LinearGradient
-                  colors={
-                    this.state.paymentReceived
-                      ? ["#fff4cc", "#efb404", "#d1a31d"]
-                      : ["#ffffff", "#cccccc", "#999999"]
-                  }
+                <Text
                   style={{
-                    flex: 1,
-                    borderWidth: 1,
-                    borderRadius: 5,
-                    padding: 15,
-                    width: 300,
-                    justifyContent: "center",
-                    alignItems: "center",
+                    fontSize: 16,
+                    textAlign: "center",
                   }}
                 >
-                  <Text
-                    style={{
-                      backgroundColor: "transparent",
-                      fontSize: 15,
-                      color: "black",
-                      textAlign: "center"
-                    }}
-                  >
-                    {!this.state.viewPaymentMethod
-                      ? "Proceed to Payment Method"
-                      : !this.state.paymentReceived
-                      ? "Generate Payment Address"
-                      : "Review Order"}
-                  </Text>
-                </LinearGradient>
+                  Checkout
+                </Text>
               </TouchableOpacity>
-            </View>*/}
-          </View>
+            </View>
+          </KeyboardAvoidingView>
         </ScrollView>
       </View>
     );
@@ -597,7 +600,15 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     marginBottom: 10
   },
-  inputStyle: {
+  textInvalid: {
+    borderWidth: 1,
+    borderColor: "#ff0000",
+    backgroundColor: "white",
+    marginBottom: 5,
+    height: 40,
+    paddingHorizontal: 5
+  },
+  textValid: {
     borderWidth: 1,
     borderColor: "#2e4158",
     backgroundColor: "white",

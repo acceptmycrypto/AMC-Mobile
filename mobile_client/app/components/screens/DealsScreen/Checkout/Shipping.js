@@ -131,7 +131,7 @@ class DealItem extends React.Component {
 
 //props
 /*
-  fullName, email, city, state, zipCode: string
+  firstName, lastName, email, city, state, zipCode: string
 */
 class Shipping extends React.Component {
   render(){
@@ -141,27 +141,29 @@ class Shipping extends React.Component {
           borderBottomColor: "#dbd8ce",
           borderBottomWidth: 1,
           flexDirection: "column",
-          padding: 15
+          padding: 10
         }}
       >
         <View style={{flexDirection: "row"}}>
-          <Text style={{fontWeight: "bold"}}>Name: </Text>
-          <Text>{this.props.fullName}</Text>
-        </View>
+          <Text
+            style={{
+              fontSize: 20,
+              fontWeight: "bold",
+              marginRight: 10
+            }}
+          >
+            Shipping To:
+          </Text>
 
-        { this.props.email ? (
-        <View style={{flexDirection: "row"}}>
-          <Text style={{fontWeight: "bold"}}>Email: </Text>
-          <Text>this.props.email</Text>
-        </View>): null }
-
-        <View style={{flexDirection: "row"}}>
-          <Text style={{fontWeight: "bold"}}>Address: </Text>
           <View style={{flexDirection: "column"}}>
-            <Text>{this.props.address}</Text>
             <View style={{flexDirection: "row"}}>
-              <Text>{this.props.city + ", " + this.props.state + ", " + this.props.zipCode}</Text>
+              <Text style={{fontWeight: "bold", fontSize: 16}}>{this.props.firstName + " " + this.props.lastName}</Text>
             </View>
+            <Text style={{fontWeight: "bold", fontSize: 16}}>{this.props.address}</Text>
+            <View style={{flexDirection: "row"}}>
+              <Text style={{fontWeight: "bold", fontSize: 16}}>{this.props.city + ", " + this.props.state + ", " + this.props.zipCode}</Text>
+            </View>
+            { this.props.email ? (<Text style={{fontWeight: "bold", fontSize: 14}}>this.props.email</Text>): null}
           </View>
         </View>
       </View>
@@ -170,3 +172,4 @@ class Shipping extends React.Component {
 }
 
 export {DealItem, Shipping};
+
