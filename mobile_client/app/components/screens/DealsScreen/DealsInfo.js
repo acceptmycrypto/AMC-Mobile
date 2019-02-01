@@ -163,10 +163,6 @@ export default class PostInfo extends React.Component {
     let z;
 
     if(navigation.getParam("description", "N/A") != "") {
-      // console.log("DAHSFKJADJSLKFJDSLK;FJLDSKA;JFLK;DSAJFKL;",typeof navigation.getParam("description", "N/A") == 'string')
-      // let y = navigation.getParam("description", "N/A")
-
-      // if(JSON.parse(navigation.getParam("description", "N/A")) == 'object'){
       try {
         console.log("ALMOST THERE????", typeof JSON.parse(navigation.getParam("description", "N/A")))
         x = JSON.stringify(navigation.getParam("description", "N/A"))
@@ -177,12 +173,6 @@ export default class PostInfo extends React.Component {
       } catch(err){
         z = navigation.getParam("description", "N/A")
       }
-
-      // x = JSON.stringify(navigation.getParam("description", "N/A"))
-      // a = x.split('"')
-      // z = a[10].substring(0, a[10].length - 1);
-      // JSON.parse(x)!= undefined? a = x.split('"') : z = navigation.getParam("description", "N/A");
-      // z = a[10].substring(0, a[10].length - 1);
     }
 
     this.setState({
@@ -278,42 +268,6 @@ export default class PostInfo extends React.Component {
   }
 
   render() {
-
-    // {"blocks":[{"key":"3ktu8","text":"Pippi Longstocking book is for sale.","type":"unstyled","depth":0,"inlineStyleRanges":[{"offset":0,"length":36,"style":"ITALIC"}],"entityRanges":[],"data":{}}],"entityMap":{}}
-
-    let y = "{\"blocks\":[{\"key\":\"fti2m\",\"text\":\"Grab this bitcoin quick.\",\"type\":\"unstyled\",\"depth\":0,\"inlineStyleRanges\":[{\"offset\":0,\"length\":24,\"style\":\"BOLD\"}],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"
-
-    let t = JSON.parse(y);
-    console.log(typeof(t.blocks))
-    console.log(t.blocks[0].text)
-    console.log(typeof t)
-
-    // console.log(JSON.stringify(t.blocks))
-    // console.log("-----Line 248-----", this.state);
-    console.log("=====LALALLALLALALA=======");
-    console.log(typeof this.state.description)
-    let x = JSON.stringify(this.state.description)
-    let a = x.split('"')
-    console.log("WORK", a);
-    console.log("WORK", a.length);
-    console.log("WORRKKKKKK", typeof a[10])
-    console.log(a.slice(0,-1))
-    // console.log("WORK", a[10].slice(0,a[10].length -1 ));
-    // let r = a[10].split()
-    // console.log("WORK!!!!!!", r.slice(0,r.length-2));
-    console.log(x)
-    let u = JSON.parse(x)
-    console.log("LINE 268", u)
-    console.log("=====LALALLALLALALA=======");
-    console.log(typeof(x))
-    // console.log(typeof(t.blocks))
-    // console.log(t.blocks[0].text)
-    // console.log(JSON.parse(this.state.description));
-    console.log("=====LALALLALLALALA=======");
-    // console.log(JSON.stringify(this.state.description));
-    // console.log(JSON.stringify(this.state.description));
-    
-    console.log("=====LALALLALLALALA=======");
     let colors = this.state.colorOption;
     let size = this.state.sizeOption;
     return(
