@@ -52,8 +52,13 @@ const HomeStack = createStackNavigator(
     },
     DealsCheckout: {
       screen: DealsCheckout,
-      navigationOptions: header,
-      headerLayoutPreset: 'center'
+      navigationOptions: {
+        headerTitle: 'Checkout',
+        headerStyle: {
+          backgroundColor: '#66dac7',
+          color: '#000000',
+        },
+      },
     }
   },
   {
@@ -86,23 +91,16 @@ const VenuesStack = createStackNavigator(
   }
 );
 
-// const DealsStack = createStackNavigator(
-//   {
-//     Deals: {
-//       screen: Deals
-//     },
-//     DealsInfo: {
-//       screen: DealsInfo
-//     },
-//     DealsCheckout: {
-//       screen: DealsCheckout,
-//     }
-//   },
-//   {
-//     navigationOptions: header,
-//     headerLayoutPreset: 'center'
-//   }
-// );
+/*Hides tab bottom navigation*/
+HomeStack.navigationOptions = ({navigation}) => {
+  let tabBarVisible = true;
+  if (navigation.state.index > 2) {
+    tabBarVisible = false;
+  }
+  return {
+    tabBarVisible,
+  };
+};
 
 const ProfileStack = createStackNavigator(
   {
@@ -121,8 +119,7 @@ export default createBottomTabNavigator(
     Home: HomeStack,
     Search: SearchStack,
     Venues: VenuesStack,
-    // Deals: DealsStack,
-    Profile: ProfileStack
+    Profile: ProfileStack,
   },
   {
     navigationOptions: ({ navigation }) => ({
