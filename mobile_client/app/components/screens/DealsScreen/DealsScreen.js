@@ -61,7 +61,7 @@ export default class Post extends React.Component {
       const value = await AsyncStorage.getItem('token');
       // if (value !== null) {
         return _loadDeals(value).then(res => {
-          // console.log('FETCHING' + JSON.stringify(res.deals));
+          console.log('FETCHING' + JSON.stringify(res.deals.all_results));
           this.setState({
             isLoading: false,
             isFetching: false,
@@ -79,7 +79,7 @@ export default class Post extends React.Component {
   };
 
   filterDealsData = () => {
-    let searchData = this.state.allResults.filter(postData => {
+    let searchData = this.state.allResults[0].filter(postData => {
       console.log('POST ' + JSON.stringify(postData));
       if (postData.category_name !== null) {
         return postData.category_name.includes(this.state.department);
