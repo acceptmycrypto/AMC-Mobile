@@ -38,7 +38,7 @@ export default class Post extends React.Component {
   getDealsData = async () => {
     try {
       const value = await AsyncStorage.getItem('token');
-      if (value !== null) {
+      // if (value !== null) {
         return _loadDeals(value).then(res => {
           console.log('FETCHING' + res);
           this.setState({
@@ -47,7 +47,7 @@ export default class Post extends React.Component {
             dealsData: res.deals
           });
         });
-      }
+      // }
     } catch (error) {
       console.log(error);
     }

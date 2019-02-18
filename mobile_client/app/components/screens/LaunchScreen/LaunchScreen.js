@@ -43,8 +43,8 @@ export default class LaunchScreen extends React.Component {
       isSelectingCryptos: false,
       id: 0,
       username: '',
-      email: '',
-      password: '',
+      email: 'audiopunk252@yahoo.com',
+      password: 'taylora',
       cryptoOptions: {},
       cryptoProfile: []
     };

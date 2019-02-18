@@ -2,15 +2,13 @@ let url = 'https://acceptmycrypto.herokuapp.com' || 'http://localhost:3001';
 
 export async function _loadDeals(token) {
   const settings = {
-    method: 'POST',
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({ token })
   };
 
-  const dealsList = await fetch(url + '/api/deals', settings);
+  const dealsList = await fetch(url + '/home/categorized/deals', settings);
   const deals = await dealsList.json();
 
   return { deals };

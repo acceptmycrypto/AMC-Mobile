@@ -32,7 +32,8 @@ export default class Post extends React.Component {
       data: {},
       search: '',
       post: '',
-      dealsData: [],
+      recentDeals: [],
+      allResults: [],
       department: ''
     };
   }
@@ -58,29 +59,30 @@ export default class Post extends React.Component {
   getDealsData = async () => {
     try {
       const value = await AsyncStorage.getItem('token');
-      if (value !== null) {
+      // if (value !== null) {
         return _loadDeals(value).then(res => {
-          console.log('FETCHING' + res);
+          console.log('FETCHING' + JSON.stringify(res.deals.all_results));
           this.setState({
             isLoading: false,
             isFetching: false,
-            dealsData: res.deals
+            recentDeals: res.deals.recent_deals,
+            allResults: res.deals.all_results
           });
-          if (this.state.department !== 'All Categories') {
+          // if (this.state.department !== 'All Categories') {
             this.filterDealsData();
-          }
+          // }
         });
-      }
+      // }
     } catch (error) {
       console.log(error);
     }
   };
 
   filterDealsData = () => {
-    let searchData = this.state.dealsData.filter(postData => {
-      console.log('POST ' + postData.category);
-      if (postData.category !== null) {
-        return postData.category.includes(this.state.department);
+    let searchData = this.state.allResults[0].filter(postData => {
+      console.log('POST ' + JSON.stringify(postData));
+      if (postData.category_name !== null) {
+        return postData.category_name.includes(this.state.department);
       }
     });
     this.setState({ dealsData: searchData });
@@ -139,7 +141,7 @@ export default class Post extends React.Component {
                   />
                 );
               }
-              console.log(`Item = ${JSON.stringify(item)}, index = ${index}`);
+              console.log('ITEMS'+JSON.stringify(item));
               return (
                 <View
                   style={{

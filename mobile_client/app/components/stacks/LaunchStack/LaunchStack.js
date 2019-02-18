@@ -14,10 +14,10 @@ const launchHeader = {
 
 export default (LaunchStack = createStackNavigator(
   {
-    Launch: {
-      screen: LaunchScreen,
-      navigationOptions: launchHeader,
-	},
+  //   Launch: {
+  //     screen: LaunchScreen,
+  //     navigationOptions: launchHeader,
+	// },
     Main: {
       screen: NavStack,
       navigationOptions: {
