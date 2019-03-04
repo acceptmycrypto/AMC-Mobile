@@ -14,6 +14,7 @@ import DealsCheckout from '../../screens/DealsScreen/DealsCheckout';
 import ProfileScreen from '../../screens/ProfileScreen/ProfileScreen';
 import LogoTitle from './LogoTitle';
 import SearchTitle from './SearchTitle';
+import LaunchTitle from '../LaunchStack/LaunchTitle';
 import Feather from '@expo/vector-icons/Feather';
 
 const header = {
@@ -32,6 +33,14 @@ const HomeHeader = {
   headerTitle: <SearchTitle />,
   headerStyle: {
     backgroundColor: color
+  }
+};
+
+const profileHeader = {
+  headerTitle: <LaunchTitle />,
+  headerStyle: {
+    backgroundColor: '#66dac7',
+    height: 130
   }
 };
 
@@ -109,7 +118,7 @@ const ProfileStack = createStackNavigator(
     }
   },
   {
-    navigationOptions: header,
+    navigationOptions: profileHeader,
     headerLayoutPreset: 'center'
   }
 );

@@ -1,16 +1,32 @@
 # About AcceptMyCrypto
-*The purpose of the app is for cryptocurrencies holders to find and purchase deals that match to the cryptocurrencies that they're interested or owned.
+*The purpose of this app is for cryptocurrency holders to be able to find and purchase deals using the cryptocurrencies that they are interested in or already own*
 
 ## API
 *AcceptMyCrypto uses coinmarketcap api to get crypto info shown below*
 * Name
-* Symple
+* Symbol
 * Price
 * Logo
 * Website URL
 
 ## Venues
-*AcceptMyCrypto doesn't rely on any third party API to get the venues data set. All data regarding venues are manually inserted by the team.*
-*Two ways we come up with the venues data*
-* Team does marketing research and submit manually
-* Users submitting prospective venues to us. We verified and submit manually.
+*AcceptMyCrypto does not rely on any third party API to get its venues data. All data regarding venues are manually inserted by the team*
+*There are two ways that we acquire venue data*
+* Team does market research and submits manually
+* Users submit prospective venues to us and we verify and submit manually
+
+# To Run The App Using Expo
+```
+$ git clone https://github.com/acceptmycrypto/AMC-Mobile.git
+
+$ cd AMC-Mobile
+
+$ cd mobile_client
+
+$ yarn install
+
+$ expo start
+```
+## After Tab Opens In Browser
+* Click Run on iOS simluator || Run on Android device/emulator
+* If scanning bar code with expo mobile app be sure to click on Tunnel under connection above the QR Code first
